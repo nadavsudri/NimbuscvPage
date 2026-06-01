@@ -1560,12 +1560,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 
   // CHECKOUT — Replace with your Stripe / LemonSqueezy / Paddle link
   window.handleCheckout=function(){
-    /*
-     * Stripe:  window.location.href = 'https://checkout.stripe.com/c/pay/YOUR_LINK';
-     * LemonSqueezy:  LemonSqueezy.Url.Open('YOUR_LS_URL');
-     * Paddle:  Paddle.Checkout.open({ product: YOUR_ID });
-     */
-    alert('Wire up your payment provider here.\n\nSee handleCheckout() in index.html.');
+    window.location.href='checkout.html';
   };
 })();
 </script>

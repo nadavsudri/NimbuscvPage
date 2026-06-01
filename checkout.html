@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Nimbus — Checkout</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#06121a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z' fill='none' stroke='%2300e5b4' stroke-width='3'/><circle cx='50' cy='50' r='14' fill='none' stroke='%2300e5b4' stroke-width='2' opacity='0.5'/><rect x='48.8' y='40' width='2.4' height='20' rx='1.2' fill='%2300e5b4'/></svg>"/>
+<style>
+:root{
+  --bg:#06121a;
+  --bg-2:#0a1922;
+  --bg-3:#0d2230;
+  --panel:#0e2433;
+  --ink:#e6f5f3;
+  --ink-2:#8aa6ad;
+  --ink-3:#516b75;
+  --ink-4:#2d3f48;
+  --rule:#152935;
+  --rule-2:#1d3947;
+  --teal:#00e5b4;
+  --teal-deep:#00b894;
+  --cyan:#22d3ee;
+  --error:#f87171;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  background:var(--bg);color:var(--ink-2);
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+  min-height:100vh;
+}
+
+/* ─── NAV ─── */
+.nav{
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  background:rgba(6,18,26,0.85);
+  border-bottom:1px solid var(--rule);
+  padding:14px 0;
+}
+.nav-inner{
+  max-width:1200px;margin:0 auto;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav .logo{
+  font-family:'Instrument Serif',serif;font-size:22px;
+  color:var(--ink);text-decoration:none;font-weight:400;
+}
+.nav .logo span{color:var(--teal)}
+.nav .back{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink-3);text-decoration:none;
+  transition:color 0.25s ease;
+}
+.nav .back:hover{color:var(--ink)}
+
+/* ─── LAYOUT ─── */
+.checkout-wrap{
+  max-width:960px;margin:0 auto;padding:60px 32px 120px;
+  display:grid;grid-template-columns:1fr 360px;gap:64px;
+  align-items:start;
+}
+@media(max-width:800px){
+  .checkout-wrap{grid-template-columns:1fr;gap:40px}
+}
+
+/* ─── FORM ─── */
+.checkout-form h1{
+  font-family:'Instrument Serif',serif;font-weight:400;
+  font-size:clamp(32px,4vw,48px);line-height:1;
+  letter-spacing:-0.02em;color:var(--ink);margin:0 0 8px;
+}
+.checkout-form h1 .it{font-style:italic;color:var(--teal)}
+.checkout-form .subtitle{
+  font-size:15px;color:var(--ink-3);margin-bottom:36px;
+}
+
+.form-group{margin-bottom:20px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:500px){.form-row{grid-template-columns:1fr}}
+
+.form-group label{
+  display:block;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:6px;font-weight:500;
+}
+.form-group input,
+.form-group select{
+  width:100%;padding:12px 14px;
+  font-family:'Space Grotesk',sans-serif;font-size:14.5px;
+  color:var(--ink);background:var(--bg-2);
+  border:1px solid var(--rule-2);border-radius:6px;
+  outline:none;
+  transition:border-color 0.25s ease,box-shadow 0.25s ease;
+}
+.form-group input::placeholder{color:var(--ink-4)}
+.form-group input:focus,
+.form-group select:focus{
+  border-color:var(--teal);
+  box-shadow:0 0 0 3px rgba(0,229,180,0.1);
+}
+.form-group input.error{border-color:var(--error)}
+.form-group .error-msg{
+  font-size:12px;color:var(--error);margin-top:4px;display:none;
+}
+.form-group input.error ~ .error-msg{display:block}
+
+.form-divider{
+  border:none;border-top:1px solid var(--rule);
+  margin:32px 0;
+}
+
+.form-section-label{
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--ink-4);margin-bottom:16px;
+}
+
+/* ─── CHECKBOX ─── */
+.checkbox-wrap{
+  display:flex;align-items:center;gap:10px;
+  margin-top:28px;cursor:pointer;
+  font-size:13.5px;color:var(--ink-2);
+  user-select:none;
+}
+.checkbox-wrap input{display:none}
+.checkbox-wrap .checkmark{
+  width:18px;height:18px;flex-shrink:0;
+  border:1px solid var(--rule-2);border-radius:4px;
+  background:var(--bg-2);position:relative;
+  transition:background 0.2s ease,border-color 0.2s ease;
+}
+.checkbox-wrap input:checked ~ .checkmark{
+  background:var(--teal);border-color:var(--teal);
+}
+.checkbox-wrap .checkmark::after{
+  content:'';position:absolute;
+  left:5.5px;top:2.5px;width:5px;height:9px;
+  border:solid #06121a;border-width:0 2px 2px 0;
+  transform:rotate(45deg);opacity:0;
+  transition:opacity 0.15s ease;
+}
+.checkbox-wrap input:checked ~ .checkmark::after{opacity:1}
+
+/* ─── PAY BUTTON ─── */
+.btn-pay{
+  width:100%;padding:16px 24px;margin-top:32px;
+  font-family:'JetBrains Mono',monospace;font-size:13px;
+  font-weight:600;letter-spacing:0.12em;text-transform:uppercase;
+  color:#06121a;background:var(--teal);
+  border:none;border-radius:6px;cursor:pointer;
+  transition:transform 0.2s cubic-bezier(0.16,1,0.3,1),box-shadow 0.2s ease;
+  box-shadow:0 4px 20px -4px rgba(0,229,180,0.3);
+}
+.btn-pay:hover{
+  transform:translateY(-2px);
+  box-shadow:0 8px 30px -4px rgba(0,229,180,0.4);
+}
+.btn-pay:active{transform:translateY(0) scale(0.98)}
+
+.secure-note{
+  display:flex;align-items:center;gap:8px;
+  margin-top:14px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:0.08em;color:var(--ink-4);
+}
+.secure-note svg{flex-shrink:0}
+
+/* ─── ORDER SUMMARY ─── */
+.order-summary{
+  position:sticky;top:80px;
+  border:1px solid var(--rule-2);border-radius:10px;
+  background:var(--bg-2);padding:28px;
+  box-shadow:0 20px 60px -20px rgba(0,0,0,0.4);
+}
+.order-summary h2{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 20px;font-weight:500;
+}
+.order-item{
+  display:flex;justify-content:space-between;align-items:start;
+  padding:14px 0;border-bottom:1px solid var(--rule);
+}
+.order-item:last-of-type{border-bottom:none}
+.order-item .name{
+  font-size:15px;color:var(--ink);font-weight:500;
+}
+.order-item .detail{
+  font-size:12.5px;color:var(--ink-3);margin-top:2px;
+}
+.order-item .price{
+  font-family:'JetBrains Mono',monospace;font-size:14px;
+  color:var(--ink);font-weight:500;white-space:nowrap;
+}
+
+.order-includes{
+  margin-top:16px;padding-top:16px;border-top:1px solid var(--rule);
+}
+.order-includes li{
+  position:relative;padding-left:16px;
+  font-size:12.5px;color:var(--ink-3);line-height:2;
+  list-style:none;
+}
+.order-includes li::before{
+  content:'';position:absolute;left:0;top:10px;
+  width:5px;height:5px;border-radius:50%;
+  background:var(--teal);opacity:0.5;
+}
+
+.order-total{
+  display:flex;justify-content:space-between;
+  margin-top:20px;padding-top:16px;
+  border-top:1px dashed var(--rule-2);
+}
+.order-total .label{
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--teal);font-weight:600;
+}
+.order-total .amount{
+  font-family:'Instrument Serif',serif;font-size:28px;
+  color:var(--teal);font-weight:400;line-height:1;
+}
+.order-total .amount small{font-size:16px}
+
+/* ─── FOOTER ─── */
+.checkout-footer{
+  border-top:1px solid var(--rule);padding:24px 0;
+  max-width:960px;margin:0 auto;padding-left:32px;padding-right:32px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  color:var(--ink-4);letter-spacing:0.06em;
+  display:flex;justify-content:space-between;
+}
+.checkout-footer a{color:var(--ink-3);text-decoration:none}
+.checkout-footer a:hover{color:var(--teal)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Nimbus<span>.</span></a>
+    <a href="index.html" class="back">&larr; Back to site</a>
+  </div>
+</nav>
+
+<!-- CHECKOUT -->
+<div class="checkout-wrap">
+
+  <!-- FORM -->
+  <div class="checkout-form">
+    <h1>Check<span class="it">out.</span></h1>
+    <p class="subtitle">One-time purchase. No subscription. Yours forever.</p>
+
+    <form id="checkout-form" novalidate>
+
+      <div class="form-section-label">Contact</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="first-name">First name</label>
+          <input type="text" id="first-name" name="firstName" placeholder="Ada" required>
+          <div class="error-msg">Required</div>
+        </div>
+        <div class="form-group">
+          <label for="last-name">Last name</label>
+          <input type="text" id="last-name" name="lastName" placeholder="Lovelace" required>
+          <div class="error-msg">Required</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="ada@example.com" required>
+        <div class="error-msg">Enter a valid email</div>
+      </div>
+
+      <div class="form-group">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567">
+      </div>
+
+      <hr class="form-divider">
+      <div class="form-section-label">Billing address</div>
+
+      <div class="form-group">
+        <label for="address">Street address</label>
+        <input type="text" id="address" name="address" placeholder="123 Synth Ave" required>
+        <div class="error-msg">Required</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="city">City</label>
+          <input type="text" id="city" name="city" placeholder="Tel Aviv" required>
+          <div class="error-msg">Required</div>
+        </div>
+        <div class="form-group">
+          <label for="zip">Zip / Postal code</label>
+          <input type="text" id="zip" name="zip" placeholder="6100001" required>
+          <div class="error-msg">Required</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="state">State / Region</label>
+          <input type="text" id="state" name="state" placeholder="Optional">
+        </div>
+        <div class="form-group">
+          <label for="country">Country</label>
+          <select id="country" name="country">
+            <option value="IL" selected>Israel</option>
+            <option value="US">United States</option>
+            <option value="GB">United Kingdom</option>
+            <option value="DE">Germany</option>
+            <option value="FR">France</option>
+            <option value="JP">Japan</option>
+            <option value="AU">Australia</option>
+            <option value="CA">Canada</option>
+            <option value="NL">Netherlands</option>
+            <option value="SE">Sweden</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <label class="checkbox-wrap">
+        <input type="checkbox" id="subscribe" name="subscribe" checked>
+        <span class="checkmark"></span>
+        Keep me updated on new features, upgrades, and patches
+      </label>
+
+      <button type="submit" class="btn-pay">
+        Pay $29.90 &rarr;
+      </button>
+
+      <div class="secure-note">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#516b75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        Secure checkout. Your data is encrypted.
+      </div>
+    </form>
+  </div>
+
+  <!-- ORDER SUMMARY -->
+  <div class="order-summary">
+    <h2>Order summary</h2>
+
+    <div class="order-item">
+      <div>
+        <div class="name">Nimbus 1.0.0</div>
+        <div class="detail">VST3 / AU / Standalone &middot; macOS</div>
+      </div>
+      <div class="price">$29.90</div>
+    </div>
+    <div class="order-item">
+      <div>
+        <div class="name">Lifetime upgrades pack</div>
+        <div class="detail">All future versions &middot; no extra cost</div>
+      </div>
+      <div class="price" style="color:var(--teal)">Free</div>
+    </div>
+
+    <ul class="order-includes">
+      <li>Two-hand tracking</li>
+      <li>12 CC channels &middot; gesture editor</li>
+      <li>Smart gesture recording</li>
+      <li>Dual camera support</li>
+      <li>3 machines &middot; lifetime updates</li>
+    </ul>
+
+    <div class="order-total">
+      <span class="label">Total</span>
+      <span class="amount">$29<small>.90</small></span>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<div class="checkout-footer">
+  <span>&copy; 2026 Nimbus Audio &middot; Tel Aviv</span>
+  <span>
+    <a href="#">Privacy</a> &middot; <a href="#">Terms</a>
+  </span>
+</div>
+
+<script>
+(function(){
+  var form=document.getElementById('checkout-form');
+  form.addEventListener('submit',function(e){
+    e.preventDefault();
+    var valid=true;
+    var required=form.querySelectorAll('[required]');
+    required.forEach(function(input){
+      input.classList.remove('error');
+      if(!input.value.trim()){
+        input.classList.add('error');
+        valid=false;
+      }
+    });
+    var email=form.querySelector('#email');
+    if(email.value&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)){
+      email.classList.add('error');
+      valid=false;
+    }
+    if(valid){
+      // Replace this URL with your payment provider link (Stripe, LemonSqueezy, Paddle, etc.)
+      // window.location.href = 'https://checkout.stripe.com/c/pay/YOUR_LINK';
+      alert('Payment provider not configured yet.\n\nReplace the URL in checkout.html with your Stripe / LemonSqueezy / Paddle link.');
+    }
+  });
+  // Clear error on input
+  form.querySelectorAll('input').forEach(function(input){
+    input.addEventListener('input',function(){
+      input.classList.remove('error');
+    });
+  });
+})();
+</script>
+</body>
+</html>
