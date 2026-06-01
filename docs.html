@@ -1,0 +1,671 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Nimbus — Documentation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="description" content="Nimbus user manual. Installation, gesture mappings, virtual instruments, scene management, and troubleshooting."/>
+<meta name="theme-color" content="#06121a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z' fill='none' stroke='%2300e5b4' stroke-width='3'/><circle cx='50' cy='50' r='14' fill='none' stroke='%2300e5b4' stroke-width='2' opacity='0.5'/><rect x='48.8' y='40' width='2.4' height='20' rx='1.2' fill='%2300e5b4'/></svg>"/>
+<style>
+:root{
+  --bg:#06121a;
+  --bg-2:#0a1922;
+  --bg-3:#0d2230;
+  --panel:#0e2433;
+  --ink:#e6f5f3;
+  --ink-2:#8aa6ad;
+  --ink-3:#516b75;
+  --ink-4:#2d3f48;
+  --rule:#152935;
+  --rule-2:#1d3947;
+  --teal:#00e5b4;
+  --teal-deep:#00b894;
+  --cyan:#22d3ee;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  background:var(--bg);color:var(--ink-2);
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px}
+a{color:var(--teal);text-decoration:none}
+a:hover{text-decoration:underline}
+
+/* ─── NAV ─── */
+.nav{
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  background:rgba(6,18,26,0.85);
+  border-bottom:1px solid var(--rule);
+  padding:14px 0;
+}
+.nav-inner{
+  max-width:1200px;margin:0 auto;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav .logo{
+  font-family:'Instrument Serif',serif;font-size:22px;
+  color:var(--ink);text-decoration:none;font-weight:400;
+}
+.nav .logo span{color:var(--teal)}
+.nav-links{display:flex;gap:24px}
+.nav-links a{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink-3);text-decoration:none;
+  transition:color 0.25s ease;
+}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:#06121a;background:var(--teal);
+  padding:8px 16px;border-radius:4px;text-decoration:none;
+  transition:transform 0.15s ease;
+}
+.nav-cta:hover{transform:translateY(-1px);text-decoration:none}
+@media(max-width:760px){.nav-links{display:none}}
+
+/* ─── HERO ─── */
+.docs-hero{
+  padding:100px 0 60px;border-bottom:1px solid var(--rule);
+}
+.docs-hero h1{
+  font-family:'Instrument Serif',serif;font-weight:400;
+  font-size:clamp(36px,5.5vw,72px);line-height:0.95;
+  letter-spacing:-0.02em;color:var(--ink);margin:0 0 16px;
+}
+.docs-hero h1 .it{font-style:italic;color:var(--teal)}
+.docs-hero p{font-size:16px;max-width:520px;margin:0 0 24px}
+.docs-hero .meta{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:20px;
+}
+.docs-download{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--teal);padding:12px 20px;
+  border:1px solid var(--teal);border-radius:6px;
+  background:transparent;cursor:pointer;
+  transition:background 0.25s ease,transform 0.15s ease;
+  text-decoration:none;
+}
+.docs-download:hover{background:rgba(0,229,180,0.08);text-decoration:none}
+.docs-download:active{transform:scale(0.97)}
+
+/* ─── LAYOUT ─── */
+.docs-layout{
+  display:grid;grid-template-columns:220px 1fr;gap:64px;
+  padding:60px 0 120px;
+}
+@media(max-width:900px){
+  .docs-layout{grid-template-columns:1fr;gap:32px}
+}
+
+/* ─── TOC ─── */
+.docs-toc{
+  position:sticky;top:80px;
+  display:flex;flex-direction:column;gap:4px;
+  align-self:start;
+}
+.docs-toc a{
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;
+  letter-spacing:0.06em;color:var(--ink-3);
+  padding:8px 12px;border-radius:5px;border-left:2px solid transparent;
+  transition:background 0.2s ease,color 0.2s ease,border-color 0.2s ease;
+  text-decoration:none;
+}
+.docs-toc a:hover{background:var(--bg-3);color:var(--ink);border-left-color:var(--teal)}
+.docs-toc a.active{color:var(--teal);border-left-color:var(--teal);background:rgba(0,229,180,0.05)}
+
+/* ─── CONTENT ─── */
+.docs-content{display:flex;flex-direction:column;gap:56px}
+.docs-section{scroll-margin-top:90px}
+.docs-section h2{
+  font-family:'Instrument Serif',serif;font-weight:400;
+  font-size:clamp(28px,3.5vw,42px);line-height:1;
+  letter-spacing:-0.01em;color:var(--ink);margin:0 0 8px;
+}
+.docs-section .section-num{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ink-4);margin-bottom:8px;
+}
+.docs-section h3{
+  font-family:'Space Grotesk',sans-serif;font-weight:600;
+  font-size:18px;color:var(--ink);margin:32px 0 10px;
+}
+.docs-section h4{
+  font-family:'Space Grotesk',sans-serif;font-weight:600;
+  font-size:15px;color:var(--ink);margin:24px 0 8px;
+}
+.docs-section p{font-size:14.5px;line-height:1.75;margin:0 0 10px;max-width:640px}
+.docs-section code{
+  font-family:'JetBrains Mono',monospace;font-size:12.5px;
+  background:var(--bg-3);padding:2px 6px;border-radius:3px;color:var(--teal);
+}
+.docs-section ul{list-style:none;padding:0;margin:8px 0 16px}
+.docs-section li{
+  position:relative;padding-left:18px;
+  font-size:14.5px;line-height:1.85;
+}
+.docs-section li::before{
+  content:'';position:absolute;left:0;top:11px;
+  width:6px;height:6px;border-radius:50%;
+  background:var(--teal);opacity:0.45;
+}
+.docs-section li strong{color:var(--ink);font-weight:600}
+.docs-section hr{
+  border:none;border-top:1px solid var(--rule);margin:40px 0;
+}
+
+/* ─── TABLE ─── */
+.docs-table{
+  width:100%;max-width:640px;border-collapse:collapse;
+  font-size:13px;margin:16px 0 24px;
+}
+.docs-table th{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--ink-3);text-align:left;
+  padding:8px 12px;border-bottom:1px solid var(--rule-2);
+  font-weight:500;
+}
+.docs-table td{
+  padding:7px 12px;border-bottom:1px solid var(--rule);
+  color:var(--ink-2);
+}
+.docs-table td code{
+  font-family:'JetBrains Mono',monospace;font-size:11.5px;
+  background:var(--bg-3);padding:1px 5px;border-radius:3px;color:var(--teal);
+}
+
+/* ─── FOOTER ─── */
+.docs-footer{
+  border-top:1px solid var(--rule);padding:32px 0;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--ink-4);letter-spacing:0.08em;
+  display:flex;justify-content:space-between;
+}
+.docs-footer a{color:var(--ink-3);text-decoration:none}
+.docs-footer a:hover{color:var(--teal)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="logo">Nimbus<span>.</span></a>
+    <div class="nav-links">
+      <a href="index.html#how">How it works</a>
+      <a href="index.html#inside">Features</a>
+      <a href="index.html#pricing">Buy</a>
+      <a href="docs.html" style="color:var(--ink)">Docs</a>
+      <a href="index.html#faq">FAQ</a>
+    </div>
+    <a href="index.html#pricing" class="nav-cta">Get Nimbus</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="docs-hero">
+  <div class="wrap">
+    <div class="meta">Nimbus v1.0.0 &mdash; User manual</div>
+    <h1>Read the <span class="it">manual.</span></h1>
+    <p>Everything you need to install, configure, and perform with Nimbus. From first launch to stage-ready in minutes.</p>
+    <a href="#" class="docs-download">Download PDF &darr;</a>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="wrap">
+  <div class="docs-layout">
+
+    <!-- TOC -->
+    <aside class="docs-toc">
+      <a href="#installation">Installation &amp; setup</a>
+      <a href="#getting-started">Getting started</a>
+      <a href="#visualizer">Hand visualizer</a>
+      <a href="#gestures">Gesture mappings</a>
+      <a href="#instruments">Instruments</a>
+      <a href="#advanced">Advanced features</a>
+      <a href="#settings">Settings</a>
+      <a href="#scenes">Scene management</a>
+      <a href="#tips">Tips &amp; tricks</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+      <a href="#midi-ref">MIDI CC reference</a>
+      <a href="#shortcuts">Keyboard shortcuts</a>
+      <a href="#specs">Specifications</a>
+    </aside>
+
+    <!-- CONTENT -->
+    <div class="docs-content">
+
+      <!-- 1. INSTALLATION -->
+      <div class="docs-section" id="installation">
+        <div class="section-num">01 &mdash; Setup</div>
+        <h2>Installation &amp; setup</h2>
+
+        <h3>System requirements</h3>
+        <ul>
+          <li>macOS 10.13 or later</li>
+          <li>DAW supporting VST3 or AU format (Ableton Live 11+, Logic Pro, FL Studio 20+, etc.)</li>
+          <li>Webcam with 720p or higher resolution</li>
+          <li>USB 2.0 or better bandwidth</li>
+          <li>Adequate lighting for hand tracking</li>
+        </ul>
+
+        <h3>For VST3</h3>
+        <ul>
+          <li>Download the Nimbus VST3 bundle</li>
+          <li>Navigate to <code>~/Library/Audio/Plug-Ins/VST3/</code></li>
+          <li>Copy <code>CV MIDI Controller.vst3</code> to this folder</li>
+          <li>Restart your DAW</li>
+        </ul>
+
+        <h3>For AU</h3>
+        <ul>
+          <li>Download the Nimbus AU bundle</li>
+          <li>Navigate to <code>~/Library/Audio/Plug-Ins/Components/</code></li>
+          <li>Copy <code>CV MIDI Controller.component</code> to this folder</li>
+          <li>Restart your DAW</li>
+        </ul>
+
+        <h3>First launch</h3>
+        <p>Open your DAW, load Nimbus as an instrument or MIDI effect, and grant camera permissions when prompted. The hand visualizer should display with your webcam feed active.</p>
+      </div>
+
+      <!-- 2. GETTING STARTED -->
+      <div class="docs-section" id="getting-started">
+        <div class="section-num">02 &mdash; Basics</div>
+        <h2>Getting started</h2>
+
+        <h3>Workspace layout</h3>
+        <p>The Nimbus interface is divided into three main sections:</p>
+
+        <h4>Left panel &mdash; Source pads</h4>
+        <ul>
+          <li>4 Sound Pads (2&times;2 grid)</li>
+          <li>4 Sliders (2&times;2 grid)</li>
+          <li>4 Knobs (2&times;2 grid)</li>
+          <li>Keyboard</li>
+          <li>Arp Stream</li>
+          <li>Strings</li>
+          <li>Dead Zone</li>
+        </ul>
+
+        <h4>Center &mdash; Hand visualizer</h4>
+        <ul>
+          <li>Live hand tracking display</li>
+          <li>0&ndash;400px coordinate space</li>
+          <li>Gesture visualization</li>
+          <li>Interactive instrument placement</li>
+        </ul>
+
+        <h4>Right panel &mdash; Settings</h4>
+        <ul>
+          <li>Hand color selection</li>
+          <li>Tracking smoothing slider</li>
+          <li>CV filters (brightness, contrast)</li>
+          <li>Camera selection</li>
+          <li>Scene management</li>
+        </ul>
+
+        <h3>Basic workflow</h3>
+        <ul>
+          <li>Drag an instrument from the left panel onto the hand visualizer</li>
+          <li>Release to place the instrument at that location</li>
+          <li>Right-click on the instrument to edit its properties</li>
+          <li>Perform gestures with your hands to trigger the instrument</li>
+          <li>Save your scene using the Scene menu</li>
+        </ul>
+      </div>
+
+      <!-- 3. VISUALIZER -->
+      <div class="docs-section" id="visualizer">
+        <div class="section-num">03 &mdash; Display</div>
+        <h2>The hand visualizer</h2>
+
+        <h3>What you're seeing</h3>
+        <ul>
+          <li>Two hands rendered in real-time as skeletal structures (up to 2 hands tracked simultaneously)</li>
+          <li>Finger bones connecting 21 landmark points on each hand</li>
+          <li>Hand joints shown as colored circles (larger at wrist, smaller at fingertips)</li>
+          <li>Grid background for reference positioning</li>
+          <li>Placed instruments as colored circles or lines</li>
+        </ul>
+
+        <h3>Coordinate system</h3>
+        <ul>
+          <li><strong>X-axis</strong> (horizontal): 0 (left) &rarr; 1.0 (right)</li>
+          <li><strong>Y-axis</strong> (vertical): 0 (top) &rarr; 1.0 (bottom)</li>
+          <li><strong>Z-axis</strong> (depth): tracked but not visually displayed; used for collision detection</li>
+        </ul>
+
+        <h3>Interaction tips</h3>
+        <ul>
+          <li>Keep hands 18&ndash;24 inches from the camera for best tracking</li>
+          <li>Ensure good lighting on your hands</li>
+          <li>The hand visualizer updates at 30Hz</li>
+          <li>Landmarks are smoothed with adjustable EMA (exponential moving average)</li>
+        </ul>
+      </div>
+
+      <!-- 4. GESTURES -->
+      <div class="docs-section" id="gestures">
+        <div class="section-num">04 &mdash; Control</div>
+        <h2>Gesture mappings</h2>
+
+        <h3>Hand openness</h3>
+        <p>Fist (fully closed) outputs CC value 0. Open palm (fully extended) outputs CC value 127. Assigned to the "Openness" gesture slot. Use it for filter cutoff, reverb wet/dry, or volume.</p>
+
+        <h3>Hand height (Y position)</h3>
+        <p>Hand at top of frame outputs CC 127. Hand at bottom outputs CC 0. Inverted so raised hand equals high value. Assigned to the "Height" gesture slot.</p>
+
+        <h3>Hand X position (horizontal)</h3>
+        <p>Left hand: leftmost = 0, rightmost = 127. Right hand: mirrored. Useful for pan, filter frequency sweep, or effect parameters.</p>
+
+        <h3>Hand distance (two hands)</h3>
+        <p>Hands together outputs CC 0. Hands apart (opposite edges) outputs CC 127. Requires both hands active and not in the dead zone. Great for stereo width, delay feedback, or reverb decay.</p>
+
+        <h3>Pinch detection</h3>
+        <p>Thumb to index finger distance &lt; 45% of hand size activates the pinch. Also works with thumb to middle finger. While pinching, all CC values for that hand freeze (pinch lock) &mdash; useful for holding a parameter value.</p>
+
+        <h3>Snap detection</h3>
+        <p>Triggered when thumb flicks up while middle finger flicks down simultaneously. Hand must be mostly closed; opposing vertical velocities &gt; 14px/frame. 500ms cooldown between snaps. Visual feedback: orange ripple effect at trigger point.</p>
+
+        <h3>Custom gestures</h3>
+        <p>Right-click "Record" in settings to capture a pose. Choose between trigger mode (toggle on/off) or scale mode (continuous 0&ndash;127). Detection uses RMS distance from the template pose with an adjustable threshold. Assign any custom CC number and range.</p>
+      </div>
+
+      <!-- 5. INSTRUMENTS -->
+      <div class="docs-section" id="instruments">
+        <div class="section-num">05 &mdash; Instruments</div>
+        <h2>Instruments</h2>
+
+        <h3>Sound pads</h3>
+        <p>Trigger audio samples and MIDI notes by touching virtual pads with your index fingertip. 4 pads arranged in a 2&times;2 grid. Drag from the left panel to place.</p>
+        <ul>
+          <li><strong>Position:</strong> X/Y coordinates (0&ndash;1.0 normalized)</li>
+          <li><strong>Size:</strong> pad radius in pixels (default 40px)</li>
+          <li><strong>MIDI Note:</strong> 0&ndash;127 (default 60 = Middle C)</li>
+          <li><strong>MIDI Channel:</strong> 0&ndash;15 (default 0)</li>
+          <li><strong>Velocity:</strong> 0&ndash;127 (default 127)</li>
+          <li><strong>Polyphonic:</strong> up to 4 pads simultaneously</li>
+        </ul>
+
+        <h3>Sliders</h3>
+        <p>Output continuous CC values based on hand position along a linear track. Pinch with thumb + index, then move fist up/down to modulate. CC output updates in real-time (0&ndash;127).</p>
+
+        <h3>Knobs</h3>
+        <p>Output continuous CC values based on rotational hand movement around the knob center. Place hand over knob, rotate wrist to modulate. 360&deg; rotation maps to full 0&ndash;127 CC sweep.</p>
+
+        <h3>Piano keyboard</h3>
+        <p>Curl individual fingers to play notes on a virtual keyboard overlay. Each finger maps to a key. Place on the canvas and interact with fingertips.</p>
+
+        <h3>Arp laser streams</h3>
+        <p>BPM-synced laser beams that fire MIDI notes when your hand passes through armed pulses. 16-step sequencer with per-step note assignment via a built-in piano picker. Set time division (1/4, 1/8, 1/16, 1/32).</p>
+
+        <h3>Guitar strings</h3>
+        <p>6 virtual strings with chord switching. One hand pinches like holding a pick and strums up/down across strings. The other hand signs numbers 1&ndash;5 to switch between 5 assignable chords from a 12-chord library (C, Cm, D, Dm, G, Em, E, Am, A, F, Bm, B). Chords persist until a new number is shown &mdash; fist is neutral.</p>
+
+        <h3>Dead zone</h3>
+        <p>Drag a resizable exclusion zone onto the canvas where hand tracking is completely ignored. No MIDI, no triggers, nothing. Useful for resting hands or isolating performance areas.</p>
+      </div>
+
+      <!-- 6. ADVANCED -->
+      <div class="docs-section" id="advanced">
+        <div class="section-num">06 &mdash; Advanced</div>
+        <h2>Advanced features</h2>
+
+        <h3>Collision detection</h3>
+        <p>Z-axis (depth) proximity prevents accidental triggers. Hand must be within 100px depth of pad center. Useful for avoiding false positives in live performance.</p>
+
+        <h3>Motion trails</h3>
+        <p>Visual history of hand movement (5 frames). Helps visualize gesture speed and direction. Toggle in Settings &rarr; Trails Enabled.</p>
+
+        <h3>Hand color selection</h3>
+        <p>Customize hand skeleton color for visual contrast. Available colors: Blue, Red, Green, Cyan, Magenta, Yellow. Helps distinguish left/right hand in dual-hand performances.</p>
+      </div>
+
+      <!-- 7. SETTINGS -->
+      <div class="docs-section" id="settings">
+        <div class="section-num">07 &mdash; Settings</div>
+        <h2>Settings &amp; customization</h2>
+
+        <h3>Tracking smoothing</h3>
+        <p>Controls the EMA (Exponential Moving Average) filter applied to hand landmarks.</p>
+        <ul>
+          <li><strong>Low (0.2):</strong> responsive but jittery</li>
+          <li><strong>Medium (0.5):</strong> balanced (recommended)</li>
+          <li><strong>High (0.9):</strong> smooth but latent</li>
+        </ul>
+
+        <h3>CV filters</h3>
+        <ul>
+          <li><strong>Brightness boost:</strong> increases video brightness (useful in dim lighting)</li>
+          <li><strong>Contrast boost:</strong> increases color separation (helps hand detection in low contrast)</li>
+          <li><strong>Trails enabled:</strong> toggle motion trails visualization on/off</li>
+        </ul>
+
+        <h3>Camera selection</h3>
+        <p>Dropdown menu lists all available cameras: built-in webcam (default), external USB camera, and virtual camera apps (OBS, etc.).</p>
+      </div>
+
+      <!-- 8. SCENES -->
+      <div class="docs-section" id="scenes">
+        <div class="section-num">08 &mdash; Scenes</div>
+        <h2>Scene management</h2>
+
+        <p>A scene is a complete configuration of all placed instruments, their positions, properties, and assignments.</p>
+
+        <h3>Save a scene</h3>
+        <ul>
+          <li>Place and configure all instruments</li>
+          <li>Menu &rarr; Save Scene</li>
+          <li>Enter scene name (e.g., "Acid Solo", "Ambient Pad", "Drum Break")</li>
+          <li>Configurations are persisted on disk</li>
+        </ul>
+
+        <h3>Load a scene</h3>
+        <ul>
+          <li>Menu &rarr; Load Scene</li>
+          <li>Select from list of saved scenes</li>
+          <li>All instruments restore to their saved positions and properties</li>
+        </ul>
+
+        <p>The default scene loads on plugin startup. Create separate scenes for different songs or sets and name them descriptively. Backup scenes by exporting plugin state.</p>
+      </div>
+
+      <!-- 9. TIPS -->
+      <div class="docs-section" id="tips">
+        <div class="section-num">09 &mdash; Tips</div>
+        <h2>Tips &amp; tricks</h2>
+
+        <h3>Performance</h3>
+        <ul>
+          <li>Keep hands 18&ndash;24 inches from camera for optimal tracking</li>
+          <li>Bright, even lighting on hands improves detection</li>
+          <li>Plain, contrasting background (not same color as hands)</li>
+          <li>Let detector warm up for 2&ndash;3 seconds before performing</li>
+        </ul>
+
+        <h3>Gestures</h3>
+        <ul>
+          <li>Bring thumb and index tips close (almost touching) for reliable pinch</li>
+          <li>Fully close all fingers for clean fist detection</li>
+          <li>Spread all fingers wide for maximum openness value</li>
+          <li>Practice the snap flick motion slowly at first &mdash; speed comes with muscle memory</li>
+        </ul>
+
+        <h3>Workflow</h3>
+        <ul>
+          <li>Use a DAW MIDI monitor to verify CC messages are sending</li>
+          <li>Practice your performance without audio first</li>
+          <li>Use DAW's MIDI learn to auto-assign CCs to parameters</li>
+          <li>Regularly export your scenes and custom gesture data</li>
+        </ul>
+      </div>
+
+      <!-- 10. TROUBLESHOOTING -->
+      <div class="docs-section" id="troubleshooting">
+        <div class="section-num">10 &mdash; Troubleshooting</div>
+        <h2>Troubleshooting</h2>
+
+        <h3>Hand not tracking</h3>
+        <ul>
+          <li>Check camera permissions (System Preferences &rarr; Security &amp; Privacy &rarr; Camera)</li>
+          <li>Restart plugin/DAW</li>
+          <li>Try different camera (Settings &rarr; Camera dropdown)</li>
+          <li>Ensure adequate lighting</li>
+          <li>Move closer to camera (12&ndash;24 inches optimal)</li>
+        </ul>
+
+        <h3>Tracking is jittery</h3>
+        <ul>
+          <li>Increase Tracking Smoothing slider</li>
+          <li>Improve lighting (reduce shadows on hands)</li>
+          <li>Clean camera lens</li>
+          <li>Move camera away from light sources</li>
+        </ul>
+
+        <h3>Gestures not triggering</h3>
+        <ul>
+          <li>Check hand is not in dead zone</li>
+          <li>Verify instrument is placed (white dot indicator shows)</li>
+          <li>For sliders: ensure you're using pinch + fist, not open hand</li>
+          <li>For pads: use index fingertip to touch</li>
+          <li>Check DAW MIDI monitor to see if CC messages are being sent</li>
+        </ul>
+
+        <h3>MIDI not reaching DAW</h3>
+        <ul>
+          <li>Verify MIDI channel matches your DAW track</li>
+          <li>Check DAW input filter (some DAWs ignore default channels)</li>
+          <li>Use MIDI learn to assign CC to DAW parameters</li>
+          <li>Verify plugin is on a MIDI track, not audio track</li>
+        </ul>
+
+        <h3>Camera crashes or freezes</h3>
+        <ul>
+          <li>Restart DAW</li>
+          <li>Unplug and re-plug USB camera (if external)</li>
+          <li>Close other apps using camera</li>
+          <li>Update macOS and DAW to latest versions</li>
+        </ul>
+
+        <h3>Snap detection not working</h3>
+        <ul>
+          <li>Practice the flick motion &mdash; thumb and middle must move opposite directions</li>
+          <li>Increase Tracking Smoothing slightly</li>
+          <li>Ensure hand is mostly closed (openness &lt; 35%)</li>
+          <li>Verify 500ms has passed since last snap (cooldown)</li>
+        </ul>
+      </div>
+
+      <!-- MIDI REF -->
+      <div class="docs-section" id="midi-ref">
+        <div class="section-num">Appendix A</div>
+        <h2>MIDI CC reference</h2>
+
+        <table class="docs-table">
+          <thead>
+            <tr><th>Function</th><th>Default CC</th><th>Range</th><th>Notes</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Hand Openness (Left)</td><td><code>20</code></td><td>0&ndash;127</td><td>Via gesture slot</td></tr>
+            <tr><td>Hand Openness (Right)</td><td><code>21</code></td><td>0&ndash;127</td><td>Via gesture slot</td></tr>
+            <tr><td>Hand Height (Left)</td><td><code>22</code></td><td>0&ndash;127</td><td>Inverted Y</td></tr>
+            <tr><td>Hand Height (Right)</td><td><code>23</code></td><td>0&ndash;127</td><td>Inverted Y</td></tr>
+            <tr><td>Hand X (Left)</td><td><code>24</code></td><td>0&ndash;127</td><td>Left=0, Right=127</td></tr>
+            <tr><td>Hand X (Right)</td><td><code>25</code></td><td>0&ndash;127</td><td>Right=0, Left=127</td></tr>
+            <tr><td>Hand Distance</td><td><code>26</code></td><td>0&ndash;127</td><td>Both hands required</td></tr>
+            <tr><td>Sound Pads</td><td><code>30&ndash;33</code></td><td>0&ndash;127</td><td>4 pads</td></tr>
+            <tr><td>Snap Gesture</td><td><code>34&ndash;35</code></td><td>0/127</td><td>2 snap slots</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SHORTCUTS -->
+      <div class="docs-section" id="shortcuts">
+        <div class="section-num">Appendix B</div>
+        <h2>Keyboard shortcuts</h2>
+
+        <table class="docs-table">
+          <thead>
+            <tr><th>Action</th><th>Shortcut</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Edit mode (instruments)</td><td>Right-click</td></tr>
+            <tr><td>Toggle dead zone</td><td>Right-click dead zone</td></tr>
+            <tr><td>Remove instrument</td><td>Right-click &rarr; DEL</td></tr>
+            <tr><td>Pan canvas</td><td>Middle-mouse drag</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SPECS -->
+      <div class="docs-section" id="specs">
+        <div class="section-num">Appendix C</div>
+        <h2>Specifications</h2>
+
+        <ul>
+          <li><strong>Tracking rate:</strong> 30Hz</li>
+          <li><strong>Hand landmarks:</strong> 21 per hand &times; 2 hands</li>
+          <li><strong>Coordinate space:</strong> 0&ndash;400px (normalized to 0&ndash;1.0)</li>
+          <li><strong>MIDI latency:</strong> &lt; 1 frame (~33ms)</li>
+          <li><strong>Supported MIDI channels:</strong> 0&ndash;15</li>
+          <li><strong>Max simultaneous CC updates:</strong> 12 per frame</li>
+          <li><strong>Max placed instruments:</strong> unlimited (performance dependent)</li>
+          <li><strong>Audio formats:</strong> WAV, AIFF, MP3, OGG, FLAC</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="docs-footer">
+      <span>&larr; <a href="index.html">Back to Nimbus</a></span>
+      <span>&copy; 2026 Nimbus Audio &middot; Tel Aviv</span>
+    </div>
+  </div>
+</footer>
+
+<!-- TOC highlight on scroll -->
+<script>
+(function(){
+  var links=document.querySelectorAll('.docs-toc a');
+  var sections=[];
+  links.forEach(function(a){
+    var id=a.getAttribute('href').replace('#','');
+    var el=document.getElementById(id);
+    if(el) sections.push({el:el,link:a});
+  });
+  function update(){
+    var y=window.scrollY+120;
+    var active=sections[0];
+    for(var i=0;i<sections.length;i++){
+      if(sections[i].el.offsetTop<=y) active=sections[i];
+    }
+    links.forEach(function(a){a.classList.remove('active')});
+    if(active) active.link.classList.add('active');
+  }
+  window.addEventListener('scroll',update,{passive:true});
+  update();
+})();
+</script>
+</body>
+</html>
