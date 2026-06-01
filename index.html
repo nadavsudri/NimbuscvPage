@@ -235,7 +235,6 @@ nav{
   box-shadow:0 0 0 1px rgba(0,229,180,0.4),0 14px 32px -8px rgba(0,229,180,0.4);
 }
 .btn-primary:active{transform:translateY(0) scale(0.97)}
-.btn-primary .arr{font-family:serif;font-size:18px;line-height:0;margin-top:2px}
 .btn-ghost{
   font-family:'JetBrains Mono',monospace;
   font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;
@@ -521,43 +520,55 @@ nav{
 }
 .chapter-vis-corner.right{left:auto;right:12px;color:var(--teal)}
 
-/* ─── INSIDE / FEATURES ─── */
-.inside{padding:160px 0;background:var(--bg);border-bottom:1px solid var(--rule);position:relative;overflow:hidden}
-.feat-list{display:flex;flex-direction:column}
-.feat-row{
-  display:grid;grid-template-columns:1fr 1fr;gap:64px;
-  padding:56px 0;border-top:1px solid var(--rule);
-  align-items:start;
+/* ─── THE PIECES ─── */
+.pieces{padding:160px 0;background:var(--bg);border-bottom:1px solid var(--rule);position:relative;overflow:hidden}
+.pieces-grid{
+  display:grid;grid-template-columns:repeat(6,1fr);gap:24px;
+  margin-top:56px;
 }
-.feat-row:last-child{border-bottom:1px solid var(--rule)}
-.feat-row:nth-child(even) .feat-head{order:2}
-.feat-row:nth-child(even) .feat-content{order:1;text-align:right}
-.feat-row:nth-child(even) .feat-content p{margin-left:auto}
-.feat-num{
-  font-family:'Instrument Serif',serif;
-  font-size:72px;line-height:0.85;font-style:italic;
-  color:var(--teal);opacity:0.25;letter-spacing:-0.04em;
-  margin-bottom:16px;
+.pieces-grid .piece-card{grid-column:span 2}
+.pieces-grid .piece-card:nth-child(4){grid-column:2 / span 2}
+.pieces-grid .piece-card:nth-child(5){grid-column:4 / span 2}
+@media(max-width:960px){.pieces-grid{grid-template-columns:repeat(2,1fr)}.pieces-grid .piece-card{grid-column:span 1}.pieces-grid .piece-card:nth-child(4){grid-column:auto}.pieces-grid .piece-card:nth-child(5){grid-column:auto}}
+@media(max-width:600px){.pieces-grid{grid-template-columns:1fr}.pieces-grid .piece-card{grid-column:span 1}}
+.piece-card{
+  border:1px solid var(--rule-2);border-radius:10px;
+  background:var(--bg-2);overflow:hidden;
+  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1),border-color 0.35s ease,box-shadow 0.35s ease;
 }
-.feat-head .feat-tag{
-  font-family:'JetBrains Mono',monospace;font-size:10.5px;
-  letter-spacing:0.2em;color:var(--ink-3);text-transform:uppercase;
-  margin-bottom:16px;font-weight:600;
+.piece-card.rv.show{transform:translateY(0)}
+.piece-card.rv.show:hover{
+  transform:translateY(-12px) !important;
+  border-color:rgba(0,229,180,0.25);
+  box-shadow:0 12px 32px rgba(0,229,180,0.08);
 }
-.feat-head h4{
-  font-family:'Instrument Serif',serif;font-weight:400;
-  font-size:36px;line-height:1.05;letter-spacing:-0.015em;
-  margin:0;color:var(--ink);
+.piece-card-img img{transition:transform 0.45s cubic-bezier(0.16,1,0.3,1)}
+.piece-card.rv.show:hover .piece-card-img img{transform:scale(1.06)}
+.piece-card-img:hover img{transform:scale(1.14) !important}
+.piece-card-img{
+  aspect-ratio:16/10;min-height:200px;
+  background:linear-gradient(135deg,var(--bg-3) 0%,var(--bg-2) 100%);
+  display:grid;place-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--ink-4);letter-spacing:0.1em;text-transform:uppercase;
+  border-bottom:1px solid var(--rule);
+  overflow:hidden;position:relative;
 }
-.feat-head h4 .it{font-style:italic;color:var(--teal)}
-.feat-content{padding-top:8px}
-.feat-content p{color:var(--ink-2);font-size:15px;line-height:1.65;margin:0;max-width:44ch}
-@media(max-width:880px){
-  .feat-row{grid-template-columns:1fr;gap:20px;padding:40px 0}
-  .feat-row:nth-child(even) .feat-head{order:unset}
-  .feat-row:nth-child(even) .feat-content{order:unset;text-align:left}
-  .feat-row:nth-child(even) .feat-content p{margin-left:0}
-  .feat-num{font-size:48px}
+.piece-card-img::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(0,229,180,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,180,0.04) 1px,transparent 1px);
+  background-size:20px 20px;opacity:0.5;
+}
+.piece-card-img img{width:100%;height:100%;object-fit:cover}
+.piece-card-body{padding:24px}
+.piece-card-body h3{
+  font-family:'Space Grotesk',sans-serif;font-weight:600;
+  font-size:17px;color:var(--ink);margin:0 0 8px;letter-spacing:-0.01em;
+}
+.piece-card-body p{
+  color:var(--ink-2);font-size:14px;line-height:1.65;margin:0;
 }
 
 /* ─── QUOTE ─── */
@@ -854,7 +865,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
     </a>
     <div class="nav-links">
       <a href="#how">How it works</a>
-      <a href="#inside">What's inside</a>
+      <a href="#pieces">The Pieces</a>
       <a href="#voices">Voices</a>
       <a href="#pricing">Buy</a>
       <a href="docs.html">Docs</a>
@@ -969,9 +980,8 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         </p>
         <div class="hero-actions">
           <button class="btn-primary" onclick="handleCheckout()">
-            Get Nimbus <span class="arr">&#8599;</span>
-          </button>
-          <a href="#how" class="btn-text">How it works &darr;</a>
+            Get Nimbus          </button>
+          <a href="#how" class="btn-text">How it works</a>
         </div>
       </div>
     </div>
@@ -1100,7 +1110,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         <div class="meta">Stage &mdash; Capture</div>
         <h3>Any webcam. <span class="it">Any light.</span></h3>
         <p>MediaPipe pipeline at 30Hz, full RGB. No calibration, no markers, no gloves. The laptop camera you already own is enough.</p>
-        <p style="color:var(--ink-3);font-size:12.5px">&rarr; Continuous auto-exposure, dynamic crop, optional 720p mode for older machines.</p>
+        <p style="color:var(--ink-3);font-size:12.5px">Continuous auto-exposure, dynamic crop, optional 720p mode for older machines.</p>
       </div>
       <div class="chapter-vis">
         <img src="assets/webcam-wireframe.png" alt="Wireframe 3D webcam with optical path and data stream visualisation" style="width:88%;height:88%;object-fit:contain;position:relative;z-index:1">
@@ -1113,7 +1123,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         <div class="meta">Stage &mdash; Track</div>
         <h3><span class="it">Twenty-one</span> landmarks per hand.</h3>
         <p>MediaPipe hand landmark detection finds every joint and fingertip per frame. Openness, pinch distance, rotation, snap, and custom gestures are all derived in real time.</p>
-        <p style="color:var(--ink-3);font-size:12.5px">&rarr; One-euro filter, configurable dead-zone, sub-pixel temporal smoothing.</p>
+        <p style="color:var(--ink-3);font-size:12.5px">One-euro filter, configurable dead-zone, sub-pixel temporal smoothing.</p>
       </div>
       <div class="chapter-vis">
         <img src="assets/hand-tracking.png" alt="Hand tracking visualisation with twenty-one cyan wireframe landmarks and HUD overlay" style="width:88%;height:88%;object-fit:contain;position:relative;z-index:1">
@@ -1126,7 +1136,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         <div class="meta">Stage &mdash; Control</div>
         <h3>MIDI <span class="it">out</span> &mdash; to anything.</h3>
         <p>Smoothed CC channels with adjustable response curves, gain, and dead-zone. Right-click any synth knob, wiggle your hand, mapped.</p>
-        <p style="color:var(--ink-3);font-size:12.5px">&rarr; Standard MIDI Learn. Works with Serum, Vital, Massive X, Diva, Pigments and anything else.</p>
+        <p style="color:var(--ink-3);font-size:12.5px">Standard MIDI Learn. Works with Serum, Vital, Massive X, Diva, Pigments and anything else.</p>
       </div>
       <div class="chapter-vis">
         <svg width="60%" viewBox="0 0 200 130" fill="none">
@@ -1158,13 +1168,12 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   </div>
 </div>
 
-<!-- ═══════ INSIDE ═══════ -->
-<section class="inside" id="inside">
+<!-- ═══════ THE PIECES ═══════ -->
+<section class="pieces" id="pieces">
 
   <!-- hw decor: knob trio -->
   <div class="hw-decor" aria-hidden="true" style="left:2%;bottom:18%;opacity:0.12;width:160px">
     <svg viewBox="0 0 160 64" fill="none">
-      <!-- Knob 1 — ATK -->
       <g>
         <g stroke="#1d3947" stroke-width="0.5" opacity="0.5">
           <line x1="24" y1="2" x2="24" y2="6" transform="rotate(-135 24 24)"/>
@@ -1185,8 +1194,6 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         <circle cx="24" cy="24" r="2" fill="#00e5b4" opacity="0.4"/>
         <text x="24" y="54" font-family="JetBrains Mono,monospace" font-size="5.5" fill="#516b75" text-anchor="middle" letter-spacing="0.1em">ATK</text>
       </g>
-
-      <!-- Knob 2 — DEC -->
       <g>
         <circle cx="72" cy="24" r="17" fill="#0e2433" stroke="#1d3947" stroke-width="0.6"/>
         <circle cx="72" cy="24" r="17" fill="none" stroke="#22d3ee" stroke-width="1.4" stroke-dasharray="42 65" transform="rotate(-135 72 24)" stroke-linecap="round" opacity="0.4"/>
@@ -1195,8 +1202,6 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         <circle cx="72" cy="24" r="2" fill="#22d3ee" opacity="0.35"/>
         <text x="72" y="54" font-family="JetBrains Mono,monospace" font-size="5.5" fill="#516b75" text-anchor="middle" letter-spacing="0.1em">DEC</text>
       </g>
-
-      <!-- Knob 3 — SUS -->
       <g>
         <circle cx="120" cy="24" r="17" fill="#0e2433" stroke="#1d3947" stroke-width="0.6"/>
         <circle cx="120" cy="24" r="17" fill="none" stroke="#00e5b4" stroke-width="1.4" stroke-dasharray="76 31" transform="rotate(-135 120 24)" stroke-linecap="round" opacity="0.6"/>
@@ -1210,84 +1215,64 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 
   <div class="wrap">
     <div class="section-head rv">
-      <div class="section-kicker">&sect;&nbsp;02 &mdash; On the workbench</div>
+      <div class="section-kicker">&sect;&nbsp;02 &mdash; The toolkit</div>
       <h2 class="section-title">
-        Seven things <span class="dim">that</span><br>
-        make this <span class="it">feel right.</span>
+        The <span class="it">Pieces.</span>
       </h2>
     </div>
 
-    <div class="feat-list">
-      <div class="feat-row rv">
-        <div class="feat-head">
-          <div class="feat-num">01</div>
-          <div class="feat-tag">Mapping</div>
-          <h4>MIDI <span class="it">Learn.</span></h4>
+    <div class="pieces-grid">
+
+      <div class="piece-card rv">
+        <div class="piece-card-img">
+          <img src="assets/piece-prerecorded.png" alt="Pre-recorded gestures" style="width:100%;height:100%;object-fit:cover">
         </div>
-        <div class="feat-content">
-          <p>Right-click any parameter, wiggle a finger, you're mapped. Standard MIDI CC &mdash; every synth and effect on the planet speaks it.</p>
-        </div>
-      </div>
-      <div class="feat-row rv">
-        <div class="feat-head">
-          <div class="feat-num">02</div>
-          <div class="feat-tag">Smoothing</div>
-          <h4>One-euro <span class="it">filter.</span></h4>
-        </div>
-        <div class="feat-content">
-          <p>Adaptive smoothing with a configurable dead-zone. Tremors stay out, fast articulations come through unmolested.</p>
+        <div class="piece-card-body">
+          <h3>Pre-recorded gestures</h3>
+          <p>Ship with a library of ready-made gesture mappings. Hand openness, height, X position, distance between hands, pinch, and snap &mdash; all pre-wired and ready to assign to any parameter.</p>
         </div>
       </div>
-      <div class="feat-row rv">
-        <div class="feat-head">
-          <div class="feat-num">03</div>
-          <div class="feat-tag">Latency</div>
-          <h4>Real-time <span class="it">tracking.</span></h4>
+
+      <div class="piece-card rv">
+        <div class="piece-card-img">
+          <img src="assets/piece-recorder.png" alt="Gesture recorder" style="width:100%;height:100%;object-fit:cover">
         </div>
-        <div class="feat-content">
-          <p>Tracking on its own thread at 30Hz. Audio thread never blocks. Below the threshold of perception &mdash; play it live, on stage.</p>
-        </div>
-      </div>
-      <div class="feat-row rv">
-        <div class="feat-head">
-          <div class="feat-num">04</div>
-          <div class="feat-tag">Gestures</div>
-          <h4>Smart gesture <span class="it">recording.</span></h4>
-        </div>
-        <div class="feat-content">
-          <p>Record any hand movement, name it, and map it to any parameter. Nimbus learns your gestures so you can create a control language that's entirely your own.</p>
+        <div class="piece-card-body">
+          <h3>Gesture recorder</h3>
+          <p>Record any hand pose or movement, name it, and map it to a CC channel. Choose trigger mode for on/off switches or scale mode for continuous control. Your vocabulary, your rules.</p>
         </div>
       </div>
-      <div class="feat-row rv">
-        <div class="feat-head">
-          <div class="feat-num">05</div>
-          <div class="feat-tag">Dual camera</div>
-          <h4>Two cameras, <span class="it">two hands.</span></h4>
+
+      <div class="piece-card rv">
+        <div class="piece-card-img">
+          <img src="assets/piece-keys.png" alt="Keys" style="width:100%;height:100%;object-fit:cover">
         </div>
-        <div class="feat-content">
-          <p>Connect two separate cameras and assign one per hand. Each hand gets its own gesture set, its own mappings, its own response curves. The best setup for live performance &mdash; no crossed signals, no fighting for frame space.</p>
-        </div>
-      </div>
-      <div class="feat-row rv">
-        <div class="feat-head">
-          <div class="feat-num">06</div>
-          <div class="feat-tag">Gestures</div>
-          <h4>Pinch, fist, <span class="it">snap.</span></h4>
-        </div>
-        <div class="feat-content">
-          <p>Trigger notes, scene changes, or macros from discrete gestures. Build your own in the editor &mdash; record once, refine, save.</p>
+        <div class="piece-card-body">
+          <h3>Keys</h3>
+          <p>A virtual piano keyboard on the canvas. Curl individual fingers to play notes. Pair with the arp laser for BPM-synced sequences &mdash; 16-step sequencer with per-step note assignment via a built-in piano picker.</p>
         </div>
       </div>
-      <div class="feat-row rv">
-        <div class="feat-head">
-          <div class="feat-num">07</div>
-          <div class="feat-tag">Privacy</div>
-          <h4>Fully <span class="it">offline.</span></h4>
+
+      <div class="piece-card rv">
+        <div class="piece-card-img">
+          <img src="assets/piece-strings.png" alt="Strings" style="width:100%;height:100%;object-fit:cover">
         </div>
-        <div class="feat-content">
-          <p>Zero cloud. Zero telemetry. The tracking core is open source &mdash; audit it yourself. Your camera feed never leaves the machine.</p>
+        <div class="piece-card-body">
+          <h3>Strings</h3>
+          <p>Six virtual strings on the canvas. One hand picks and strums &mdash; pinch like you're holding a pick and sweep up or down across the strings. The other hand shapes chords by signing numbers 1&ndash;5, each mapped to a chord from a 12-chord library. Two hands, two roles, one instrument.</p>
         </div>
       </div>
+
+      <div class="piece-card rv">
+        <div class="piece-card-img">
+          <img src="assets/piece-knobs.png" alt="Sliders & Knobs" style="width:100%;height:100%;object-fit:cover">
+        </div>
+        <div class="piece-card-body">
+          <h3>Sliders &amp; Knobs</h3>
+          <p>Drag sliders and knobs onto the canvas. Grab a slider with a fist grip and slide along the line. Pinch near a knob and twist your wrist to rotate. Each one maps to any CC channel with adjustable range.</p>
+        </div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -1398,8 +1383,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 
         <div class="pricing-actions">
           <button class="btn-primary" onclick="handleCheckout()">
-            Get Nimbus &mdash; $29.90 <span class="arr">&#8599;</span>
-          </button>
+            Get Nimbus &mdash; $29.90          </button>
         </div>
       </div>
 
@@ -1435,7 +1419,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         <h2>Things people <span class="it">ask</span>&mdash;</h2>
         <p>If your question isn't here, the answer is probably "yes."</p>
         <p>Still stuck? Email us, we read everything.</p>
-        <a href="mailto:hello@nimbus.audio" class="contact">hello@nimbus.audio &rarr;</a>
+        <a href="mailto:hello@nimbus.audio" class="contact">hello@nimbus.audio</a>
       </div>
       <div class="faq-list rv rv-d1">
         <details class="faq-item">
@@ -1493,8 +1477,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
     <h2>Stop reaching<br>for the <span class="it">mouse.</span></h2>
     <div class="final-actions">
       <button class="btn-primary" onclick="handleCheckout()">
-        Get Nimbus &mdash; $29.90 <span class="arr">&#8599;</span>
-      </button>
+        Get Nimbus &mdash; $29.90      </button>
     </div>
   </div>
 </section>
@@ -1521,7 +1504,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
       <div class="foot-col">
         <h5>Product</h5>
         <a href="#how">How it works</a>
-        <a href="#inside">What's inside</a>
+        <a href="#pieces">The Pieces</a>
         <a href="#pricing">Buy</a>
         <a href="docs.html">Docs</a>
         <a href="#">Presets</a>
