@@ -1,7 +1,12 @@
+import crypto from 'crypto';
+
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
+
+  // Generate a unique download token
+  const token = crypto.randomUUID();
 
   try {
     const response = await fetch('https://api.lemonsqueezy.com/v1/checkouts', {
@@ -16,10 +21,10 @@ export default async function handler(req, res) {
           type: 'checkouts',
           attributes: {
             checkout_data: {
-              custom: {},
+              custom: { download_token: token },
             },
             product_options: {
-              redirect_url: `${process.env.SITE_URL}/success.html`,
+              redirect_url: `${process.env.SITE_URL}/success.html?token=${token}`,
             },
           },
           relationships: {

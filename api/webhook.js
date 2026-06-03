@@ -46,10 +46,13 @@ export default async function handler(req, res) {
   if (eventName === 'order_created') {
     const attrs = event.data?.attributes;
 
+    const customData = event.meta?.custom_data || {};
+
     const { error } = await supabase.from('purchases').insert({
       email: attrs?.user_email,
       name: attrs?.user_name,
       order_id: String(event.data?.id),
+      download_token: customData.download_token || null,
       amount: attrs?.total,
       currency: attrs?.currency,
       status: attrs?.status,

@@ -6,21 +6,20 @@ const supabase = createClient(
 );
 
 export default async function handler(req, res) {
-  const { order_id, email } = req.query;
+  const { token } = req.query;
 
-  if (!order_id && !email) {
-    return res.status(400).json({ error: 'Missing order_id or email' });
+  if (!token) {
+    return res.status(400).json({ error: 'Missing token' });
   }
 
   try {
-    // Check purchase exists in our database (written by webhook)
-    let query = supabase.from('purchases').select('*');
-    if (order_id) {
-      query = query.eq('order_id', order_id);
-    } else {
-      query = query.eq('email', email);
-    }
-    const { data: purchase, error: dbError } = await query.eq('status', 'paid').limit(1).single();
+    const { data: purchase, error: dbError } = await supabase
+      .from('purchases')
+      .select('*')
+      .eq('download_token', token)
+      .eq('status', 'paid')
+      .limit(1)
+      .single();
 
     if (dbError || !purchase) {
       return res.status(403).json({ error: 'Purchase not found or not yet processed. Try again in a few seconds.' });
