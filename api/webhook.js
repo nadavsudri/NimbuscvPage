@@ -74,29 +74,26 @@ export default async function handler(req, res) {
     console.log('License key update: key=' + key + ' orderId=' + orderId + ' email=' + email);
 
     if (key) {
-      // Try matching by order_id first, then by email as fallback
-      const { error, count } = await supabase
+      // Try matching by order_id
+      const { data: d1, error: e1 } = await supabase
         .from('purchases')
         .update({ license_key: key })
-        .eq('order_id', orderId);
+        .eq('order_id', orderId)
+        .select();
 
-      if (error || count === 0) {
-        console.log('order_id match failed, trying email fallback');
-        const { error: err2 } = await supabase
+      console.log('order_id match result:', JSON.stringify(d1), e1?.message);
+
+      // If no rows matched, try email fallback
+      if (!d1 || d1.length === 0) {
+        console.log('order_id match failed, trying email fallback for:', email);
+        const { data: d2, error: e2 } = await supabase
           .from('purchases')
           .update({ license_key: key })
           .eq('email', email)
           .is('license_key', null)
-          .order('created_at', { ascending: false })
-          .limit(1);
+          .select();
 
-        if (err2) {
-          console.error('License key update error (email fallback):', err2.message);
-        }
-      }
-
-      if (error) {
-        console.error('License key update error:', error.message);
+        console.log('email match result:', JSON.stringify(d2), e2?.message);
       }
     }
   }

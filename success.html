@@ -54,9 +54,9 @@ body{
 }
 .download-btn:active{transform:translateY(0)}
 
-/* License key table */
+/* License key section */
 .license-section{
-  margin-top:40px;text-align:left;display:none;
+  margin-top:40px;text-align:left;
 }
 .license-section h2{
   font-family:'Instrument Serif',serif;font-weight:400;
@@ -98,6 +98,22 @@ body{
 }
 .license-btn:hover{border-color:var(--teal);color:var(--ink)}
 
+/* Loading bar */
+.license-loading{
+  margin-top:40px;text-align:center;
+}
+.license-loading p{
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  letter-spacing:0.08em;color:var(--ink-3);margin:0 0 12px;
+}
+.loading-bar{
+  width:100%;height:3px;background:var(--rule);border-radius:2px;overflow:hidden;
+}
+.loading-bar-fill{
+  height:100%;width:0%;background:var(--teal);border-radius:2px;
+  transition:width 0.5s ease;
+}
+
 .back-link{
   display:inline-block;margin-top:32px;
   font-family:'JetBrains Mono',monospace;font-size:12px;
@@ -118,7 +134,12 @@ body{
   <a id="downloadBtn" class="download-btn" href="#">Download Nimbus 1.0.0</a>
   <p id="errorMsg" class="error-msg">Something went wrong verifying your purchase. Please contact hello@nimbus.audio</p>
 
-  <div id="licenseSection" class="license-section">
+  <div id="licenseLoading" class="license-loading" style="display:none">
+    <p>Generating your license key...</p>
+    <div class="loading-bar"><div id="loadingBarFill" class="loading-bar-fill"></div></div>
+  </div>
+
+  <div id="licenseSection" class="license-section" style="display:none">
     <h2>Your license <span style="font-style:italic;color:var(--teal)">key</span></h2>
     <table class="license-table">
       <thead>
@@ -156,7 +177,9 @@ body{
 
   btn.href = '/api/download?token=' + encodeURIComponent(token);
 
-  // Fetch license key
+  // License key elements
+  var licenseLoading = document.getElementById('licenseLoading');
+  var loadingBarFill = document.getElementById('loadingBarFill');
   var licenseSection = document.getElementById('licenseSection');
   var licenseKeyEl = document.getElementById('licenseKey');
   var copyBtn = document.getElementById('copyBtn');
@@ -164,25 +187,52 @@ body{
   var copiedMsg = document.getElementById('copiedMsg');
   var licenseKeyValue = '';
 
-  function fetchLicense(attempts) {
-    fetch('/api/license?token=' + encodeURIComponent(token))
+  // Show loading
+  licenseLoading.style.display = 'block';
+  var maxAttempts = 10;
+  var attempt = 0;
+
+  function updateBar() {
+    var pct = Math.min(((attempt + 1) / maxAttempts) * 100, 95);
+    loadingBarFill.style.width = pct + '%';
+  }
+
+  function fetchLicense() {
+    attempt++;
+    updateBar();
+
+    fetch('/api/license?token=' + encodeURIComponent(token) + '&_t=' + Date.now())
       .then(function(r){ return r.json() })
       .then(function(data){
         if (data.license_key) {
+          // Found it
           licenseKeyValue = data.license_key;
           licenseKeyEl.textContent = licenseKeyValue;
-          licenseSection.style.display = 'block';
-        } else if (attempts > 0) {
-          // Webhook may not have fired yet, retry
-          setTimeout(function(){ fetchLicense(attempts - 1) }, 3000);
+          loadingBarFill.style.width = '100%';
+          setTimeout(function(){
+            licenseLoading.style.display = 'none';
+            licenseSection.style.display = 'block';
+          }, 400);
+        } else if (attempt < maxAttempts) {
+          setTimeout(fetchLicense, 3000);
+        } else {
+          // Give up — tell user to check email
+          licenseLoading.querySelector('p').textContent = 'License key is on its way. Check your email.';
+          loadingBarFill.style.width = '100%';
+          loadingBarFill.style.background = 'var(--ink-3)';
         }
       })
-      .catch(function(){});
+      .catch(function(){
+        if (attempt < maxAttempts) {
+          setTimeout(fetchLicense, 3000);
+        }
+      });
   }
 
-  fetchLicense(5);
+  // Start fetching after a short delay to let webhook process
+  setTimeout(fetchLicense, 2000);
 
-  // Click key cell to copy
+  // Copy key
   licenseKeyEl.addEventListener('click', function(){ copyKey() });
   copyBtn.addEventListener('click', function(){ copyKey() });
 
