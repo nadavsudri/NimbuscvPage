@@ -63,7 +63,7 @@ export default async function handler(req, res) {
     }
   }
 
-  console.log('Webhook event:', eventName, JSON.stringify(event.data?.attributes || {}).slice(0, 500));
+  console.log('Webhook event:', eventName, 'data.id:', event.data?.id, JSON.stringify(event.data?.attributes || {}).slice(0, 500));
 
   if (eventName === 'license_key_created') {
     const attrs = event.data?.attributes;
