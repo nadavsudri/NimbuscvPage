@@ -63,5 +63,22 @@ export default async function handler(req, res) {
     }
   }
 
+  if (eventName === 'license_key_created') {
+    const attrs = event.data?.attributes;
+    const key = attrs?.key;
+    const orderId = String(attrs?.order_id);
+
+    if (key && orderId) {
+      const { error } = await supabase
+        .from('purchases')
+        .update({ license_key: key })
+        .eq('order_id', orderId);
+
+      if (error) {
+        console.error('License key update error:', error.message);
+      }
+    }
+  }
+
   res.status(200).json({ received: true });
 }
