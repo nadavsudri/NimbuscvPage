@@ -77,18 +77,35 @@ body{
 <script>
 (function(){
   var params = new URLSearchParams(window.location.search);
-  var orderId = params.get('order_id');
+  // LemonSqueezy may pass order_id, checkout_id, or other params
+  var orderId = params.get('order_id') || params.get('checkout_id') || params.get('id');
   var btn = document.getElementById('downloadBtn');
   var err = document.getElementById('errorMsg');
 
-  if (!orderId) {
-    btn.style.display = 'none';
-    err.style.display = 'block';
-    err.textContent = 'No purchase found. If you just paid, check your email for the download link.';
+  if (orderId) {
+    btn.href = '/api/download?order_id=' + encodeURIComponent(orderId);
     return;
   }
 
-  btn.href = '/api/download?order_id=' + encodeURIComponent(orderId);
+  // Fallback: wait a moment for webhook to process, then retry with a delay
+  btn.textContent = 'Preparing download...';
+  btn.style.opacity = '0.6';
+  btn.style.pointerEvents = 'none';
+
+  setTimeout(function(){
+    // Try fetching the page URL params one more time (LemonSqueezy may redirect with params)
+    var retryParams = new URLSearchParams(window.location.search);
+    var retryId = retryParams.get('order_id') || retryParams.get('checkout_id') || retryParams.get('id');
+    if (retryId) {
+      btn.href = '/api/download?order_id=' + encodeURIComponent(retryId);
+      btn.textContent = 'Download Nimbus 1.0.0';
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = 'auto';
+    } else {
+      btn.style.display = 'none';
+      err.style.display = 'block';
+    }
+  }, 5000);
 })();
 </script>
 </body>

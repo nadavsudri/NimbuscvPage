@@ -6,31 +6,24 @@ const supabase = createClient(
 );
 
 export default async function handler(req, res) {
-  const { order_id } = req.query;
+  const { order_id, email } = req.query;
 
-  if (!order_id) {
-    return res.status(400).json({ error: 'Missing order_id' });
+  if (!order_id && !email) {
+    return res.status(400).json({ error: 'Missing order_id or email' });
   }
 
   try {
-    // Verify order exists with LemonSqueezy API
-    const lsResponse = await fetch(
-      `https://api.lemonsqueezy.com/v1/orders/${order_id}`,
-      {
-        headers: {
-          'Authorization': `Bearer ${process.env.LEMONSQUEEZY_API_KEY}`,
-          'Accept': 'application/vnd.api+json',
-        },
-      }
-    );
-
-    if (!lsResponse.ok) {
-      return res.status(403).json({ error: 'Order not found' });
+    // Check purchase exists in our database (written by webhook)
+    let query = supabase.from('purchases').select('*');
+    if (order_id) {
+      query = query.eq('order_id', order_id);
+    } else {
+      query = query.eq('email', email);
     }
+    const { data: purchase, error: dbError } = await query.eq('status', 'paid').limit(1).single();
 
-    const order = await lsResponse.json();
-    if (order.data?.attributes?.status !== 'paid') {
-      return res.status(403).json({ error: 'Payment not completed' });
+    if (dbError || !purchase) {
+      return res.status(403).json({ error: 'Purchase not found or not yet processed. Try again in a few seconds.' });
     }
 
     // Generate a signed download URL (expires in 30 minutes)
