@@ -1541,9 +1541,15 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 
   // EYE — static, no cursor tracking
 
-  // CHECKOUT — Replace with your Stripe / LemonSqueezy / Paddle link
+  // CHECKOUT — calls Vercel serverless function → redirects to Stripe
   window.handleCheckout=function(){
-    window.location.href='checkout.html';
+    fetch('/api/create-checkout',{method:'POST'})
+      .then(function(r){return r.json()})
+      .then(function(data){
+        if(data.url) window.location.href=data.url;
+        else alert('Something went wrong. Please try again.');
+      })
+      .catch(function(){alert('Connection error. Please try again.')});
   };
 })();
 </script>
