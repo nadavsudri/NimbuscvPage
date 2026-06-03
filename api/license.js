@@ -15,11 +15,12 @@ export default async function handler(req, res) {
   try {
     const { data, error } = await supabase
       .from('purchases')
-      .select('license_key')
+      .select('license_key, download_token, order_id, email')
       .eq('download_token', token)
-      .eq('status', 'paid')
       .limit(1)
       .single();
+
+    console.log('License query token:', token, 'result:', JSON.stringify(data), 'error:', error?.message);
 
     if (error || !data) {
       return res.status(404).json({ error: 'Purchase not found' });
