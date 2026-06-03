@@ -5,6 +5,8 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
+const MAX_DOWNLOADS = 5;
+
 export default async function handler(req, res) {
   const { token } = req.query;
 
@@ -24,6 +26,18 @@ export default async function handler(req, res) {
     if (dbError || !purchase) {
       return res.status(403).json({ error: 'Purchase not found or not yet processed. Try again in a few seconds.' });
     }
+
+    // Check download count
+    const count = purchase.download_count || 0;
+    if (count >= MAX_DOWNLOADS) {
+      return res.status(403).json({ error: 'Download limit reached. Contact hello@nimbus.audio for help.' });
+    }
+
+    // Increment download count
+    await supabase
+      .from('purchases')
+      .update({ download_count: count + 1 })
+      .eq('download_token', token);
 
     // Generate a signed download URL (expires in 30 minutes)
     const { data, error } = await supabase.storage
