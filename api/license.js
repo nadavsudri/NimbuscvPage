@@ -15,7 +15,7 @@ export default async function handler(req, res) {
   try {
     const { data, error } = await supabase
       .from('purchases')
-      .select('license_key, download_token, order_id, email')
+      .select('license_key, download_token, order_id, email, created_at')
       .eq('download_token', token)
       .limit(1)
       .single();
@@ -27,18 +27,7 @@ export default async function handler(req, res) {
     }
 
     // Check if token has expired (30 minutes)
-    const { data: purchase, error: purchaseError } = await supabase
-      .from('purchases')
-      .select('created_at')
-      .eq('download_token', token)
-      .limit(1)
-      .single();
-
-    if (purchaseError || !purchase) {
-      return res.status(404).json({ error: 'Purchase not found' });
-    }
-
-    const createdAt = new Date(purchase.created_at);
+    const createdAt = new Date(data.created_at);
     const now = new Date();
     const diffMinutes = (now - createdAt) / 1000 / 60;
     if (diffMinutes > 30) {

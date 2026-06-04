@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Nimbus — Link Expired</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#06121a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z' fill='none' stroke='%2300e5b4' stroke-width='3'/><circle cx='50' cy='50' r='14' fill='none' stroke='%2300e5b4' stroke-width='2' opacity='0.5'/><rect x='48.8' y='40' width='2.4' height='20' rx='1.2' fill='%2300e5b4'/></svg>"/>
+<style>
+:root{
+  --bg:#06121a;
+  --bg-2:#0a1922;
+  --ink:#e6f5f3;
+  --ink-2:#8aa6ad;
+  --ink-3:#516b75;
+  --rule:#152935;
+  --teal:#00e5b4;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  background:var(--bg);color:var(--ink-2);
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+  min-height:100vh;display:grid;place-items:center;
+}
+.container{
+  text-align:center;padding:40px 32px;max-width:600px;
+}
+h1{
+  font-family:'Instrument Serif',serif;font-weight:400;
+  font-size:clamp(36px,5vw,56px);line-height:1.05;
+  letter-spacing:-0.02em;color:var(--ink);margin:0 0 16px;
+}
+h1 .it{font-style:italic;color:var(--teal)}
+.emoji{font-size:80px;margin:20px 0}
+p{
+  font-size:16px;color:var(--ink-2);margin:0 0 24px;line-height:1.7;
+}
+.messages{
+  background:var(--bg-2);border:1px solid var(--rule);border-radius:8px;
+  padding:20px;margin:24px 0;text-align:left;font-size:14px;
+}
+.messages li{
+  margin:8px 0;list-style:none;padding-left:20px;position:relative;
+}
+.messages li::before{
+  content:'⏱️ ';position:absolute;left:0;
+}
+.button{
+  display:inline-block;padding:12px 32px;
+  background:var(--teal);color:var(--bg);
+  font-family:'Space Grotesk',sans-serif;font-weight:600;
+  font-size:14px;border-radius:6px;text-decoration:none;
+  transition:transform 0.2s ease;
+}
+.button:hover{transform:translateY(-2px)}
+.contact{
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  color:var(--ink-3);margin-top:32px;
+}
+.contact a{color:var(--teal);text-decoration:none}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="emoji">⏳</div>
+  <h1>Your link <span class="it">expired.</span></h1>
+
+  <p>That download link was good for 30 minutes. Looks like you took your time! (We don't blame you, but... it's gone now.)</p>
+
+  <div class="messages">
+    <p style="margin:0 0 12px;font-weight:600;color:var(--ink)">What happened?</p>
+    <ul>
+      <li>Your link expired after 30 minutes</li>
+      <li>Check your email for a fresh link</li>
+      <li>Or <a href="/" style="color:var(--teal)">start over</a></li>
+    </ul>
+  </div>
+
+  <a href="/" class="button">← Back to Nimbus</a>
+
+  <div class="contact">
+    Still stuck? <a href="mailto:hello@nimbus.audio">Email us</a> and we'll sort it out.
+  </div>
+</div>
+</body>
+</html>

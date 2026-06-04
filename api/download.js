@@ -39,7 +39,7 @@ export default async function handler(req, res) {
         .eq('download_token', token)
         .catch(err => console.error('Failed to mark inactive:', err.message));
 
-      return res.status(403).json({ error: 'Download link expired. This link is valid for 30 minutes after purchase. Check your email for a new link or contact hello@nimbus.audio' });
+      return res.redirect(303, '/expired');
     }
 
     // Check download count
