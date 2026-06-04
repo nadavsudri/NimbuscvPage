@@ -17,7 +17,6 @@
   --ink-2:#8aa6ad;
   --ink-3:#516b75;
   --rule:#152935;
-  --rule-2:#1d3947;
   --teal:#00e5b4;
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
@@ -28,7 +27,7 @@ body{
   min-height:100vh;display:grid;place-items:center;
 }
 .success{
-  text-align:center;padding:40px 32px;max-width:600px;
+  text-align:center;padding:40px 32px;max-width:560px;
 }
 .success h1{
   font-family:'Instrument Serif',serif;font-weight:400;
@@ -53,69 +52,8 @@ body{
   box-shadow:0 8px 24px rgba(0,229,180,0.2);
 }
 .download-btn:active{transform:translateY(0)}
-
-/* License key section */
-.license-section{
-  margin-top:40px;text-align:left;
-}
-.license-section h2{
-  font-family:'Instrument Serif',serif;font-weight:400;
-  font-size:24px;color:var(--ink);margin:0 0 16px;
-}
-.license-table{
-  width:100%;border-collapse:collapse;margin-bottom:16px;
-}
-.license-table th{
-  font-family:'JetBrains Mono',monospace;font-size:11px;
-  letter-spacing:0.12em;text-transform:uppercase;
-  color:var(--ink-3);text-align:left;padding:8px 12px;
-  border-bottom:1px solid var(--rule-2);
-}
-.license-table td{
-  padding:12px;border-bottom:1px solid var(--rule);
-  font-family:'JetBrains Mono',monospace;font-size:14px;
-  color:var(--teal);letter-spacing:0.04em;
-  cursor:pointer;transition:background 0.2s ease;
-  word-break:break-all;
-}
-.license-table td:hover{background:var(--bg-2);border-radius:4px}
-.copied-msg{
-  font-family:'Space Grotesk',sans-serif;font-size:12px;
-  color:var(--teal);opacity:0;transition:opacity 0.3s ease;
-  margin-left:8px;
-}
-.copied-msg.show{opacity:1}
-.license-actions{
-  display:flex;gap:12px;justify-content:center;margin-top:16px;
-}
-.license-btn{
-  display:inline-flex;align-items:center;gap:6px;
-  padding:10px 20px;border:1px solid var(--rule-2);border-radius:6px;
-  background:var(--bg-2);color:var(--ink-2);
-  font-family:'JetBrains Mono',monospace;font-size:12px;
-  letter-spacing:0.06em;cursor:pointer;text-decoration:none;
-  transition:border-color 0.2s ease,color 0.2s ease;
-}
-.license-btn:hover{border-color:var(--teal);color:var(--ink)}
-
-/* Loading bar */
-.license-loading{
-  margin-top:40px;text-align:center;
-}
-.license-loading p{
-  font-family:'JetBrains Mono',monospace;font-size:12px;
-  letter-spacing:0.08em;color:var(--ink-3);margin:0 0 12px;
-}
-.loading-bar{
-  width:100%;height:3px;background:var(--rule);border-radius:2px;overflow:hidden;
-}
-.loading-bar-fill{
-  height:100%;width:0%;background:var(--teal);border-radius:2px;
-  transition:width 0.5s ease;
-}
-
 .back-link{
-  display:inline-block;margin-top:32px;
+  display:inline-block;margin-top:24px;
   font-family:'JetBrains Mono',monospace;font-size:12px;
   letter-spacing:0.1em;text-transform:uppercase;
   color:var(--ink-3);text-decoration:none;
@@ -133,41 +71,8 @@ body{
   <p>Your purchase is confirmed. Click below to download Nimbus. This link expires in 30 minutes &mdash; if you need it again, check your email.</p>
   <a id="downloadBtn" class="download-btn" href="#">Download Nimbus 1.0.0</a>
   <p id="errorMsg" class="error-msg">Something went wrong verifying your purchase. Please contact hello@nimbus.audio</p>
-
-  <!-- Email lookup form for overlay checkout (no token) -->
-  <div id="emailForm" style="display:none;margin-top:32px;">
-    <p style="margin-bottom:24px;color:var(--ink-2);">Enter the email address from your purchase to retrieve your license key:</p>
-    <input type="email" id="emailInput" placeholder="your@email.com" style="width:100%;padding:12px 14px;margin-bottom:16px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);background:var(--bg-2);border:1px solid var(--rule-2);border-radius:6px;outline:none;" />
-    <button id="lookupBtn" class="download-btn" type="button" style="width:100%;">Retrieve License</button>
-  </div>
-
-  <div id="licenseLoading" class="license-loading" style="display:none">
-    <p>Generating your license key...</p>
-    <div class="loading-bar"><div id="loadingBarFill" class="loading-bar-fill"></div></div>
-  </div>
-
-  <div id="licenseSection" class="license-section" style="display:none">
-    <h2>Your license <span style="font-style:italic;color:var(--teal)">key</span></h2>
-    <table class="license-table">
-      <thead>
-        <tr><th>Product</th><th>License key</th></tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:14px;cursor:default">Nimbus 1.0.0</td>
-          <td id="licenseKey" title="Click to copy">&mdash;</td>
-        </tr>
-      </tbody>
-    </table>
-    <span id="copiedMsg" class="copied-msg">Copied to clipboard</span>
-    <div class="license-actions">
-      <button id="copyBtn" class="license-btn" type="button">Copy key</button>
-      <button id="saveTxtBtn" class="license-btn" type="button">Download as .txt</button>
-    </div>
-  </div>
-
   <br>
-  <a href="/" class="back-link">Back to home</a>
+  <a href="index.html" class="back-link">Back to home</a>
 </div>
 <script>
 (function(){
@@ -175,126 +80,14 @@ body{
   var token = params.get('token');
   var btn = document.getElementById('downloadBtn');
   var err = document.getElementById('errorMsg');
-  var emailForm = document.getElementById('emailForm');
-  var emailInput = document.getElementById('emailInput');
-  var lookupBtn = document.getElementById('lookupBtn');
 
-  // License key elements
-  var licenseLoading = document.getElementById('licenseLoading');
-  var loadingBarFill = document.getElementById('loadingBarFill');
-  var licenseSection = document.getElementById('licenseSection');
-  var licenseKeyEl = document.getElementById('licenseKey');
-  var copyBtn = document.getElementById('copyBtn');
-  var saveTxtBtn = document.getElementById('saveTxtBtn');
-  var copiedMsg = document.getElementById('copiedMsg');
-  var licenseKeyValue = '';
-  var maxAttempts = 10;
-  var attempt = 0;
-
-  function updateBar() {
-    var pct = Math.min(((attempt + 1) / maxAttempts) * 100, 95);
-    loadingBarFill.style.width = pct + '%';
-  }
-
-  function fetchLicense(identifier, isToken) {
-    attempt++;
-    updateBar();
-
-    var url = isToken ?
-      '/api/license?token=' + encodeURIComponent(identifier) + '&_t=' + Date.now() :
-      '/api/license?email=' + encodeURIComponent(identifier) + '&_t=' + Date.now();
-
-    fetch(url)
-      .then(function(r){ return r.json() })
-      .then(function(data){
-        if (data.license_key) {
-          licenseKeyValue = data.license_key;
-          licenseKeyEl.textContent = licenseKeyValue;
-          loadingBarFill.style.width = '100%';
-          setTimeout(function(){
-            licenseLoading.style.display = 'none';
-            licenseSection.style.display = 'block';
-          }, 400);
-        } else if (attempt < maxAttempts) {
-          setTimeout(function(){ fetchLicense(identifier, isToken) }, 3000);
-        } else {
-          licenseLoading.querySelector('p').textContent = 'License key is on its way. Check your email.';
-          loadingBarFill.style.width = '100%';
-          loadingBarFill.style.background = 'var(--ink-3)';
-        }
-      })
-      .catch(function(){
-        if (attempt < maxAttempts) {
-          setTimeout(function(){ fetchLicense(identifier, isToken) }, 3000);
-        }
-      });
-  }
-
-  function setupDownloadAndLicense(identifier, isToken) {
-    if (isToken) {
-      btn.href = '/api/download?token=' + encodeURIComponent(identifier);
-    } else {
-      btn.href = '/api/download?email=' + encodeURIComponent(identifier);
-    }
-
-    btn.style.display = 'inline-flex';
-    err.style.display = 'none';
-    emailForm.style.display = 'none';
-    licenseLoading.style.display = 'block';
-    attempt = 0;
-
-    setTimeout(function(){ fetchLicense(identifier, isToken) }, 2000);
-  }
-
-  // Copy key
-  licenseKeyEl.addEventListener('click', function(){ copyKey() });
-  copyBtn.addEventListener('click', function(){ copyKey() });
-
-  function copyKey() {
-    if (!licenseKeyValue) return;
-    navigator.clipboard.writeText(licenseKeyValue).then(function(){
-      copiedMsg.classList.add('show');
-      setTimeout(function(){ copiedMsg.classList.remove('show') }, 2000);
-    });
-  }
-
-  // Download as txt
-  saveTxtBtn.addEventListener('click', function(){
-    if (!licenseKeyValue) return;
-    var text = 'Nimbus 1.0.0 License Key\n========================\n\n' + licenseKeyValue + '\n\nKeep this file safe.\n';
-    var blob = new Blob([text], { type: 'text/plain' });
-    var a = document.createElement('a');
-    a.href = URL.createObjectURL(blob);
-    a.download = 'nimbus-license-key.txt';
-    a.click();
-    URL.revokeObjectURL(a.href);
-  });
-
-  // Email lookup handler
-  lookupBtn.addEventListener('click', function(){
-    var email = emailInput.value.trim();
-    if (!email) {
-      emailInput.style.borderColor = '#f87171';
-      return;
-    }
-    setupDownloadAndLicense(email, false);
-  });
-
-  // Enter key in email input
-  emailInput.addEventListener('keypress', function(e){
-    if (e.key === 'Enter') {
-      lookupBtn.click();
-    }
-  });
-
-  // Initialize based on token presence
   if (!token) {
     btn.style.display = 'none';
-    err.style.display = 'none';
-    emailForm.style.display = 'block';
-  } else {
-    setupDownloadAndLicense(token, true);
+    err.style.display = 'block';
+    return;
   }
+
+  btn.href = '/api/download?token=' + encodeURIComponent(token);
 })();
 </script>
 </body>
