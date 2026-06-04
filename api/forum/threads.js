@@ -28,7 +28,7 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
       // Create new thread
-      const { title, body, name, email } = req.body;
+      const { title, body, name, email, owns_nimbus } = req.body;
 
       if (!title || !body || !name || !email) {
         return res.status(400).json({ error: 'Missing required fields' });
@@ -36,7 +36,7 @@ export default async function handler(req, res) {
 
       const { data, error } = await supabase
         .from('forum_threads')
-        .insert([{ title, body, name, email }])
+        .insert([{ title, body, name, email, owns_nimbus: owns_nimbus || false }])
         .select();
 
       if (error) throw error;

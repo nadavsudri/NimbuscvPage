@@ -201,7 +201,7 @@ body{
   <div class="wrap">
     <h1>Community <span style="font-style:italic;color:var(--teal)">Forum.</span></h1>
     <p>Ask questions, share workflows, and connect with other Nimbus users.</p>
-    <a href="#new-thread" class="btn-new-thread" onclick="showNewThreadForm()">+ New Question</a>
+    <a href="#new-thread" class="btn-new-thread" onclick="showNewThreadForm()">New Question</a>
   </div>
 </div>
 
@@ -266,6 +266,11 @@ body{
       <textarea name="body" required placeholder="Describe your question, setup, or issue..." rows="6" style="width:100%;padding:12px 14px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--rule-2);border-radius:6px;outline:none;resize:vertical;transition:border-color 0.25s ease;"></textarea>
     </div>
 
+    <div style="display:flex;align-items:center;gap:12px;margin:20px 0;cursor:pointer;user-select:none;">
+      <input type="checkbox" id="new-thread-owns" name="owns_nimbus" style="width:20px;height:20px;cursor:pointer;accent-color:var(--teal);">
+      <label for="new-thread-owns" style="margin:0;font-size:13px;color:var(--ink-2);cursor:pointer;">I own Nimbus</label>
+    </div>
+
     <div style="display:flex;gap:12px;justify-content:flex-end;">
       <button type="button" onclick="closeNewThreadForm()" style="padding:12px 24px;background:var(--bg);color:var(--ink-2);border:1px solid var(--rule-2);border-radius:6px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-weight:600;transition:all 0.2s ease;">Cancel</button>
       <button type="submit" style="padding:12px 24px;background:var(--teal);color:var(--bg);border:none;border-radius:6px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-weight:600;transition:all 0.2s ease;">Post Question</button>
@@ -285,7 +290,7 @@ async function loadThreads() {
     renderThreads();
   } catch (err) {
     console.error('Failed to load threads:', err);
-    document.getElementById('threads-container').innerHTML = '<div class="empty-state"><div class="icon">❌</div><h2>Error loading</h2><p>Failed to load forum threads. Please try again.</p></div>';
+    document.getElementById('threads-container').innerHTML = '<div class="empty-state"><div class="icon">!</div><h2>Error loading</h2><p>Failed to load forum threads. Please try again.</p></div>';
   }
 }
 
@@ -293,7 +298,7 @@ function renderThreads() {
   const container = document.getElementById('threads-container');
 
   if (threadsData.length === 0) {
-    container.innerHTML = '<div class="empty-state"><div class="icon">💬</div><h2>No questions yet</h2><p>Be the first to ask something!</p></div>';
+    container.innerHTML = '<div class="empty-state"><div class="icon">—</div><h2>No questions yet</h2><p>Be the first to ask something!</p></div>';
     return;
   }
 
@@ -324,12 +329,14 @@ async function submitNewThread(e) {
   e.preventDefault();
   const form = e.target;
   const data = new FormData(form);
+  const payload = Object.fromEntries(data);
+  payload.owns_nimbus = data.has('owns_nimbus');
 
   try {
     const response = await fetch('/api/forum/threads', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(Object.fromEntries(data))
+      body: JSON.stringify(payload)
     });
 
     if (!response.ok) throw new Error('Failed to post thread');

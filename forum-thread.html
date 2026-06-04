@@ -221,10 +221,10 @@ body{
             <textarea id="comment-body" name="body" required placeholder="Share your thoughts, solutions, or experiences..."></textarea>
           </div>
 
-          <label class="checkbox-group">
+          <div class="checkbox-group" style="margin:0;">
             <input type="checkbox" id="owns-nimbus" name="owns_nimbus">
-            <label for="owns-nimbus" style="margin:0;cursor:pointer;">I own Nimbus</label>
-          </label>
+            <label for="owns-nimbus">I own Nimbus</label>
+          </div>
 
           <div class="form-actions">
             <button type="submit" class="form-actions btn-submit">Post Reply</button>
@@ -239,7 +239,7 @@ body{
 const threadId = new URLSearchParams(window.location.search).get('id');
 
 if (!threadId) {
-  document.getElementById('thread-post').innerHTML = '<div class="empty-state"><div class="icon">❌</div><h2>Invalid thread</h2></div>';
+  document.getElementById('thread-post').innerHTML = '<div class="empty-state"><div class="icon">!</div><h2>Invalid thread</h2></div>';
 } else {
   loadThread();
 }
@@ -253,7 +253,7 @@ async function loadThread() {
     renderThread(thread, comments);
   } catch (err) {
     console.error('Failed to load thread:', err);
-    document.getElementById('thread-post').innerHTML = '<div class="empty-state"><div class="icon">❌</div><h2>Error loading thread</h2></div>';
+    document.getElementById('thread-post').innerHTML = '<div class="empty-state"><div class="icon">!</div><h2>Error loading thread</h2></div>';
   }
 }
 
