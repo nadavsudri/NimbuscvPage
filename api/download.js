@@ -27,6 +27,14 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'Purchase not found or not yet processed. Try again in a few seconds.' });
     }
 
+    // Check if token has expired (30 minutes)
+    const createdAt = new Date(purchase.created_at);
+    const now = new Date();
+    const diffMinutes = (now - createdAt) / 1000 / 60;
+    if (diffMinutes > 30) {
+      return res.status(403).json({ error: 'Download link expired. This link is valid for 30 minutes after purchase. Check your email for a new link or contact hello@nimbus.audio' });
+    }
+
     // Check download count
     const count = purchase.download_count || 0;
     if (count >= MAX_DOWNLOADS) {

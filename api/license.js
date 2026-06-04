@@ -26,6 +26,25 @@ export default async function handler(req, res) {
       return res.status(404).json({ error: 'Purchase not found' });
     }
 
+    // Check if token has expired (30 minutes)
+    const { data: purchase, error: purchaseError } = await supabase
+      .from('purchases')
+      .select('created_at')
+      .eq('download_token', token)
+      .limit(1)
+      .single();
+
+    if (purchaseError || !purchase) {
+      return res.status(404).json({ error: 'Purchase not found' });
+    }
+
+    const createdAt = new Date(purchase.created_at);
+    const now = new Date();
+    const diffMinutes = (now - createdAt) / 1000 / 60;
+    if (diffMinutes > 30) {
+      return res.status(403).json({ error: 'License link expired. This link is valid for 30 minutes after purchase. Check your email for a new link or contact hello@nimbus.audio' });
+    }
+
     res.status(200).json({ license_key: data.license_key || null });
   } catch (err) {
     console.error('License fetch error:', err.message);
