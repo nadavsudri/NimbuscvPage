@@ -35,7 +35,6 @@ h1{
   letter-spacing:-0.02em;color:var(--ink);margin:0 0 16px;
 }
 h1 .it{font-style:italic;color:var(--teal)}
-.emoji{font-size:80px;margin:20px 0}
 p{
   font-size:16px;color:var(--ink-2);margin:0 0 24px;line-height:1.7;
 }
@@ -47,7 +46,7 @@ p{
   margin:8px 0;list-style:none;padding-left:20px;position:relative;
 }
 .messages li::before{
-  content:'⏱️ ';position:absolute;left:0;
+  content:'→ ';position:absolute;left:0;
 }
 .button{
   display:inline-block;padding:12px 32px;
@@ -66,7 +65,6 @@ p{
 </head>
 <body>
 <div class="container">
-  <div class="emoji">⏳</div>
   <h1>Your link <span class="it">expired.</span></h1>
 
   <p>That download link was good for 30 minutes. Looks like you took your time! (We don't blame you, but... it's gone now.)</p>
@@ -76,11 +74,11 @@ p{
     <ul>
       <li>Your link expired after 30 minutes</li>
       <li>Check your email for a fresh link</li>
-      <li>Or <a href="/" style="color:var(--teal)">start over</a></li>
+      <li>Or start over on our site</li>
     </ul>
   </div>
 
-  <a href="/" class="button">← Back to Nimbus</a>
+  <a href="/" class="button">Back to Nimbus</a>
 
   <div class="contact">
     Still stuck? <a href="mailto:hello@nimbus.audio">Email us</a> and we'll sort it out.

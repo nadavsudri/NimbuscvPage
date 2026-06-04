@@ -40,7 +40,7 @@ export default async function handler(req, res) {
         .then(() => console.log('Marked inactive:', token))
         .catch(err => console.error('Failed to mark inactive:', err.message));
 
-      return res.redirect(303, '/expired');
+      return res.redirect(303, '/expired.html');
     }
 
     // Check download count
