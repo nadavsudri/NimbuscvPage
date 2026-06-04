@@ -308,9 +308,10 @@ body{
       </p>
     </div>
 
-    <button id="checkout-btn" class="btn-pay">
+
+    <a href="https://nimbuscv.lemonsqueezy.com/checkout/buy/1b9b04a7-d47e-45df-9c56-c5ce69979b7f" class="lemonsqueezy-button btn-pay">
       Continue to checkout
-    </button>
+    </a>
 
     <div class="secure-note" style="margin-top:28px">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#516b75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -367,12 +368,6 @@ body{
   </span>
 </div>
 
-<!-- Lemon.js integration with success callback -->
-<script>
-document.getElementById('checkout-btn').addEventListener('click', function() {
-  window.location.href = 'https://nimbuscv.lemonsqueezy.com/checkout/buy/1b9b04a7-d47e-45df-9c56-c5ce69979b7f?checkout[background_color]=%23061218&checkout[primary_text_color]=%23e6f5f3&checkout[button_color]=%2300e5b4';
-});
-</script>
-</script>
+<!-- Lemon.js handles checkout automatically via lemonsqueezy-button class -->
 </body>
 </html>
