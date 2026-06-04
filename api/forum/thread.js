@@ -45,20 +45,20 @@ export default async function handler(req, res) {
 
     if (req.method === 'POST') {
       // Add comment to thread
-      const { title, body, name, email, owns_nimbus } = req.body;
+      const { body, name, email, owns_nimbus } = req.body;
 
-      if (!title || !body || !name || !email) {
-        return res.status(400).json({ error: 'Missing required fields' });
+      if (!body || !name) {
+        return res.status(400).json({ error: 'Name and message required' });
       }
 
       const { data, error } = await supabase
         .from('forum_comments')
         .insert([{
           thread_id: id,
-          title,
+          title: 'Reply',
           body,
           name,
-          email,
+          email: email || 'user@nimbus.local',
           owns_nimbus: owns_nimbus || false
         }])
         .select();

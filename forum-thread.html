@@ -252,31 +252,14 @@ body{
       <div class="comment-form">
         <h3>Reply to this thread</h3>
         <form id="comment-form" onsubmit="submitComment(event)">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
-            <div class="form-group">
-              <label for="comment-name">Name</label>
-              <input type="text" id="comment-name" name="name" required placeholder="Ada Lovelace">
-            </div>
-
-            <div class="form-group">
-              <label for="comment-email">Email</label>
-              <input type="email" id="comment-email" name="email" required placeholder="ada@example.com">
-            </div>
-          </div>
-
           <div class="form-group">
-            <label for="comment-title">Title</label>
-            <input type="text" id="comment-title" name="title" required placeholder="Great tip!">
+            <label for="comment-name">Name</label>
+            <input type="text" id="comment-name" name="name" required placeholder="Your name">
           </div>
 
           <div class="form-group">
             <label for="comment-body">Message</label>
             <textarea id="comment-body" name="body" required placeholder="Share your thoughts..."></textarea>
-          </div>
-
-          <div class="checkbox-group">
-            <input type="checkbox" id="owns-nimbus" name="owns_nimbus">
-            <label for="owns-nimbus">I own Nimbus</label>
           </div>
 
           <div class="form-actions">
@@ -343,7 +326,6 @@ function renderThread(thread, comments) {
               <span class="comment-time">${new Date(comment.created_at).toLocaleString()}</span>
               ${badge}
             </div>
-            <div class="comment-title">${escapeHtml(comment.title)}</div>
             <div class="comment-text">${escapeHtml(comment.body)}</div>
           </div>
         </div>
@@ -359,9 +341,10 @@ function renderThread(thread, comments) {
 async function submitComment(e) {
   e.preventDefault();
   const form = e.target;
-  const data = new FormData(form);
-  const payload = Object.fromEntries(data);
-  payload.owns_nimbus = data.has('owns_nimbus');
+  const name = document.getElementById('comment-name').value;
+  const body = document.getElementById('comment-body').value;
+
+  const payload = { name, body };
 
   try {
     const response = await fetch(`/api/forum/thread?id=${threadId}`, {
