@@ -8,39 +8,43 @@ const supabase = createClient(
 const MAX_DOWNLOADS = 5;
 
 export default async function handler(req, res) {
-  const { token } = req.query;
+  const { token, email } = req.query;
 
-  if (!token) {
-    return res.status(400).json({ error: 'Missing token' });
+  if (!token && !email) {
+    return res.status(400).json({ error: 'Missing token or email' });
   }
 
   try {
-    const { data: purchase, error: dbError } = await supabase
-      .from('purchases')
-      .select('*')
-      .eq('download_token', token)
-      .eq('status', 'paid')
-      .limit(1)
-      .single();
+    let query = supabase.from('purchases').select('*').eq('status', 'paid');
+
+    if (token) {
+      query = query.eq('download_token', token);
+    } else {
+      query = query.eq('email', email).order('created_at', { ascending: false });
+    }
+
+    const { data: purchase, error: dbError } = await query.limit(1).single();
 
     if (dbError || !purchase) {
       return res.status(403).json({ error: 'Purchase not found or not yet processed. Try again in a few seconds.' });
     }
 
-    // Check if token has expired (30 minutes)
-    const createdAt = new Date(purchase.created_at);
-    const now = new Date();
-    const diffMinutes = (now - createdAt) / 1000 / 60;
-    if (diffMinutes > 30) {
-      // Mark as inactive (non-blocking)
-      supabase
-        .from('purchases')
-        .update({ is_active: false })
-        .eq('download_token', token)
-        .then(() => console.log('Marked inactive:', token))
-        .catch(err => console.error('Failed to mark inactive:', err.message));
+    // Check if token has expired (30 minutes) - only for token-based lookups
+    if (token) {
+      const createdAt = new Date(purchase.created_at);
+      const now = new Date();
+      const diffMinutes = (now - createdAt) / 1000 / 60;
+      if (diffMinutes > 30) {
+        // Mark as inactive (non-blocking)
+        supabase
+          .from('purchases')
+          .update({ is_active: false })
+          .eq('download_token', token)
+          .then(() => console.log('Marked inactive:', token))
+          .catch(err => console.error('Failed to mark inactive:', err.message));
 
-      return res.redirect(303, '/expired.html');
+        return res.redirect(303, '/expired.html');
+      }
     }
 
     // Check download count
@@ -53,7 +57,7 @@ export default async function handler(req, res) {
     await supabase
       .from('purchases')
       .update({ download_count: count + 1 })
-      .eq('download_token', token);
+      .eq('id', purchase.id);
 
     // Generate a signed download URL (expires in 30 minutes)
     const { data, error } = await supabase.storage

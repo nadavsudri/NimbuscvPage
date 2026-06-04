@@ -134,6 +134,13 @@ body{
   <a id="downloadBtn" class="download-btn" href="#">Download Nimbus 1.0.0</a>
   <p id="errorMsg" class="error-msg">Something went wrong verifying your purchase. Please contact hello@nimbus.audio</p>
 
+  <!-- Email lookup form for overlay checkout (no token) -->
+  <div id="emailForm" style="display:none;margin-top:32px;">
+    <p style="margin-bottom:24px;color:var(--ink-2);">Enter the email address from your purchase to retrieve your license key:</p>
+    <input type="email" id="emailInput" placeholder="your@email.com" style="width:100%;padding:12px 14px;margin-bottom:16px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);background:var(--bg-2);border:1px solid var(--rule-2);border-radius:6px;outline:none;" />
+    <button id="lookupBtn" class="download-btn" type="button" style="width:100%;">Retrieve License</button>
+  </div>
+
   <div id="licenseLoading" class="license-loading" style="display:none">
     <p>Generating your license key...</p>
     <div class="loading-bar"><div id="loadingBarFill" class="loading-bar-fill"></div></div>
@@ -168,14 +175,9 @@ body{
   var token = params.get('token');
   var btn = document.getElementById('downloadBtn');
   var err = document.getElementById('errorMsg');
-
-  if (!token) {
-    btn.style.display = 'none';
-    err.style.display = 'block';
-    return;
-  }
-
-  btn.href = '/api/download?token=' + encodeURIComponent(token);
+  var emailForm = document.getElementById('emailForm');
+  var emailInput = document.getElementById('emailInput');
+  var lookupBtn = document.getElementById('lookupBtn');
 
   // License key elements
   var licenseLoading = document.getElementById('licenseLoading');
@@ -186,9 +188,6 @@ body{
   var saveTxtBtn = document.getElementById('saveTxtBtn');
   var copiedMsg = document.getElementById('copiedMsg');
   var licenseKeyValue = '';
-
-  // Show loading
-  licenseLoading.style.display = 'block';
   var maxAttempts = 10;
   var attempt = 0;
 
@@ -197,15 +196,18 @@ body{
     loadingBarFill.style.width = pct + '%';
   }
 
-  function fetchLicense() {
+  function fetchLicense(identifier, isToken) {
     attempt++;
     updateBar();
 
-    fetch('/api/license?token=' + encodeURIComponent(token) + '&_t=' + Date.now())
+    var url = isToken ?
+      '/api/license?token=' + encodeURIComponent(identifier) + '&_t=' + Date.now() :
+      '/api/license?email=' + encodeURIComponent(identifier) + '&_t=' + Date.now();
+
+    fetch(url)
       .then(function(r){ return r.json() })
       .then(function(data){
         if (data.license_key) {
-          // Found it
           licenseKeyValue = data.license_key;
           licenseKeyEl.textContent = licenseKeyValue;
           loadingBarFill.style.width = '100%';
@@ -214,9 +216,8 @@ body{
             licenseSection.style.display = 'block';
           }, 400);
         } else if (attempt < maxAttempts) {
-          setTimeout(fetchLicense, 3000);
+          setTimeout(function(){ fetchLicense(identifier, isToken) }, 3000);
         } else {
-          // Give up — tell user to check email
           licenseLoading.querySelector('p').textContent = 'License key is on its way. Check your email.';
           loadingBarFill.style.width = '100%';
           loadingBarFill.style.background = 'var(--ink-3)';
@@ -224,13 +225,26 @@ body{
       })
       .catch(function(){
         if (attempt < maxAttempts) {
-          setTimeout(fetchLicense, 3000);
+          setTimeout(function(){ fetchLicense(identifier, isToken) }, 3000);
         }
       });
   }
 
-  // Start fetching after a short delay to let webhook process
-  setTimeout(fetchLicense, 2000);
+  function setupDownloadAndLicense(identifier, isToken) {
+    if (isToken) {
+      btn.href = '/api/download?token=' + encodeURIComponent(identifier);
+    } else {
+      btn.href = '/api/download?email=' + encodeURIComponent(identifier);
+    }
+
+    btn.style.display = 'inline-flex';
+    err.style.display = 'none';
+    emailForm.style.display = 'none';
+    licenseLoading.style.display = 'block';
+    attempt = 0;
+
+    setTimeout(function(){ fetchLicense(identifier, isToken) }, 2000);
+  }
 
   // Copy key
   licenseKeyEl.addEventListener('click', function(){ copyKey() });
@@ -255,6 +269,32 @@ body{
     a.click();
     URL.revokeObjectURL(a.href);
   });
+
+  // Email lookup handler
+  lookupBtn.addEventListener('click', function(){
+    var email = emailInput.value.trim();
+    if (!email) {
+      emailInput.style.borderColor = '#f87171';
+      return;
+    }
+    setupDownloadAndLicense(email, false);
+  });
+
+  // Enter key in email input
+  emailInput.addEventListener('keypress', function(e){
+    if (e.key === 'Enter') {
+      lookupBtn.click();
+    }
+  });
+
+  // Initialize based on token presence
+  if (!token) {
+    btn.style.display = 'none';
+    err.style.display = 'none';
+    emailForm.style.display = 'block';
+  } else {
+    setupDownloadAndLicense(token, true);
+  }
 })();
 </script>
 </body>
