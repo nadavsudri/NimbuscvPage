@@ -1,4 +1,9 @@
 {
   "buildCommand": "",
-  "outputDirectory": "."
+  "outputDirectory": ".",
+  "rewrites": [
+    { "source": "/docs", "destination": "/docs.html" },
+    { "source": "/checkout", "destination": "/checkout.html" },
+    { "source": "/success", "destination": "/success.html" }
+  ]
 }
