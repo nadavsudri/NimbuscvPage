@@ -9,6 +9,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z' fill='none' stroke='%2300e5b4' stroke-width='3'/><circle cx='50' cy='50' r='14' fill='none' stroke='%2300e5b4' stroke-width='2' opacity='0.5'/><rect x='48.8' y='40' width='2.4' height='20' rx='1.2' fill='%2300e5b4'/></svg>"/>
+<script src="https://app.lemonsqueezy.com/js/lemon.js" defer></script>
 <style>
 :root{
   --bg:#06121a;
@@ -261,96 +262,16 @@ body{
     <h1>Check<span class="it">out.</span></h1>
     <p class="subtitle">One-time purchase. No subscription. Yours forever.</p>
 
-    <form id="checkout-form" novalidate>
+    <a href="https://demo.lemonsqueezy.com/checkout/buy/12345678" class="lemonsqueezy-button btn-pay">
+      Pay $29.90 &rarr;
+    </a>
 
-      <div class="form-section-label">Contact</div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="first-name">First name</label>
-          <input type="text" id="first-name" name="firstName" placeholder="Ada" required>
-          <div class="error-msg">Required</div>
-        </div>
-        <div class="form-group">
-          <label for="last-name">Last name</label>
-          <input type="text" id="last-name" name="lastName" placeholder="Lovelace" required>
-          <div class="error-msg">Required</div>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="ada@example.com" required>
-        <div class="error-msg">Enter a valid email</div>
-      </div>
-
-      <div class="form-group">
-        <label for="phone">Phone</label>
-        <input type="tel" id="phone" name="phone" placeholder="+1 (555) 123-4567">
-      </div>
-
-      <hr class="form-divider">
-      <div class="form-section-label">Billing address</div>
-
-      <div class="form-group">
-        <label for="address">Street address</label>
-        <input type="text" id="address" name="address" placeholder="123 Synth Ave" required>
-        <div class="error-msg">Required</div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="city">City</label>
-          <input type="text" id="city" name="city" placeholder="Tel Aviv" required>
-          <div class="error-msg">Required</div>
-        </div>
-        <div class="form-group">
-          <label for="zip">Zip / Postal code</label>
-          <input type="text" id="zip" name="zip" placeholder="6100001" required>
-          <div class="error-msg">Required</div>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label for="state">State / Region</label>
-          <input type="text" id="state" name="state" placeholder="Optional">
-        </div>
-        <div class="form-group">
-          <label for="country">Country</label>
-          <select id="country" name="country">
-            <option value="IL" selected>Israel</option>
-            <option value="US">United States</option>
-            <option value="GB">United Kingdom</option>
-            <option value="DE">Germany</option>
-            <option value="FR">France</option>
-            <option value="JP">Japan</option>
-            <option value="AU">Australia</option>
-            <option value="CA">Canada</option>
-            <option value="NL">Netherlands</option>
-            <option value="SE">Sweden</option>
-            <option value="other">Other</option>
-          </select>
-        </div>
-      </div>
-
-      <label class="checkbox-wrap">
-        <input type="checkbox" id="subscribe" name="subscribe" checked>
-        <span class="checkmark"></span>
-        Keep me updated on new features, upgrades, and patches
-      </label>
-
-      <button type="submit" class="btn-pay">
-        Pay $29.90 &rarr;
-      </button>
-
-      <div class="secure-note">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#516b75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-        </svg>
-        Secure checkout. Your data is encrypted.
-      </div>
-    </form>
+    <div class="secure-note" style="margin-top:14px">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#516b75" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+      Secure checkout. Your data is encrypted.
+    </div>
   </div>
 
   <!-- ORDER SUMMARY -->
@@ -396,38 +317,6 @@ body{
   </span>
 </div>
 
-<script>
-(function(){
-  var form=document.getElementById('checkout-form');
-  form.addEventListener('submit',function(e){
-    e.preventDefault();
-    var valid=true;
-    var required=form.querySelectorAll('[required]');
-    required.forEach(function(input){
-      input.classList.remove('error');
-      if(!input.value.trim()){
-        input.classList.add('error');
-        valid=false;
-      }
-    });
-    var email=form.querySelector('#email');
-    if(email.value&&!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)){
-      email.classList.add('error');
-      valid=false;
-    }
-    if(valid){
-      // Replace this URL with your payment provider link (Stripe, LemonSqueezy, Paddle, etc.)
-      // window.location.href = 'https://checkout.stripe.com/c/pay/YOUR_LINK';
-      alert('Payment provider not configured yet.\n\nReplace the URL in checkout.html with your Stripe / LemonSqueezy / Paddle link.');
-    }
-  });
-  // Clear error on input
-  form.querySelectorAll('input').forEach(function(input){
-    input.addEventListener('input',function(){
-      input.classList.remove('error');
-    });
-  });
-})();
-</script>
+<!-- Lemon.js handles the checkout link automatically -->
 </body>
 </html>
