@@ -377,39 +377,33 @@ body{
     return;
   }
   
-  btn.addEventListener('click', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    
-    if (typeof Lemon === 'undefined' || !Lemon.Checkout) {
-      console.error('Lemon.js not loaded', typeof Lemon);
-      alert('Payment system loading. Please try again.');
+  function openCheckout() {
+    if (typeof window.Lemon === 'undefined' || !window.Lemon.Checkout) {
+      console.error('Lemon.js not available, trying again...');
+      setTimeout(openCheckout, 500);
       return;
     }
     
-    try {
-      Lemon.Checkout.open({
-        checkoutOptions: {
-          'embed': false
-        },
-        checkoutData: {
-          checkout_data: {
-            email: '',
-            name: '',
-            billing_address: {
-              country: ''
-            }
-          }
-        },
-        onSuccess: function(checkout) {
-          setTimeout(function() {
-            window.location.href = '/success';
-          }, 2000);
-        }
-      }, 'https://nimbuscv.lemonsqueezy.com/checkout/buy/1b9b04a7-d47e-45df-9c56-c5ce69979b7f?checkout[background_color]=%23061218&checkout[primary_text_color]=%23e6f5f3&checkout[button_color]=%2300e5b4');
-    } catch (err) {
-      console.error('Lemon.Checkout.open error:', err);
-      alert('Error opening checkout: ' + err.message);
+    window.Lemon.Checkout.open({
+      checkoutOptions: {
+        'embed': false
+      },
+      onSuccess: function(checkout) {
+        setTimeout(function() {
+          window.location.href = '/success';
+        }, 2000);
+      }
+    }, 'https://nimbuscv.lemonsqueezy.com/checkout/buy/1b9b04a7-d47e-45df-9c56-c5ce69979b7f?checkout[background_color]=%23061218&checkout[primary_text_color]=%23e6f5f3&checkout[button_color]=%2300e5b4');
+  }
+  
+  btn.addEventListener('click', function(e) {
+    e.preventDefault();
+    
+    if (typeof window.Lemon === 'undefined' || !window.Lemon.Checkout) {
+      console.warn('Lemon.js still loading, waiting...');
+      setTimeout(openCheckout, 1000);
+    } else {
+      openCheckout();
     }
   });
 })();
