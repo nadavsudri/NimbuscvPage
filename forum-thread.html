@@ -1,0 +1,330 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Nimbus — Forum Thread</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#06121a"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z' fill='none' stroke='%2300e5b4' stroke-width='3'/><circle cx='50' cy='50' r='14' fill='none' stroke='%2300e5b4' stroke-width='2' opacity='0.5'/><rect x='48.8' y='40' width='2.4' height='20' rx='1.2' fill='%2300e5b4'/></svg>"/>
+<style>
+:root{
+  --bg:#06121a;
+  --bg-2:#0a1922;
+  --bg-3:#0d2230;
+  --ink:#e6f5f3;
+  --ink-2:#8aa6ad;
+  --ink-3:#516b75;
+  --ink-4:#2d3f48;
+  --rule:#152935;
+  --rule-2:#1d3947;
+  --teal:#00e5b4;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  background:var(--bg);color:var(--ink-2);
+  line-height:1.6;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:900px;margin:0 auto;padding:0 32px}
+
+/* NAV */
+.nav{
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+  background:rgba(6,18,26,0.85);
+  border-bottom:1px solid var(--rule);
+  padding:14px 0;
+}
+.nav-inner{
+  max-width:900px;margin:0 auto;padding:0 32px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.nav .logo{
+  font-family:'Instrument Serif',serif;font-size:22px;
+  color:var(--ink);text-decoration:none;font-weight:400;
+}
+.nav .logo span{color:var(--teal)}
+.nav .back{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--ink-3);text-decoration:none;
+  transition:color 0.25s ease;
+}
+.nav .back:hover{color:var(--ink)}
+
+/* THREAD */
+.thread-section{
+  padding:60px 0;
+}
+.thread-post{
+  background:var(--bg-2);border:1px solid var(--rule-2);
+  border-radius:8px;padding:32px;margin-bottom:40px;
+}
+.thread-post.op{
+  border-color:var(--teal);
+  background:linear-gradient(135deg, rgba(0,229,180,0.05) 0%, transparent 100%);
+}
+
+.post-header{
+  display:flex;justify-content:space-between;align-items:start;margin-bottom:20px;
+}
+.post-author{
+  display:flex;flex-direction:column;gap:4px;
+}
+.post-author-name{
+  font-weight:600;color:var(--ink);
+}
+.post-author-meta{
+  font-size:12px;color:var(--ink-3);
+}
+.post-badge{
+  display:inline-block;padding:4px 12px;
+  background:rgba(0,229,180,0.2);color:var(--teal);
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:0.08em;border-radius:4px;
+}
+
+.post-title{
+  font-family:'Instrument Serif',serif;font-weight:400;
+  font-size:24px;color:var(--ink);margin:0 0 16px;
+  line-height:1.3;
+}
+.post-body{
+  font-size:14px;color:var(--ink-2);line-height:1.8;
+  white-space:pre-wrap;word-wrap:break-word;
+}
+
+/* COMMENTS */
+.comments-section{
+  margin-top:60px;
+}
+.comments-title{
+  font-family:'Instrument Serif',serif;font-weight:400;
+  font-size:20px;color:var(--ink);margin:0 0 32px;
+}
+
+.comment-form{
+  background:var(--bg-2);border:1px solid var(--rule-2);
+  border-radius:8px;padding:32px;margin-bottom:40px;
+}
+.comment-form h3{
+  font-family:'Instrument Serif',serif;font-weight:400;
+  font-size:18px;color:var(--ink);margin:0 0 24px;
+}
+
+.form-group{margin-bottom:20px}
+.form-group label{
+  display:block;font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
+  color:var(--ink-3);margin-bottom:6px;font-weight:500;
+}
+.form-group input,
+.form-group textarea{
+  width:100%;padding:12px 14px;
+  font-family:'Space Grotesk',sans-serif;font-size:14px;
+  color:var(--ink);background:var(--bg);
+  border:1px solid var(--rule-2);border-radius:6px;
+  outline:none;transition:border-color 0.25s ease;
+}
+.form-group input:focus,
+.form-group textarea:focus{
+  border-color:var(--teal);box-shadow:0 0 0 3px rgba(0,229,180,0.1);
+}
+.form-group textarea{resize:vertical;min-height:120px}
+
+.checkbox-group{
+  display:flex;align-items:center;gap:12px;
+  margin:20px 0;cursor:pointer;user-select:none;
+}
+.checkbox-group input[type="checkbox"]{
+  width:20px;height:20px;cursor:pointer;
+  accent-color:var(--teal);
+}
+.checkbox-group label{
+  margin:0;font-size:13px;color:var(--ink-2);
+}
+
+.form-actions{
+  display:flex;gap:12px;justify-content:flex-end;margin-top:24px;
+}
+.form-actions button{
+  padding:12px 24px;border:none;border-radius:6px;
+  cursor:pointer;font-family:'Space Grotesk',sans-serif;
+  font-weight:600;transition:all 0.2s ease;
+}
+.form-actions .btn-submit{
+  background:var(--teal);color:var(--bg);
+}
+.form-actions .btn-submit:hover{
+  transform:translateY(-2px);box-shadow:0 8px 24px rgba(0,229,180,0.2);
+}
+
+/* EMPTY STATE */
+.empty-state{
+  text-align:center;padding:60px 32px;
+}
+.empty-state .icon{font-size:48px;margin-bottom:16px}
+
+/* LOADING */
+.loading{
+  text-align:center;padding:60px 32px;color:var(--ink-3);
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="/" class="logo">Nimbus<span>.</span></a>
+    <a href="/forum" class="back">&larr; Back to forum</a>
+  </div>
+</nav>
+
+<!-- THREAD -->
+<div class="wrap">
+  <div class="thread-section">
+    <div id="thread-post" class="thread-post op">
+      <div class="loading">Loading thread...</div>
+    </div>
+
+    <div id="comments-section" class="comments-section" style="display:none;">
+      <h2 class="comments-title" id="comments-count">Comments</h2>
+
+      <div id="comments-list" style="margin-bottom:40px;display:flex;flex-direction:column;gap:20px;">
+      </div>
+
+      <div class="comment-form">
+        <h3>Reply</h3>
+        <form id="comment-form" onsubmit="submitComment(event)">
+          <div class="form-group">
+            <label for="comment-name">Your Name</label>
+            <input type="text" id="comment-name" name="name" required placeholder="Ada Lovelace">
+          </div>
+
+          <div class="form-group">
+            <label for="comment-email">Email</label>
+            <input type="email" id="comment-email" name="email" required placeholder="ada@example.com">
+          </div>
+
+          <div class="form-group">
+            <label for="comment-title">Reply Title</label>
+            <input type="text" id="comment-title" name="title" required placeholder="My solution...">
+          </div>
+
+          <div class="form-group">
+            <label for="comment-body">Message</label>
+            <textarea id="comment-body" name="body" required placeholder="Share your thoughts, solutions, or experiences..."></textarea>
+          </div>
+
+          <label class="checkbox-group">
+            <input type="checkbox" id="owns-nimbus" name="owns_nimbus">
+            <label for="owns-nimbus" style="margin:0;cursor:pointer;">I own Nimbus</label>
+          </label>
+
+          <div class="form-actions">
+            <button type="submit" class="form-actions btn-submit">Post Reply</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const threadId = new URLSearchParams(window.location.search).get('id');
+
+if (!threadId) {
+  document.getElementById('thread-post').innerHTML = '<div class="empty-state"><div class="icon">❌</div><h2>Invalid thread</h2></div>';
+} else {
+  loadThread();
+}
+
+async function loadThread() {
+  try {
+    const response = await fetch(`/api/forum/thread?id=${threadId}`);
+    if (!response.ok) throw new Error('Thread not found');
+
+    const { thread, comments } = await response.json();
+    renderThread(thread, comments);
+  } catch (err) {
+    console.error('Failed to load thread:', err);
+    document.getElementById('thread-post').innerHTML = '<div class="empty-state"><div class="icon">❌</div><h2>Error loading thread</h2></div>';
+  }
+}
+
+function renderThread(thread, comments) {
+  document.getElementById('thread-post').innerHTML = `
+    <div class="post-header">
+      <div class="post-author">
+        <div class="post-author-name">${escapeHtml(thread.name)}</div>
+        <div class="post-author-meta">${new Date(thread.created_at).toLocaleString()}</div>
+      </div>
+    </div>
+    <h1 class="post-title">${escapeHtml(thread.title)}</h1>
+    <div class="post-body">${escapeHtml(thread.body)}</div>
+  `;
+
+  const commentsList = document.getElementById('comments-list');
+  const commentsSection = document.getElementById('comments-section');
+
+  if (comments.length > 0) {
+    commentsSection.style.display = 'block';
+    document.getElementById('comments-count').textContent = `${comments.length} ${comments.length === 1 ? 'Reply' : 'Replies'}`;
+
+    commentsList.innerHTML = comments.map(comment => `
+      <div class="thread-post">
+        <div class="post-header">
+          <div class="post-author">
+            <div class="post-author-name">${escapeHtml(comment.name)}</div>
+            <div class="post-author-meta">${new Date(comment.created_at).toLocaleString()}</div>
+          </div>
+          ${comment.owns_nimbus ? '<div class="post-badge">Nimbus Owner</div>' : ''}
+        </div>
+        <h3 class="post-title" style="font-size:18px;margin-bottom:12px;">${escapeHtml(comment.title)}</h3>
+        <div class="post-body">${escapeHtml(comment.body)}</div>
+      </div>
+    `).join('');
+  } else {
+    commentsSection.style.display = 'block';
+    document.getElementById('comments-count').textContent = 'No replies yet';
+    commentsList.innerHTML = '';
+  }
+}
+
+async function submitComment(e) {
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+  const payload = Object.fromEntries(data);
+  payload.owns_nimbus = data.has('owns_nimbus');
+
+  try {
+    const response = await fetch(`/api/forum/thread?id=${threadId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) throw new Error('Failed to post comment');
+
+    form.reset();
+    loadThread();
+  } catch (err) {
+    alert('Error posting reply: ' + err.message);
+  }
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Nimbus — Hand-tracked MIDI Controller</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="description" content="Expressive hand-tracked MIDI for producers. 11ms latency, works with any DAW. No hardware needed, just your webcam."/>
+<meta name="theme-color" content="#06121a"/>
+<meta property="og:title" content="Nimbus — Hand-tracked MIDI for producers"/>
+<meta property="og:description" content="Control synths with hand gestures. 11ms latency, any DAW. $29.90 lifetime."/>
+<meta property="og:type" content="product"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Nimbus","applicationCategory":"MultimediaApplication","operatingSystem":"macOS 12+, Windows 10+","offers":{"@type":"Offer","price":"29.90","priceCurrency":"USD"}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z' fill='none' stroke='%2300e5b4' stroke-width='3'/><circle cx='50' cy='50' r='14' fill='none' stroke='%2300e5b4' stroke-width='2' opacity='0.5'/><rect x='48.8' y='40' width='2.4' height='20' rx='1.2' fill='%2300e5b4'/></svg>"/>
+<style>
+:root{
+  --bg:#06121a;
+  --bg-2:#0a1922;
+  --bg-3:#0d2230;
+  --panel:#0e2433;
+  --ink:#e6f5f3;
+  --ink-2:#8aa6ad;
+  --ink-3:#516b75;
+  --ink-4:#2d3f48;
+  --rule:#152935;
+  --rule-2:#1d3947;
+  --teal:#00e5b4;
+  --teal-deep:#00b894;
+  --cyan:#22d3ee;
+  --blue:#3b82f6;
+  --blue-deep:#1e40af;
+  --glow:rgba(0,229,180,0.18);
+  --alert:#ff6b6b;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;
+  font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(34,211,238,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(34,211,238,0.04) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 0%,transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 0%,transparent 70%);
+}
+a{color:inherit;text-decoration:none;transition:color 0.3s cubic-bezier(0.16,1,0.3,1)}
+button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
+img{display:block;max-width:100%}
+:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:4px}
+.skip-link{
+  position:fixed;top:-100%;left:16px;z-index:200;
+  padding:10px 16px;background:var(--teal);color:#06121a;
+  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;
+  border-radius:0 0 6px 6px;transition:top 0.2s;
+}
+.skip-link:focus{top:0}
+.serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400}
+.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+.italic{font-style:italic}
+
+/* ─── LAYOUT ─── */
+.wrap{max-width:1200px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+.wrap-wide{max-width:1400px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;
+  padding:14px 32px;
+  background:rgba(6,18,26,0.78);
+  backdrop-filter:blur(14px) saturate(1.3);
+  -webkit-backdrop-filter:blur(14px) saturate(1.3);
+  border-bottom:1px solid var(--rule);
+}
+.nav-inner{
+  max-width:1400px;width:100%;margin:0 auto;
+  display:flex;align-items:center;justify-content:space-between;gap:24px;
+}
+.logo{display:flex;align-items:center;gap:10px}
+.logo svg{width:34px;height:34px;filter:drop-shadow(0 0 8px rgba(0,229,180,0.2))}
+.logo .name{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.32em;color:var(--ink);font-weight:500;
+}
+.nav-links{display:flex;gap:28px}
+.nav-links a{
+  font-size:13px;color:var(--ink-2);
+  position:relative;padding-bottom:2px;
+  transition:color 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+.nav-links a:hover{color:var(--ink)}
+.nav-links a::after{
+  content:'';position:absolute;left:0;right:0;bottom:-2px;height:1px;
+  background:var(--teal);transform:scaleX(0);transform-origin:left;
+  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{
+  font-family:'JetBrains Mono',monospace;
+  font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
+  padding:9px 14px;border-radius:6px;
+  background:var(--teal);color:#06121a;
+  font-weight:600;
+  box-shadow:0 0 0 1px rgba(0,229,180,0.2),0 4px 16px -6px rgba(0,229,180,0.25);
+  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.nav-cta:hover{background:#1cf0c4;box-shadow:0 0 0 1px rgba(0,229,180,0.3),0 8px 24px -6px rgba(0,229,180,0.35)}
+.nav-cta:active{transform:scale(0.96)}
+@media(max-width:760px){.nav-links{display:none}}
+
+/* ─── HERO ─── */
+.hero{
+  padding:120px 0 60px;position:relative;
+  border-bottom:1px solid var(--rule);
+}
+.hero::after{
+  content:'';position:absolute;
+  width:1200px;height:700px;top:-140px;left:50%;transform:translateX(-50%);
+  background:
+    radial-gradient(ellipse 50% 60% at 50% 50%,rgba(0,229,180,0.10) 0%,transparent 70%),
+    radial-gradient(ellipse 30% 40% at 30% 60%,rgba(59,130,246,0.08) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+.hero-top{
+  display:flex;align-items:center;justify-content:space-between;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:0.18em;color:var(--ink-3);text-transform:uppercase;
+  padding-bottom:24px;border-bottom:1px solid var(--rule);
+  margin-bottom:40px;position:relative;
+}
+.hero-top .left{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
+.hero-top .pill{
+  background:var(--alert);color:#fff;
+  padding:3px 8px;border-radius:3px;
+  letter-spacing:0.16em;font-weight:600;
+}
+.hero-top .right{display:flex;gap:18px;color:var(--ink-3)}
+.hero-top .live{color:var(--teal)}
+.hero-top .live::before{
+  content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
+  background:var(--teal);margin-right:6px;
+  vertical-align:1px;
+  animation:pulse 2.5s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+@media(max-width:680px){.hero-top .right{display:none}}
+
+.hero-grid{
+  display:grid;grid-template-columns:1.4fr 1fr;gap:48px;
+  align-items:start;padding-bottom:48px;position:relative;
+}
+@media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:32px}}
+
+.hero-title{
+  font-family:'Instrument Serif',serif;font-weight:400;
+  font-size:clamp(48px,9vw,96px);
+  line-height:0.95;letter-spacing:-0.02em;
+  margin:0 0 24px;color:var(--ink);
+}
+.hero-title .em{
+  font-style:italic;
+  background:linear-gradient(120deg,var(--teal) 0%,var(--cyan) 60%,var(--blue) 100%);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero-side{display:flex;flex-direction:column;gap:20px;padding-bottom:8px}
+.hero-sub{
+  font-size:17px;line-height:1.6;color:var(--ink-2);
+  max-width:420px;margin:0 0 24px;
+}
+.hero-sub b{color:var(--ink);font-weight:600}
+.hero-sub .accent{color:var(--teal)}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn-primary{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;
+  padding:16px 28px;background:var(--teal);color:#06121a;border-radius:8px;
+  display:inline-flex;align-items:center;gap:10px;
+  box-shadow:0 0 0 1px rgba(0,229,180,0.25),0 8px 24px -8px rgba(0,229,180,0.3);
+  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.btn-primary:hover{
+  background:#1cf0c4;transform:translateY(-2px);
+  box-shadow:0 0 0 1px rgba(0,229,180,0.4),0 14px 32px -8px rgba(0,229,180,0.4);
+}
+.btn-primary:active{transform:translateY(0) scale(0.97)}
+.btn-primary .arr{font-family:serif;font-size:18px;line-height:0;margin-top:2px}
+.btn-ghost{
+  font-family:'JetBrains Mono',monospace;
+  font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;
+  padding:14px 20px;border-radius:8px;
+  border:1px solid var(--rule-2);color:var(--ink);background:transparent;
+  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.btn-ghost:hover{border-color:var(--teal);background:rgba(0,229,180,0.04);color:var(--teal)}
+.btn-ghost:active{transform:scale(0.97)}
+
+.hero-quote{
+  background:rgba(0,229,180,0.06);
+  border-left:3px solid var(--teal);
+  padding:20px 24px;
+  border-radius:6px;
+  margin-bottom:24px;
+  font-size:14px;
+  color:var(--ink-2);
+  font-style:italic;
+  line-height:1.6;
+  position:relative;
+}
+.hero-quote b{color:var(--ink);font-weight:600;font-style:normal}
+
+/* ─── SHOWCASE FRAME ─── */
+.showcase{position:relative;padding:0 32px 0;margin-bottom:0;z-index:2}
+.showcase-inner{max-width:1140px;margin:0 auto;position:relative}
+.showcase-frame{
+  border:1px solid var(--rule-2);border-radius:12px;
+  background:var(--bg-2);overflow:hidden;position:relative;
+  box-shadow:
+    0 30px 80px -20px rgba(0,0,0,0.6),
+    0 0 0 1px rgba(0,229,180,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.03);
+}
+.showcase-bar{
+  display:flex;align-items:center;gap:8px;
+  padding:11px 16px;background:var(--bg-3);
+  border-bottom:1px solid var(--rule);
+}
+.showcase-bar .dot{width:10px;height:10px;border-radius:50%}
+.showcase-bar .dot-r{background:#ff5f57}
+.showcase-bar .dot-y{background:#febc2e}
+.showcase-bar .dot-g{background:#28c840}
+.showcase-bar .title{
+  margin-left:12px;font-size:11px;color:var(--ink-2);
+  font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;
+}
+.showcase-bar .right{
+  margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;
+  color:var(--ink-3);letter-spacing:0.1em;display:flex;gap:14px;
+}
+.showcase-screen{
+  aspect-ratio:16/9;
+  background:
+    radial-gradient(ellipse 60% 50% at 50% 50%,rgba(0,229,180,0.05) 0%,transparent 70%),
+    var(--bg);
+  position:relative;display:grid;place-items:center;overflow:hidden;
+}
+.showcase-screen::before{
+  content:'';position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(34,211,238,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(34,211,238,0.04) 1px,transparent 1px);
+  background-size:32px 32px;
+  mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,#000 0%,transparent 80%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,#000 0%,transparent 80%);
+}
+.showcase-content{
+  width:90%;max-width:900px;text-align:center;position:relative;z-index:1;
+}
+.showcase-label{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:0.2em;color:var(--teal);text-transform:uppercase;
+  margin-bottom:20px;font-weight:600;
+}
+.showcase-text{
+  font-family:'Instrument Serif',serif;font-style:italic;
+  font-size:24px;color:var(--ink-2);margin:0 0 20px;
+  line-height:1.4;
+}
+.showcase-img{
+  width:100%;max-width:700px;height:auto;border-radius:8px;
+  background:var(--bg-3);
+  min-height:300px;
+  display:flex;align-items:center;justify-content:center;
+  color:var(--ink-3);
+  font-size:13px;
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* ─── SPEC RIBBON ─── */
+.spec-ribbon{
+  background:var(--bg-2);
+  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
+  position:relative;
+  margin-top:60px;
+}
+.spec-ribbon::before,.spec-ribbon::after{
+  content:'';position:absolute;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,var(--teal),transparent);
+  opacity:0.5;
+}
+.spec-ribbon::before{top:-1px}.spec-ribbon::after{bottom:-1px}
+.spec-ribbon-inner{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  max-width:1400px;margin:0 auto;
+}
+@media(max-width:680px){.spec-ribbon-inner{grid-template-columns:repeat(2,1fr)}}
+.spec{
+  padding:36px 28px;border-right:1px solid var(--rule);
+  display:flex;flex-direction:column;gap:6px;position:relative;
+}
+.spec:last-child{border-right:none}
+@media(max-width:680px){
+  .spec:nth-child(2n){border-right:none}
+  .spec:nth-child(-n+2){border-bottom:1px solid var(--rule)}
+}
+.spec-label{
+  font-family:'JetBrains Mono',monospace;
+  font-size:10px;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--ink-3);font-weight:600;display:flex;align-items:center;gap:8px;
+}
+.spec-label::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--teal);
+}
+.spec-val{
+  font-family:'Instrument Serif',serif;
+  font-size:52px;line-height:1;letter-spacing:-0.02em;color:var(--ink);
+}
+.spec-val small{
+  font-size:16px;color:var(--teal);font-family:'JetBrains Mono',monospace;
+  font-weight:500;margin-left:4px;
+}
+.spec-note{font-size:12px;color:var(--ink-3);line-height:1.4}
+
+/* ─── TESTIMONIALS ─── */
+.testimonials{
+  padding:120px 0;background:var(--bg);border-bottom:1px solid var(--rule);
+}
+.testimonials-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:40px;max-width:1000px;margin:0 auto;
+}
+@media(max-width:760px){.testimonials-grid{grid-template-columns:1fr}}
+.testimonial-card{
+  background:linear-gradient(180deg,rgba(0,229,180,0.06),rgba(0,229,180,0.02));
+  border:1px solid rgba(0,229,180,0.2);
+  border-radius:12px;
+  padding:32px;
+  position:relative;
+}
+.testimonial-quote{
+  font-family:'Instrument Serif',serif;
+  font-size:18px;font-style:italic;line-height:1.5;
+  color:var(--ink);margin:0 0 24px;
+}
+.testimonial-attr{
+  display:flex;align-items:center;gap:16px;
+}
+.testimonial-avatar{
+  width:48px;height:48px;border-radius:50%;
+  background:linear-gradient(135deg,var(--teal),var(--cyan));
+}
+.testimonial-info{
+  flex:1;
+}
+.testimonial-name{
+  font-weight:600;color:var(--ink);font-size:14px;display:block;margin-bottom:2px;
+}
+.testimonial-role{
+  font-size:12px;color:var(--ink-3);font-family:'JetBrains Mono',monospace;
+  letter-spacing:0.1em;
+}
+.testimonial-card::before{
+  content:'★';position:absolute;top:16px;right:24px;
+  font-size:28px;color:var(--teal);opacity:0.3;
+}
+
+/* ─── FEATURES ─── */
+.features{padding:120px 0;background:var(--bg);border-bottom:1px solid var(--rule)}
+.section-head{
+  text-align:center;margin-bottom:80px;
+}
+.section-kicker{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.22em;text-transform:uppercase;color:var(--teal);
+  font-weight:600;margin-bottom:16px;
+  display:inline-flex;align-items:center;gap:8px;
+}
+.section-kicker::before{
+  content:'';width:8px;height:8px;border-radius:50%;
+  background:var(--teal);
+}
+.section-title{
+  font-family:'Instrument Serif',serif;
+  font-size:clamp(36px,6vw,68px);
+  line-height:1;letter-spacing:-0.02em;
+  margin:0;color:var(--ink);font-weight:400;
+}
+.section-title .em{font-style:italic;color:var(--teal)}
+.features-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:40px;
+  max-width:1000px;margin:0 auto;
+}
+@media(max-width:880px){.features-grid{grid-template-columns:1fr;gap:32px}}
+.feature-card{
+  background:rgba(0,229,180,0.03);border:1px solid var(--rule-2);
+  border-radius:12px;padding:32px;
+  transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+.feature-card:hover{
+  border-color:var(--teal);
+  background:rgba(0,229,180,0.08);
+  transform:translateY(-4px);
+}
+.feature-icon{
+  font-size:32px;margin-bottom:16px;line-height:1;
+}
+.feature-title{
+  font-family:'Instrument Serif',serif;font-size:18px;
+  color:var(--ink);font-weight:400;margin:0 0 12px;
+}
+.feature-desc{
+  font-size:14px;color:var(--ink-2);line-height:1.6;margin:0;
+}
+
+/* ─── PRICING ─── */
+.pricing{
+  padding:120px 0;background:var(--bg);border-bottom:1px solid var(--rule);
+}
+.pricing-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+  max-width:1100px;margin:0 auto;
+}
+@media(max-width:880px){.pricing-grid{grid-template-columns:1fr;gap:48px}}
+.pricing-text h2{
+  font-family:'Instrument Serif',serif;font-weight:400;
+  font-size:clamp(36px,5.2vw,64px);line-height:1;letter-spacing:-0.02em;
+  margin:0 0 24px;color:var(--ink);
+}
+.pricing-text h2 .em{
+  font-style:italic;color:var(--teal);
+}
+.pricing-text p{color:var(--ink-2);font-size:15px;line-height:1.6;max-width:450px;margin:0 0 24px}
+.pricing-table{
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  color:var(--ink-3);line-height:2;
+  border:1px solid var(--rule-2);border-radius:8px;
+  padding:24px;margin:24px 0;
+  background:linear-gradient(180deg,rgba(0,229,180,0.02),transparent);
+}
+.pricing-row{display:flex;justify-content:space-between;align-items:center}
+.pricing-row.total{
+  border-top:1px dashed var(--rule-2);padding-top:16px;margin-top:16px;
+}
+.pricing-row.total .label{color:var(--ink);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;font-size:11px}
+.pricing-row.total .value{color:var(--teal);font-weight:600;font-size:24px}
+.pricing-actions{display:flex;flex-direction:column;gap:14px;margin-top:32px}
+
+.price-sticker{
+  text-align:center;padding:48px 32px;
+  background:linear-gradient(135deg,rgba(0,229,180,0.1),rgba(34,211,238,0.05));
+  border:2px solid var(--teal);border-radius:16px;
+  position:relative;
+  overflow:hidden;
+}
+.price-sticker::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(45deg,transparent 30%,rgba(0,229,180,0.05) 50%,transparent 70%);
+  animation:shimmer 3s infinite;
+}
+@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.price-sticker-content{position:relative;z-index:1}
+.price-currency{
+  font-family:'Instrument Serif',serif;font-size:18px;color:var(--teal);
+  margin-bottom:8px;letter-spacing:0.1em;
+}
+.price-amount{
+  font-family:'Instrument Serif',serif;font-size:96px;font-weight:400;
+  color:var(--ink);line-height:0.9;margin-bottom:16px;
+}
+.price-terms{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  letter-spacing:0.15em;color:var(--ink-3);text-transform:uppercase;
+}
+.price-terms b{color:var(--teal);font-weight:600}
+
+/* ─── FAQ ─── */
+.faq-section{padding:120px 0;border-bottom:1px solid var(--rule);background:var(--bg)}
+.faq-list{
+  display:flex;flex-direction:column;max-width:800px;margin:0 auto;
+}
+.faq-item{border-top:1px solid var(--rule)}
+.faq-item:last-child{border-bottom:1px solid var(--rule)}
+.faq-item summary{
+  list-style:none;cursor:pointer;
+  padding:24px 0;position:relative;
+  font-family:'Instrument Serif',serif;font-weight:400;
+  font-size:20px;line-height:1.3;letter-spacing:-0.005em;color:var(--ink);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:20px;transition:color 0.3s cubic-bezier(0.16,1,0.3,1);
+}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary:hover{color:var(--teal)}
+.faq-toggle{
+  color:var(--teal);font-family:serif;font-size:28px;line-height:0.8;
+  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);flex-shrink:0;
+}
+.faq-item[open] .faq-toggle{transform:rotate(45deg)}
+.faq-body{
+  padding:0 0 24px;color:var(--ink-2);font-size:15px;line-height:1.65;
+}
+
+/* ─── CTA ─── */
+.final-cta{
+  padding:120px 0;text-align:center;position:relative;
+  background:var(--bg);border-bottom:1px solid var(--rule);
+}
+.final-cta h2{
+  font-family:'Instrument Serif',serif;font-weight:400;
+  font-size:clamp(40px,7vw,80px);line-height:1;letter-spacing:-0.02em;
+  margin:0 0 32px;color:var(--ink);
+}
+.final-cta h2 .em{font-style:italic;color:var(--teal)}
+.final-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
+
+/* ─── FOOTER ─── */
+footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1;border-top:1px solid var(--rule)}
+.foot-grid{
+  display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;
+  padding-bottom:48px;border-bottom:1px solid var(--rule);
+  max-width:1200px;margin:0 auto;padding-left:32px;padding-right:32px;
+}
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:32px}}
+.foot-brand p{margin:0;color:var(--ink-2);font-size:13px;line-height:1.6;max-width:280px}
+.foot-col h5{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-3);
+  font-weight:600;margin:0 0 16px;
+}
+.foot-col a{
+  display:block;font-size:13px;color:var(--ink-2);
+  padding:4px 0;transition:color 0.15s;
+}
+.foot-col a:hover{color:var(--teal)}
+.foot-bottom{
+  padding-top:28px;display:flex;justify-content:space-between;align-items:center;
+  flex-wrap:wrap;gap:14px;
+  font-family:'JetBrains Mono',monospace;font-size:10.5px;
+  letter-spacing:0.14em;color:var(--ink-4);text-transform:uppercase;
+  max-width:1200px;margin:0 auto;padding-left:32px;padding-right:32px;
+}
+
+/* ─── REVEAL ─── */
+.rv{opacity:0;transform:translateY(20px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1),transform 0.8s cubic-bezier(0.16,1,0.3,1)}
+.rv.show{opacity:1;transform:none}
+.rv-d1{transition-delay:0.12s}
+.rv-d2{transition-delay:0.24s}
+
+/* ─── MOBILE ─── */
+@media(max-width:560px){
+  .wrap{padding:0 20px}
+  .hero{padding-top:96px}
+  .showcase{padding:0 20px}
+  .features-grid{padding:0 20px}
+  .price-amount{font-size:72px}
+  .final-cta{padding:100px 20px}
+}
+</style>
+</head>
+<body>
+<a href="#features" class="skip-link">Skip to content</a>
+
+<!-- ═══════ NAV ═══════ -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="logo">
+      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z" fill="none" stroke="#00e5b4" stroke-width="3"/>
+        <circle cx="50" cy="50" r="14" fill="none" stroke="#00e5b4" stroke-width="2" opacity="0.5"/>
+        <rect x="48.8" y="40" width="2.4" height="20" rx="1.2" fill="#00e5b4"/>
+      </svg>
+      <span class="name">NIMBUS</span>
+    </a>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#testimonials">Testimonials</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <a href="#pricing" class="nav-cta">Buy &mdash; $29.90</a>
+  </div>
+</nav>
+
+<!-- ═══════ HERO ═══════ -->
+<header class="hero">
+  <div class="wrap">
+    <div class="hero-top">
+      <div class="left">
+        <span class="pill">⚡ New: Gesture Editor</span>
+        <span>Works with every DAW</span>
+      </div>
+      <div class="right">
+        <span>VST3 &middot; AU &middot; AAX</span>
+      </div>
+    </div>
+
+    <div class="hero-grid">
+      <div>
+        <h1 class="hero-title">
+          Control synths with<br>
+          <span class="em">hand gestures.</span>
+        </h1>
+        <p class="hero-sub">
+          <b>Nimbus</b> turns your webcam into expressive MIDI control. 11ms latency, zero setup, $29.90 lifetime. Works with Serum, Vital, Massive X, and everything else.
+        </p>
+        <div class="hero-quote">
+          <b>"The latency isn't there."</b> It feels like the synth is reading my hands directly. Used it on a record by Friday. — <b>Lila, Producer</b>
+        </div>
+        <div class="hero-actions">
+          <button class="btn-primary" onclick="handleCheckout()">
+            Get Nimbus <span class="arr">→</span>
+          </button>
+          <a href="#features" class="btn-ghost">See how it works</a>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center">
+        <div style="
+          background:rgba(0,229,180,0.1);
+          border:2px dashed var(--teal);
+          border-radius:12px;
+          width:100%;
+          aspect-ratio:1/1.2;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          flex-direction:column;
+          gap:16px;
+          color:var(--ink-3);
+          text-align:center;
+        ">
+          <div style="font-size:32px">🎹</div>
+          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em">DEMO VIDEO HERE</div>
+          <div style="font-size:11px;max-width:140px">Hand tracking in action with your favorite synth</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Showcase frame -->
+  <div class="showcase">
+    <div class="showcase-inner">
+      <div class="showcase-frame">
+        <div class="showcase-bar">
+          <span class="dot dot-r"></span>
+          <span class="dot dot-y"></span>
+          <span class="dot dot-g"></span>
+          <span class="title">Ableton Live &middot; Nimbus.vst3</span>
+        </div>
+        <div class="showcase-screen">
+          <div class="showcase-content">
+            <div class="showcase-label">🎥 Plugin Interface Screenshot or Video</div>
+            <div class="showcase-text">Add a screenshot of the Nimbus UI here or embed a 30-second demo video</div>
+            <div class="showcase-img">Replace with: &lt;img src="nimbus-ui.png"/&gt; or &lt;video autoplay muted loop&gt;</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════ SPEC RIBBON ═══════ -->
+<div class="spec-ribbon">
+  <div class="spec-ribbon-inner">
+    <div class="spec">
+      <div class="spec-label">Tracking Speed</div>
+      <div class="spec-val">60<small>fps</small></div>
+      <div class="spec-note">Any webcam, any resolution.</div>
+    </div>
+    <div class="spec">
+      <div class="spec-label">Latency</div>
+      <div class="spec-val">11<small>ms</small></div>
+      <div class="spec-note">Below perception threshold.</div>
+    </div>
+    <div class="spec">
+      <div class="spec-label">Hand Precision</div>
+      <div class="spec-val">21<small>pts</small></div>
+      <div class="spec-note">Sub-pixel accuracy per hand.</div>
+    </div>
+    <div class="spec">
+      <div class="spec-label">MIDI Channels</div>
+      <div class="spec-val">12</div>
+      <div class="spec-note">Map anything you want.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ TESTIMONIALS ═══════ -->
+<section class="testimonials" id="testimonials">
+  <div class="wrap">
+    <div class="section-head rv">
+      <div class="section-kicker">What Producers Say</div>
+      <h2 class="section-title">Built by musicians.<br>Loved by <span class="em">producers.</span></h2>
+    </div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card rv">
+        <div class="testimonial-quote">"Feels like I'm playing the synth directly with my hands. No learning curve, just map and go."</div>
+        <div class="testimonial-attr">
+          <div class="testimonial-avatar"></div>
+          <div class="testimonial-info">
+            <span class="testimonial-name">Lila Ostrowski</span>
+            <span class="testimonial-role">Producer • Brooklyn</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card rv rv-d1">
+        <div class="testimonial-quote">"Used it live on stage. The latency is completely transparent. My hands feel connected to the synth."</div>
+        <div class="testimonial-attr">
+          <div class="testimonial-avatar"></div>
+          <div class="testimonial-info">
+            <span class="testimonial-name">Marcus Chen</span>
+            <span class="testimonial-role">Live Performer • Tokyo</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card rv rv-d2">
+        <div class="testimonial-quote">"Works with everything. Serum, Vital, Massive—just right-click and map. Finally stopped reaching for the mouse."</div>
+        <div class="testimonial-attr">
+          <div class="testimonial-avatar"></div>
+          <div class="testimonial-info">
+            <span class="testimonial-name">Jordan Kelly</span>
+            <span class="testimonial-role">Electronic Artist • Berlin</span>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card rv rv-d2">
+        <div class="testimonial-quote">"The gesture editor is killer. Record hand shapes, trigger drums, layer in complexity. It's a real instrument."</div>
+        <div class="testimonial-attr">
+          <div class="testimonial-avatar"></div>
+          <div class="testimonial-info">
+            <span class="testimonial-name">Sophie Wright</span>
+            <span class="testimonial-role">Producer • London</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FEATURES ═══════ -->
+<section class="features" id="features">
+  <div class="wrap">
+    <div class="section-head rv">
+      <div class="section-kicker">Why It Works</div>
+      <h2 class="section-title">Everything you need to<br>perform <span class="em">expressively.</span></h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card rv">
+        <div class="feature-icon">🎹</div>
+        <h3 class="feature-title">Works Everywhere</h3>
+        <p class="feature-desc">VST3, AU, AAX. Ableton, Logic, FL Studio, Reaper, Bitwig, Cubase, Pro Tools. No special setup.</p>
+      </div>
+      <div class="feature-card rv rv-d1">
+        <div class="feature-icon">⚡</div>
+        <h3 class="feature-title">Instant Mapping</h3>
+        <p class="feature-desc">Right-click any parameter, wiggle a finger. Standard MIDI Learn—works with every synth on the planet.</p>
+      </div>
+      <div class="feature-card rv rv-d2">
+        <div class="feature-icon">🎯</div>
+        <h3 class="feature-title">11ms Latency</h3>
+        <p class="feature-desc">Below perception threshold. Play live, on stage, in the studio. Your hands feel directly connected.</p>
+      </div>
+      <div class="feature-card rv">
+        <div class="feature-icon">✋</div>
+        <h3 class="feature-title">Smart Smoothing</h3>
+        <p class="feature-desc">Tremors stay out, fast articulations come through. Adaptive filtering tuned for musical expressiveness.</p>
+      </div>
+      <div class="feature-card rv rv-d1">
+        <div class="feature-icon">📝</div>
+        <h3 class="feature-title">40+ Presets</h3>
+        <p class="feature-desc">Curated mappings for Serum, Vital, Massive X, Diva, Pigments. Start playing immediately or build your own.</p>
+      </div>
+      <div class="feature-card rv rv-d2">
+        <div class="feature-icon">🔒</div>
+        <h3 class="feature-title">100% Offline</h3>
+        <p class="feature-desc">Zero cloud. Zero telemetry. Your camera feed never leaves your machine. Open source tracking core.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ PRICING ═══════ -->
+<section class="pricing" id="pricing">
+  <div class="wrap">
+    <div class="pricing-grid">
+      <div class="pricing-text rv">
+        <h2>One price. Forever.</h2>
+        <p>No subscription. No "Pro" tier hiding features. No upgrade tax in 18 months. Pay once, own it, get lifetime updates.</p>
+
+        <div class="pricing-table">
+          <div class="pricing-row">
+            <span>Nimbus + all plugins</span>
+            <span>✓</span>
+          </div>
+          <div class="pricing-row">
+            <span>Two-hand tracking</span>
+            <span>✓</span>
+          </div>
+          <div class="pricing-row">
+            <span>12 MIDI channels</span>
+            <span>✓</span>
+          </div>
+          <div class="pricing-row">
+            <span>40+ synth presets</span>
+            <span>✓</span>
+          </div>
+          <div class="pricing-row">
+            <span>Gesture editor</span>
+            <span>✓</span>
+          </div>
+          <div class="pricing-row">
+            <span>Use on 3 machines</span>
+            <span>✓</span>
+          </div>
+          <div class="pricing-row">
+            <span>Lifetime updates</span>
+            <span>✓</span>
+          </div>
+          <div class="pricing-row total">
+            <span class="label">Total</span>
+            <span class="value">$29.90</span>
+          </div>
+        </div>
+
+        <div class="pricing-actions">
+          <button class="btn-primary" onclick="handleCheckout()">
+            Get Nimbus Now <span class="arr">→</span>
+          </button>
+          <a href="#faq" class="btn-ghost">Questions?</a>
+        </div>
+      </div>
+
+      <div class="price-sticker rv rv-d1">
+        <div class="price-sticker-content">
+          <div class="price-currency">PAY ONCE</div>
+          <div class="price-amount">$29.90</div>
+          <div class="price-terms">Forever <b>&amp; Ever</b></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FAQ ═══════ -->
+<section class="faq-section" id="faq">
+  <div class="wrap">
+    <div class="section-head rv" style="margin-bottom:60px">
+      <div class="section-kicker">Got Questions?</div>
+      <h2 class="section-title">We've got <span class="em">answers.</span></h2>
+    </div>
+
+    <div class="faq-list rv">
+      <details class="faq-item">
+        <summary>Does this work with my DAW? <span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Yes. Nimbus is VST3, AU, and AAX. Works with Ableton Live, Logic Pro, FL Studio, Reaper, Bitwig, Cubase, Pro Tools, and anything else that supports standard MIDI.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Can I really use it live on stage? <span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Absolutely. Under 12ms end-to-end latency—well below the threshold of perception. A lot of users mount a small camera on a mic stand and perform with it like an instrument.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What hardware do I need? <span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Your laptop's built-in webcam is enough. Or any USB camera. That's it. No gloves, no Leap Motion, no Kinect, no extra sensors. macOS 12+ or Windows 10+.</div>
+      </details>
+      <details class="faq-item">
+        <summary>How much CPU does it use? <span class="faq-toggle">+</span></summary>
+        <div class="faq-body">8–15% of one core on a modern laptop. Runs on its own background thread, so audio stays bulletproof. You can perform with confidence.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Is there a money-back guarantee? <span class="faq-toggle">+</span></summary>
+        <div class="faq-body">30-day full refund if it doesn't work for you. We're confident you'll love it, but no risk.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Does my camera feed leave my machine? <span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Absolutely not. Zero cloud, zero telemetry, zero tracking. The tracking core is open source—audit it yourself if you'd like.</div>
+      </details>
+      <details class="faq-item">
+        <summary>Can I use it with my favorite synths? <span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Yes. Standard MIDI Learn works with every synth. We include 40+ presets for Serum, Vital, Massive X, Diva, Pigments, Phase Plant, and more.</div>
+      </details>
+      <details class="faq-item">
+        <summary>What if I need help? <span class="faq-toggle">+</span></summary>
+        <div class="faq-body">Email hello@nimbus.audio or join our Discord. We read everything and respond fast. You're not buying from a faceless corporation.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FINAL CTA ═══════ -->
+<section class="final-cta">
+  <div class="wrap">
+    <div class="rv">
+      <h2>Stop reaching for the <span class="em">mouse.</span></h2>
+      <div class="final-actions">
+        <button class="btn-primary" onclick="handleCheckout()">
+          Get Nimbus &mdash; $29.90 <span class="arr">→</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FOOTER ═══════ -->
+<footer>
+  <div class="foot-grid">
+    <div class="foot-brand">
+      <p><b>Nimbus</b> is made by two musicians in Brooklyn who got tired of reaching for the mouse. We built this because we wanted to perform with our hands, not our keyboards.</p>
+    </div>
+    <div class="foot-col">
+      <h5>Product</h5>
+      <a href="#features">Features</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="#">Docs</a>
+      <a href="#">Presets</a>
+    </div>
+    <div class="foot-col">
+      <h5>Connect</h5>
+      <a href="#">Discord</a>
+      <a href="#">YouTube</a>
+      <a href="mailto:hello@nimbus.audio">Email</a>
+      <a href="#">Privacy</a>
+      <a href="#">Terms</a>
+    </div>
+  </div>
+  <div class="foot-bottom">
+    <span>&copy; 2026 Nimbus Audio • Brooklyn NY</span>
+    <span>Made by two hands • One obsession</span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var els=document.querySelectorAll('.rv');
+  if('IntersectionObserver' in window){
+    var obs=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('show');obs.unobserve(e.target)}});
+    },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+    els.forEach(function(el){obs.observe(el)});
+  }else{
+    els.forEach(function(el){el.classList.add('show')});
+  }
+
+  window.handleCheckout=function(){
+    alert('Wire up your payment provider here.\n\nSee handleCheckout() in index2.html.');
+  };
+})();
+</script>
+</body>
+</html>
