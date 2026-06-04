@@ -32,11 +32,12 @@ export default async function handler(req, res) {
     const now = new Date();
     const diffMinutes = (now - createdAt) / 1000 / 60;
     if (diffMinutes > 30) {
-      // Mark as inactive
-      await supabase
+      // Mark as inactive (non-blocking)
+      supabase
         .from('purchases')
         .update({ is_active: false })
         .eq('download_token', token)
+        .then(() => console.log('Marked inactive:', token))
         .catch(err => console.error('Failed to mark inactive:', err.message));
 
       return res.redirect(303, '/expired');
@@ -66,7 +67,7 @@ export default async function handler(req, res) {
 
     res.redirect(303, data.signedUrl);
   } catch (err) {
-    console.error('Download error:', err.message);
-    res.status(500).json({ error: 'Download failed' });
+    console.error('Download error:', err.message, err.stack);
+    res.status(500).json({ error: 'Download failed: ' + err.message });
   }
 }

@@ -31,11 +31,12 @@ export default async function handler(req, res) {
     const now = new Date();
     const diffMinutes = (now - createdAt) / 1000 / 60;
     if (diffMinutes > 30) {
-      // Mark as inactive
-      await supabase
+      // Mark as inactive (non-blocking)
+      supabase
         .from('purchases')
         .update({ is_active: false })
         .eq('download_token', token)
+        .then(() => console.log('Marked inactive:', token))
         .catch(err => console.error('Failed to mark inactive:', err.message));
 
       return res.status(403).json({ error: 'License link expired. This link is valid for 30 minutes after purchase. Check your email for a new link or contact hello@nimbus.audio' });
