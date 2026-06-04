@@ -369,44 +369,10 @@ body{
 
 <!-- Lemon.js integration with success callback -->
 <script>
-(function() {
-  var btn = document.getElementById('checkout-btn');
-  
-  if (!btn) {
-    console.error('Checkout button not found');
-    return;
-  }
-  
-  function openCheckout() {
-    if (typeof window.Lemon === 'undefined' || !window.Lemon.Checkout) {
-      console.error('Lemon.js not available, trying again...');
-      setTimeout(openCheckout, 500);
-      return;
-    }
-    
-    window.Lemon.Checkout.open({
-      checkoutOptions: {
-        'embed': false
-      },
-      onSuccess: function(checkout) {
-        setTimeout(function() {
-          window.location.href = '/success';
-        }, 2000);
-      }
-    }, 'https://nimbuscv.lemonsqueezy.com/checkout/buy/1b9b04a7-d47e-45df-9c56-c5ce69979b7f?checkout[background_color]=%23061218&checkout[primary_text_color]=%23e6f5f3&checkout[button_color]=%2300e5b4');
-  }
-  
-  btn.addEventListener('click', function(e) {
-    e.preventDefault();
-    
-    if (typeof window.Lemon === 'undefined' || !window.Lemon.Checkout) {
-      console.warn('Lemon.js still loading, waiting...');
-      setTimeout(openCheckout, 1000);
-    } else {
-      openCheckout();
-    }
-  });
-})();
+document.getElementById('checkout-btn').addEventListener('click', function() {
+  window.location.href = 'https://nimbuscv.lemonsqueezy.com/checkout/buy/1b9b04a7-d47e-45df-9c56-c5ce69979b7f?checkout[background_color]=%23061218&checkout[primary_text_color]=%23e6f5f3&checkout[button_color]=%2300e5b4';
+});
+</script>
 </script>
 </body>
 </html>
