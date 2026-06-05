@@ -181,6 +181,35 @@ body::after{
 }
 .license-btn:hover{border-color:var(--teal);color:var(--ink)}
 
+/* Steps section */
+.steps-card{
+  margin-top:36px;padding:24px;
+  background:var(--bg-2);border:1px solid var(--rule-2);
+  border-radius:10px;text-align:left;
+  animation:fadeUp 0.6s 0.2s ease both;
+}
+.steps-card h3{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 20px;font-weight:500;
+}
+.step{display:flex;gap:16px;align-items:flex-start}
+.step+.step{margin-top:16px;padding-top:16px;border-top:1px solid var(--rule)}
+.step-num{
+  flex-shrink:0;width:28px;height:28px;
+  border-radius:50%;border:1px solid var(--rule-2);
+  display:grid;place-items:center;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  color:var(--teal);font-weight:600;
+}
+.step-body h4{
+  font-family:'Space Grotesk',sans-serif;font-size:13px;
+  font-weight:600;color:var(--ink);margin:0 0 2px;
+}
+.step-body p{
+  font-size:12.5px;color:var(--ink-2);margin:0;line-height:1.5;
+}
+
 /* Loading bar */
 .license-loading{
   margin-top:36px;text-align:center;
@@ -245,6 +274,32 @@ body::after{
       <li>3 machine installs</li>
       <li>Lifetime updates</li>
     </ul>
+  </div>
+
+  <!-- Your first five minutes -->
+  <div class="steps-card">
+    <h3>Your first five minutes</h3>
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-body">
+        <h4>Install it.</h4>
+        <p>Run the download &mdash; the plugin lands in your VST3 / AU folder automatically.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-body">
+        <h4>Open your DAW.</h4>
+        <p>Drop Nimbus on a track, allow camera access, and you'll see your hands light up.</p>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-body">
+        <h4>Wiggle a finger.</h4>
+        <p>Right-click any synth knob, choose MIDI Learn, move your hand. That's the whole trick.</p>
+      </div>
+    </div>
   </div>
 
   <!-- Loading bar -->
