@@ -13,12 +13,15 @@
 :root{
   --bg:#06121a;
   --bg-2:#0a1922;
+  --bg-3:#0d2230;
   --ink:#e6f5f3;
   --ink-2:#8aa6ad;
   --ink-3:#516b75;
+  --ink-4:#2d3f48;
   --rule:#152935;
   --rule-2:#1d3947;
   --teal:#00e5b4;
+  --glow:rgba(0,229,180,0.18);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{
@@ -26,59 +29,139 @@ body{
   background:var(--bg);color:var(--ink-2);
   line-height:1.6;-webkit-font-smoothing:antialiased;
   min-height:100vh;display:grid;place-items:center;
+  overflow-x:hidden;
 }
+
+/* Subtle grid overlay like main site */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    linear-gradient(rgba(0,229,180,0.03) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,229,180,0.03) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 0%,transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 30%,#000 0%,transparent 70%);
+}
+
+/* Radial glow behind content */
+body::after{
+  content:'';position:fixed;
+  top:15%;left:50%;transform:translateX(-50%);
+  width:600px;height:400px;
+  background:radial-gradient(ellipse at center,rgba(0,229,180,0.08) 0%,transparent 70%);
+  pointer-events:none;z-index:0;
+}
+
 .success{
-  text-align:center;padding:40px 32px;max-width:600px;
+  position:relative;z-index:1;
+  text-align:center;padding:40px 32px;max-width:640px;
+  animation:fadeUp 0.6s ease both;
 }
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* Checkmark ring */
+.check-ring{
+  width:72px;height:72px;margin:0 auto 28px;
+  border-radius:50%;
+  border:2px solid var(--teal);
+  display:grid;place-items:center;
+  box-shadow:0 0 40px rgba(0,229,180,0.15),0 0 80px rgba(0,229,180,0.06);
+  animation:ringPulse 2.5s ease-in-out infinite;
+}
+@keyframes ringPulse{
+  0%,100%{box-shadow:0 0 40px rgba(0,229,180,0.15),0 0 80px rgba(0,229,180,0.06)}
+  50%{box-shadow:0 0 50px rgba(0,229,180,0.25),0 0 100px rgba(0,229,180,0.1)}
+}
+.check-ring svg{
+  animation:checkDraw 0.5s 0.3s ease both;
+}
+@keyframes checkDraw{
+  from{stroke-dashoffset:24;opacity:0}
+  to{stroke-dashoffset:0;opacity:1}
+}
+
 .success h1{
   font-family:'Instrument Serif',serif;font-weight:400;
-  font-size:clamp(36px,5vw,56px);line-height:1.05;
-  letter-spacing:-0.02em;color:var(--ink);margin:0 0 16px;
+  font-size:clamp(36px,5vw,52px);line-height:1.05;
+  letter-spacing:-0.02em;color:var(--ink);margin:0 0 12px;
 }
 .success h1 .it{font-style:italic;color:var(--teal)}
-.success p{
-  font-size:16px;color:var(--ink-2);margin:0 0 32px;line-height:1.7;
+.success .subtitle{
+  font-size:16px;color:var(--ink-2);margin:0 0 36px;line-height:1.7;
 }
+
+/* Download button */
 .download-btn{
   display:inline-flex;align-items:center;gap:10px;
-  padding:16px 40px;border:none;border-radius:8px;
+  padding:16px 44px;border:none;border-radius:8px;
   background:var(--teal);color:var(--bg);
   font-family:'Space Grotesk',sans-serif;font-weight:600;
   font-size:15px;letter-spacing:0.01em;cursor:pointer;
   text-decoration:none;
   transition:transform 0.2s ease,box-shadow 0.2s ease;
+  box-shadow:0 4px 24px rgba(0,229,180,0.2);
 }
 .download-btn:hover{
   transform:translateY(-2px);
-  box-shadow:0 8px 24px rgba(0,229,180,0.2);
+  box-shadow:0 8px 32px rgba(0,229,180,0.3);
 }
 .download-btn:active{transform:translateY(0)}
 
+/* What's included card */
+.included-card{
+  margin-top:36px;padding:20px 24px;
+  background:var(--bg-2);border:1px solid var(--rule-2);
+  border-radius:10px;text-align:left;
+  animation:fadeUp 0.6s 0.15s ease both;
+}
+.included-card h3{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:0.16em;text-transform:uppercase;
+  color:var(--ink-3);margin:0 0 12px;font-weight:500;
+}
+.included-list{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr 1fr;gap:6px 16px}
+@media(max-width:480px){.included-list{grid-template-columns:1fr}}
+.included-list li{
+  font-size:12.5px;color:var(--ink-2);
+  padding-left:14px;position:relative;
+}
+.included-list li::before{
+  content:'';position:absolute;left:0;top:8px;
+  width:5px;height:5px;border-radius:50%;
+  background:var(--teal);opacity:0.6;
+}
+
 /* License key section */
 .license-section{
-  margin-top:40px;text-align:left;
+  margin-top:36px;text-align:left;
+  background:var(--bg-2);border:1px solid var(--rule-2);
+  border-radius:10px;padding:24px;
+  animation:fadeUp 0.6s 0.2s ease both;
 }
 .license-section h2{
   font-family:'Instrument Serif',serif;font-weight:400;
-  font-size:24px;color:var(--ink);margin:0 0 16px;
+  font-size:22px;color:var(--ink);margin:0 0 16px;
 }
 .license-table{
-  width:100%;border-collapse:collapse;margin-bottom:16px;
+  width:100%;border-collapse:collapse;margin-bottom:12px;
 }
 .license-table th{
-  font-family:'JetBrains Mono',monospace;font-size:11px;
+  font-family:'JetBrains Mono',monospace;font-size:10px;
   letter-spacing:0.12em;text-transform:uppercase;
   color:var(--ink-3);text-align:left;padding:8px 12px;
   border-bottom:1px solid var(--rule-2);
 }
 .license-table td{
   padding:12px;border-bottom:1px solid var(--rule);
-  font-family:'JetBrains Mono',monospace;font-size:14px;
+  font-family:'JetBrains Mono',monospace;font-size:13px;
   color:var(--teal);letter-spacing:0.04em;
   cursor:pointer;transition:background 0.2s ease;
   word-break:break-all;
 }
-.license-table td:hover{background:var(--bg-2);border-radius:4px}
+.license-table td:hover{background:var(--bg-3);border-radius:4px}
 .copied-msg{
   font-family:'Space Grotesk',sans-serif;font-size:12px;
   color:var(--teal);opacity:0;transition:opacity 0.3s ease;
@@ -86,13 +169,13 @@ body{
 }
 .copied-msg.show{opacity:1}
 .license-actions{
-  display:flex;gap:12px;justify-content:center;margin-top:16px;
+  display:flex;gap:10px;justify-content:flex-start;margin-top:14px;
 }
 .license-btn{
   display:inline-flex;align-items:center;gap:6px;
-  padding:10px 20px;border:1px solid var(--rule-2);border-radius:6px;
-  background:var(--bg-2);color:var(--ink-2);
-  font-family:'JetBrains Mono',monospace;font-size:12px;
+  padding:8px 16px;border:1px solid var(--rule-2);border-radius:6px;
+  background:var(--bg-3);color:var(--ink-2);
+  font-family:'JetBrains Mono',monospace;font-size:11px;
   letter-spacing:0.06em;cursor:pointer;text-decoration:none;
   transition:border-color 0.2s ease,color 0.2s ease;
 }
@@ -100,45 +183,77 @@ body{
 
 /* Loading bar */
 .license-loading{
-  margin-top:40px;text-align:center;
+  margin-top:36px;text-align:center;
+  animation:fadeUp 0.6s 0.2s ease both;
 }
 .license-loading p{
-  font-family:'JetBrains Mono',monospace;font-size:12px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
   letter-spacing:0.08em;color:var(--ink-3);margin:0 0 12px;
 }
 .loading-bar{
-  width:100%;height:3px;background:var(--rule);border-radius:2px;overflow:hidden;
+  width:100%;height:2px;background:var(--rule);border-radius:2px;overflow:hidden;
 }
 .loading-bar-fill{
   height:100%;width:0%;background:var(--teal);border-radius:2px;
   transition:width 0.5s ease;
+  box-shadow:0 0 8px rgba(0,229,180,0.4);
 }
 
-.back-link{
-  display:inline-block;margin-top:32px;
-  font-family:'JetBrains Mono',monospace;font-size:12px;
+/* Footer links */
+.footer-links{
+  margin-top:40px;display:flex;gap:24px;justify-content:center;
+  animation:fadeUp 0.6s 0.3s ease both;
+}
+.footer-link{
+  font-family:'JetBrains Mono',monospace;font-size:11px;
   letter-spacing:0.1em;text-transform:uppercase;
-  color:var(--ink-3);text-decoration:none;
+  color:var(--ink-4);text-decoration:none;
   transition:color 0.25s ease;
 }
-.back-link:hover{color:var(--ink)}
+.footer-link:hover{color:var(--ink-2)}
+
 .error-msg{
   color:#f87171;font-size:14px;margin-top:16px;display:none;
 }
 </style>
 </head>
 <body>
+
 <div class="success">
+
+  <!-- Animated check ring -->
+  <div class="check-ring">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00e5b4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="20 6 9 17 4 12" stroke-dasharray="24" stroke-dashoffset="0"/>
+    </svg>
+  </div>
+
   <h1>Thank <span class="it">you.</span></h1>
-  <p>Your purchase is confirmed. Click below to download Nimbus. This link expires in 30 minutes &mdash; if you need it again, check your email.</p>
+  <p class="subtitle">Your purchase is confirmed. Download Nimbus below &mdash; this link expires in 30 minutes.</p>
+
   <a id="downloadBtn" class="download-btn" href="#">Download Nimbus 1.0.0</a>
   <p id="errorMsg" class="error-msg">Something went wrong verifying your purchase. Please contact hello@nimbus.audio</p>
 
+  <!-- What's included -->
+  <div class="included-card">
+    <h3>What you got</h3>
+    <ul class="included-list">
+      <li>VST3 / AU / Standalone</li>
+      <li>Two-hand tracking</li>
+      <li>12 CC channels</li>
+      <li>Gesture editor</li>
+      <li>3 machine installs</li>
+      <li>Lifetime updates</li>
+    </ul>
+  </div>
+
+  <!-- Loading bar -->
   <div id="licenseLoading" class="license-loading" style="display:none">
     <p>Generating your license key...</p>
     <div class="loading-bar"><div id="loadingBarFill" class="loading-bar-fill"></div></div>
   </div>
 
+  <!-- License key display -->
   <div id="licenseSection" class="license-section" style="display:none">
     <h2>Your license <span style="font-style:italic;color:var(--teal)">key</span></h2>
     <table class="license-table">
@@ -147,7 +262,7 @@ body{
       </thead>
       <tbody>
         <tr>
-          <td style="color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:14px;cursor:default">Nimbus 1.0.0</td>
+          <td style="color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:13px;cursor:default">Nimbus 1.0.0</td>
           <td id="licenseKey" title="Click to copy">&mdash;</td>
         </tr>
       </tbody>
@@ -155,13 +270,19 @@ body{
     <span id="copiedMsg" class="copied-msg">Copied to clipboard</span>
     <div class="license-actions">
       <button id="copyBtn" class="license-btn" type="button">Copy key</button>
-      <button id="saveTxtBtn" class="license-btn" type="button">Download as .txt</button>
+      <button id="saveTxtBtn" class="license-btn" type="button">Save as .txt</button>
     </div>
   </div>
 
-  <br>
-  <a href="/" class="back-link">Back to home</a>
+  <!-- Footer -->
+  <div class="footer-links">
+    <a href="/" class="footer-link">Home</a>
+    <a href="/docs" class="footer-link">Docs</a>
+    <a href="mailto:hello@nimbus.audio" class="footer-link">Support</a>
+  </div>
+
 </div>
+
 <script>
 (function(){
   var params = new URLSearchParams(window.location.search);
