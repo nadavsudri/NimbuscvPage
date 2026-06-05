@@ -65,37 +65,39 @@ export default async function handler(req, res) {
     }
   }
 
-  console.log('Webhook event:', eventName, 'data.id:', event.data?.id, JSON.stringify(event.data?.attributes || {}).slice(0, 500));
-
   if (eventName === 'license_key_created') {
     const attrs = event.data?.attributes;
     const key = attrs?.key;
     const orderId = String(attrs?.order_id);
     const email = attrs?.user_email;
 
-    console.log('License key update: key=' + key + ' orderId=' + orderId + ' email=' + email);
+    console.log('License key created: key=' + key + ' orderId=' + orderId + ' email=' + email);
 
-    if (key) {
-      // Try matching by order_id
+    if (key && orderId) {
+      // Try matching by order_id first (most reliable)
       const { data: d1, error: e1 } = await supabase
         .from('purchases')
         .update({ license_key: key })
         .eq('order_id', orderId)
+        .is('license_key', null)
         .select();
 
-      console.log('order_id match result:', JSON.stringify(d1), e1?.message);
+      console.log('Updated by order_id:', orderId, 'rows:', d1?.length || 0);
 
-      // If no rows matched, try email fallback
+      // If no match by order_id, try by email as fallback
       if (!d1 || d1.length === 0) {
-        console.log('order_id match failed, trying email fallback for:', email);
-        const { data: d2, error: e2 } = await supabase
-          .from('purchases')
-          .update({ license_key: key })
-          .eq('email', email)
-          .is('license_key', null)
-          .select();
+        if (email) {
+          const { data: d2, error: e2 } = await supabase
+            .from('purchases')
+            .update({ license_key: key })
+            .eq('email', email)
+            .is('license_key', null)
+            .order('created_at', { ascending: false })
+            .limit(1)
+            .select();
 
-        console.log('email match result:', JSON.stringify(d2), e2?.message);
+          console.log('Updated by email:', email, 'rows:', d2?.length || 0);
+        }
       }
     }
   }
