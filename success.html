@@ -389,8 +389,12 @@ body::after{
           updateBar();
 
           fetch('/api/license?token=' + encodeURIComponent(data.download_token) + '&_t=' + Date.now())
-            .then(function(r){ return r.json() })
+            .then(function(r){
+              if (r.status === 403) { window.location.href = '/expired.html'; return null; }
+              return r.json();
+            })
             .then(function(licData){
+              if (!licData) return;
               if (licData.license_key) {
                 licenseKeyValue = licData.license_key;
                 licenseKeyEl.textContent = licenseKeyValue;
