@@ -72,22 +72,37 @@ body{
   <a id="downloadBtn" class="download-btn" href="#">Download Nimbus 1.0.0</a>
   <p id="errorMsg" class="error-msg">Something went wrong verifying your purchase. Please contact hello@nimbus.audio</p>
   <br>
-  <a href="index.html" class="back-link">Back to home</a>
+  <a href="/" class="back-link">Back to home</a>
 </div>
 <script>
 (function(){
   var params = new URLSearchParams(window.location.search);
-  var token = params.get('token');
+  var orderId = params.get('order_id');
   var btn = document.getElementById('downloadBtn');
   var err = document.getElementById('errorMsg');
 
-  if (!token) {
+  if (!orderId) {
     btn.style.display = 'none';
     err.style.display = 'block';
     return;
   }
 
-  btn.href = '/api/download?token=' + encodeURIComponent(token);
+  // Fetch download token from Supabase by order_id
+  fetch('/api/purchase?order_id=' + encodeURIComponent(orderId))
+    .then(function(r){ return r.json() })
+    .then(function(data){
+      if (data.download_token) {
+        btn.href = '/api/download?token=' + encodeURIComponent(data.download_token);
+        btn.style.display = 'inline-flex';
+      } else {
+        btn.style.display = 'none';
+        err.style.display = 'block';
+      }
+    })
+    .catch(function(){
+      btn.style.display = 'none';
+      err.style.display = 'block';
+    });
 })();
 </script>
 </body>
