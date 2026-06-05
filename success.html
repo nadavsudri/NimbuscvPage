@@ -256,8 +256,8 @@ body::after{
 
 <div class="success">
 
-  <!-- Animated check ring -->
-  <div class="check-ring">
+  <!-- Animated check ring (hidden until license key loads) -->
+  <div id="checkRing" class="check-ring" style="display:none">
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#00e5b4" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
       <polyline points="20 6 9 17 4 12" stroke-dasharray="24" stroke-dashoffset="0"/>
     </svg>
@@ -356,6 +356,7 @@ body::after{
   var copyBtn = document.getElementById('copyBtn');
   var saveTxtBtn = document.getElementById('saveTxtBtn');
   var copiedMsg = document.getElementById('copiedMsg');
+  var checkRing = document.getElementById('checkRing');
   var stepsCard = document.getElementById('stepsCard');
   var licenseKeyValue = '';
   var maxAttempts = 10;
@@ -396,6 +397,7 @@ body::after{
                 loadingBarFill.style.width = '100%';
                 setTimeout(function(){
                   licenseLoading.style.display = 'none';
+                  checkRing.style.display = 'grid';
                   licenseSection.style.display = 'block';
                   stepsCard.style.display = 'block';
                 }, 400);
