@@ -45,14 +45,16 @@ export default async function handler(req, res) {
 
   if (eventName === 'order_created') {
     const attrs = event.data?.attributes;
-
     const customData = event.meta?.custom_data || {};
+
+    // Generate download token if not provided
+    const downloadToken = customData.download_token || crypto.randomBytes(16).toString('hex');
 
     const { error } = await supabase.from('purchases').insert({
       email: attrs?.user_email,
       name: attrs?.user_name,
       order_id: String(event.data?.id),
-      download_token: customData.download_token || null,
+      download_token: downloadToken,
       amount: attrs?.total,
       currency: attrs?.currency,
       status: attrs?.status,
