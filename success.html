@@ -282,28 +282,6 @@ body::after{
     </ul>
   </div>
 
-  <!-- Your first five minutes -->
-  <div class="steps-card">
-    <h3>Your first five minutes</h3>
-    <div class="steps-grid">
-      <div class="step">
-        <div class="step-num">01</div>
-        <h4>Install <span class="it">it.</span></h4>
-        <p>Run the download &mdash; the plugin lands in your VST3 / AU / AAX folder automatically.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">02</div>
-        <h4>Open your <span class="it">DAW.</span></h4>
-        <p>Drop Nimbus on a track, allow camera access, and you'll see your hands light up.</p>
-      </div>
-      <div class="step">
-        <div class="step-num">03</div>
-        <h4>Wiggle a <span class="it">finger.</span></h4>
-        <p>Right-click any synth knob, choose MIDI Learn, move your hand. That's the whole trick.</p>
-      </div>
-    </div>
-  </div>
-
   <!-- Loading bar -->
   <div id="licenseLoading" class="license-loading" style="display:none">
     <p>Generating your license key...</p>
@@ -331,6 +309,31 @@ body::after{
     </div>
   </div>
 
+  <!-- Your first five minutes (shown after license key) -->
+  <div id="stepsCard" class="steps-card" style="display:none">
+    <h3>Your first five minutes</h3>
+    <div class="steps-grid">
+      <div class="step">
+        <div class="step-num">01</div>
+        <h4>Install <span class="it">it.</span></h4>
+        <p>Run the download &mdash; the plugin lands in your VST3 / AU / AAX folder automatically.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <h4>Open your <span class="it">DAW.</span></h4>
+        <p>Drop Nimbus on a track, allow camera access, and you'll see your hands light up.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <h4>Wiggle a <span class="it">finger.</span></h4>
+        <p>Right-click any synth knob, choose MIDI Learn, move your hand. That's the whole trick.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:20px">
+      <a href="/docs" class="license-btn" style="padding:10px 24px;font-size:12px">Read the manual</a>
+    </div>
+  </div>
+
   <!-- Footer -->
   <div class="footer-links">
     <a href="/" class="footer-link">Home</a>
@@ -353,6 +356,7 @@ body::after{
   var copyBtn = document.getElementById('copyBtn');
   var saveTxtBtn = document.getElementById('saveTxtBtn');
   var copiedMsg = document.getElementById('copiedMsg');
+  var stepsCard = document.getElementById('stepsCard');
   var licenseKeyValue = '';
   var maxAttempts = 10;
   var attempt = 0;
@@ -393,6 +397,7 @@ body::after{
                 setTimeout(function(){
                   licenseLoading.style.display = 'none';
                   licenseSection.style.display = 'block';
+                  stepsCard.style.display = 'block';
                 }, 400);
               } else if (attempt < maxAttempts) {
                 setTimeout(fetchLicense, 3000);
