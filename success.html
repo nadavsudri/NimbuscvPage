@@ -379,9 +379,8 @@ body::after{
     .then(function(data){
       if (data.download_token) {
         btn.href = '/api/download?token=' + encodeURIComponent(data.download_token);
-        btn.style.display = 'inline-flex';
 
-        // Show loading bar and start fetching license
+        // Show loading bar, but keep download button hidden until expiry check passes
         licenseLoading.style.display = 'block';
 
         function fetchLicense() {
@@ -395,6 +394,7 @@ body::after{
             })
             .then(function(licData){
               if (!licData) return;
+              btn.style.display = 'inline-flex';
               if (licData.license_key) {
                 licenseKeyValue = licData.license_key;
                 licenseKeyEl.textContent = licenseKeyValue;
