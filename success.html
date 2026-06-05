@@ -98,6 +98,22 @@ body{
 }
 .license-btn:hover{border-color:var(--teal);color:var(--ink)}
 
+/* Loading bar */
+.license-loading{
+  margin-top:40px;text-align:center;
+}
+.license-loading p{
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  letter-spacing:0.08em;color:var(--ink-3);margin:0 0 12px;
+}
+.loading-bar{
+  width:100%;height:3px;background:var(--rule);border-radius:2px;overflow:hidden;
+}
+.loading-bar-fill{
+  height:100%;width:0%;background:var(--teal);border-radius:2px;
+  transition:width 0.5s ease;
+}
+
 .back-link{
   display:inline-block;margin-top:32px;
   font-family:'JetBrains Mono',monospace;font-size:12px;
@@ -117,6 +133,11 @@ body{
   <p>Your purchase is confirmed. Click below to download Nimbus. This link expires in 30 minutes &mdash; if you need it again, check your email.</p>
   <a id="downloadBtn" class="download-btn" href="#">Download Nimbus 1.0.0</a>
   <p id="errorMsg" class="error-msg">Something went wrong verifying your purchase. Please contact hello@nimbus.audio</p>
+
+  <div id="licenseLoading" class="license-loading" style="display:none">
+    <p>Generating your license key...</p>
+    <div class="loading-bar"><div id="loadingBarFill" class="loading-bar-fill"></div></div>
+  </div>
 
   <div id="licenseSection" class="license-section" style="display:none">
     <h2>Your license <span style="font-style:italic;color:var(--teal)">key</span></h2>
@@ -147,6 +168,16 @@ body{
   var orderId = params.get('order_id');
   var btn = document.getElementById('downloadBtn');
   var err = document.getElementById('errorMsg');
+  var licenseLoading = document.getElementById('licenseLoading');
+  var loadingBarFill = document.getElementById('loadingBarFill');
+  var licenseSection = document.getElementById('licenseSection');
+  var licenseKeyEl = document.getElementById('licenseKey');
+  var copyBtn = document.getElementById('copyBtn');
+  var saveTxtBtn = document.getElementById('saveTxtBtn');
+  var copiedMsg = document.getElementById('copiedMsg');
+  var licenseKeyValue = '';
+  var maxAttempts = 10;
+  var attempt = 0;
 
   if (!orderId) {
     btn.style.display = 'none';
@@ -154,13 +185,10 @@ body{
     return;
   }
 
-  // License key elements
-  var licenseSection = document.getElementById('licenseSection');
-  var licenseKeyEl = document.getElementById('licenseKey');
-  var copyBtn = document.getElementById('copyBtn');
-  var saveTxtBtn = document.getElementById('saveTxtBtn');
-  var copiedMsg = document.getElementById('copiedMsg');
-  var licenseKeyValue = '';
+  function updateBar() {
+    var pct = Math.min(((attempt + 1) / maxAttempts) * 100, 95);
+    loadingBarFill.style.width = pct + '%';
+  }
 
   // Fetch download token and show license key
   fetch('/api/purchase?order_id=' + encodeURIComponent(orderId))
@@ -170,24 +198,30 @@ body{
         btn.href = '/api/download?token=' + encodeURIComponent(data.download_token);
         btn.style.display = 'inline-flex';
 
-        // Try to fetch license key from database (will retry)
-        var maxAttempts = 10;
-        var attempt = 0;
+        // Show loading bar and start fetching license
+        licenseLoading.style.display = 'block';
 
         function fetchLicense() {
           attempt++;
+          updateBar();
+
           fetch('/api/license?token=' + encodeURIComponent(data.download_token) + '&_t=' + Date.now())
             .then(function(r){ return r.json() })
             .then(function(licData){
               if (licData.license_key) {
                 licenseKeyValue = licData.license_key;
                 licenseKeyEl.textContent = licenseKeyValue;
-                licenseSection.style.display = 'block';
+                loadingBarFill.style.width = '100%';
+                setTimeout(function(){
+                  licenseLoading.style.display = 'none';
+                  licenseSection.style.display = 'block';
+                }, 400);
               } else if (attempt < maxAttempts) {
                 setTimeout(fetchLicense, 3000);
               } else {
-                licenseSection.style.display = 'block';
-                licenseKeyEl.textContent = 'Check your email for your license key';
+                licenseLoading.querySelector('p').textContent = 'License key is on its way. Check your email.';
+                loadingBarFill.style.width = '100%';
+                loadingBarFill.style.background = 'var(--ink-3)';
               }
             })
             .catch(function(){
