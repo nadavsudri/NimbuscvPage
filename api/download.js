@@ -29,22 +29,24 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'Purchase not found or not yet processed. Try again in a few seconds.' });
     }
 
-    // Check if token has expired (30 minutes) - only for token-based lookups
-    if (token) {
-      const createdAt = new Date(purchase.created_at);
-      const now = new Date();
-      const diffMinutes = (now - createdAt) / 1000 / 60;
-      if (diffMinutes > 30) {
-        // Mark as inactive (non-blocking)
-        supabase
-          .from('purchases')
-          .update({ is_active: false })
-          .eq('download_token', token)
-          .then(() => console.log('Marked inactive:', token))
-          .catch(err => console.error('Failed to mark inactive:', err.message));
+    // Check is_active status first
+    if (purchase.is_active === false) {
+      return res.redirect(303, '/expired.html');
+    }
 
-        return res.redirect(303, '/expired.html');
-      }
+    // Check if expired (30 minutes)
+    const createdAt = new Date(purchase.created_at);
+    const now = new Date();
+    const diffMinutes = (now - createdAt) / 1000 / 60;
+
+    if (diffMinutes > 30) {
+      // Mark as inactive for future requests
+      await supabase
+        .from('purchases')
+        .update({ is_active: false })
+        .eq('id', purchase.id);
+
+      return res.redirect(303, '/expired.html');
     }
 
     // Check download count
