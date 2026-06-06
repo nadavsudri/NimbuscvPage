@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
     const { data, error } = await supabase
       .from('purchases')
-      .select('download_token, order_id')
+      .select('download_token, order_id, is_active')
       .eq('order_id', String(order_id))
       .single();
 
@@ -25,6 +25,10 @@ export default async function handler(req, res) {
 
     if (error || !data) {
       return res.status(404).json({ error: 'Purchase not found', order_id });
+    }
+
+    if (data.is_active === false) {
+      return res.status(403).json({ error: 'expired' });
     }
 
     res.status(200).json({ download_token: data.download_token });

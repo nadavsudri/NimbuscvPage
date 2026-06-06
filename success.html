@@ -375,8 +375,12 @@ body::after{
 
   // Fetch download token and show license key
   fetch('/api/purchase?order_id=' + encodeURIComponent(orderId))
-    .then(function(r){ return r.json() })
+    .then(function(r){
+      if (r.status === 403) { window.location.href = '/expired.html'; return null; }
+      return r.json();
+    })
     .then(function(data){
+      if (!data) return;
       if (data.download_token) {
         btn.href = '/api/download?token=' + encodeURIComponent(data.download_token);
 
