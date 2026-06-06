@@ -87,10 +87,23 @@ body{
   box-shadow:0 8px 24px rgba(0,229,180,0.2);
 }
 
+/* TOPIC FILTER TABS */
+.topic-tabs{
+  display:flex;gap:6px;flex-wrap:wrap;margin:32px 0 0;
+}
+.topic-tab{
+  font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;
+  padding:7px 14px;border-radius:6px;border:1px solid var(--rule-2);
+  background:var(--bg-2);color:var(--ink-3);cursor:pointer;
+  transition:all .15s;
+}
+.topic-tab:hover{border-color:var(--ink-3);color:var(--ink-2)}
+.topic-tab.active{border-color:var(--teal);color:var(--teal);background:rgba(0,229,180,0.06)}
+
 /* THREAD LIST */
 .forum-layout{
   display:grid;grid-template-columns:1fr 300px;gap:48px;
-  padding:60px 0 120px;
+  padding:40px 0 120px;
 }
 @media(max-width:900px){
   .forum-layout{grid-template-columns:1fr;gap:32px}
@@ -126,6 +139,13 @@ body{
   line-height:1.6;
   overflow:hidden;text-overflow:ellipsis;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+}
+.thread-card .topic-tag{
+  display:inline-block;
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;
+  padding:3px 8px;border-radius:4px;border:1px solid rgba(34,211,238,0.3);
+  color:var(--teal);background:rgba(0,229,180,0.06);
+  margin-bottom:10px;
 }
 .thread-card .comment-count{
   margin-top:12px;
@@ -202,6 +222,15 @@ body{
     <h1>Community <span style="font-style:italic;color:var(--teal)">Forum.</span></h1>
     <p>Ask questions, share workflows, and connect with other Nimbus users.</p>
     <a href="#new-thread" class="btn-new-thread" onclick="showNewThreadForm()">New Question</a>
+    <div class="topic-tabs" id="topicTabs">
+      <button class="topic-tab active" onclick="filterTopic(this,'all')">All</button>
+      <button class="topic-tab" onclick="filterTopic(this,'setup')">Setup & Tracking</button>
+      <button class="topic-tab" onclick="filterTopic(this,'daw')">DAW Integration</button>
+      <button class="topic-tab" onclick="filterTopic(this,'gestures')">Gestures & Mapping</button>
+      <button class="topic-tab" onclick="filterTopic(this,'feature-request')">Feature Requests</button>
+      <button class="topic-tab" onclick="filterTopic(this,'bug')">Bug Reports</button>
+      <button class="topic-tab" onclick="filterTopic(this,'general')">General</button>
+    </div>
   </div>
 </div>
 
@@ -262,6 +291,19 @@ body{
     </div>
 
     <div style="margin-bottom:20px;">
+      <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;">Topic</label>
+      <select name="topic" required style="width:100%;padding:12px 14px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--rule-2);border-radius:6px;outline:none;transition:border-color 0.25s ease;cursor:pointer;appearance:auto;">
+        <option value="" disabled selected>Choose a topic…</option>
+        <option value="setup">Setup & Tracking</option>
+        <option value="daw">DAW Integration</option>
+        <option value="gestures">Gestures & Mapping</option>
+        <option value="feature-request">Feature Requests</option>
+        <option value="bug">Bug Reports</option>
+        <option value="general">General</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom:20px;">
       <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;">Details</label>
       <textarea name="body" required placeholder="Describe your question, setup, or issue..." rows="6" style="width:100%;padding:12px 14px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--rule-2);border-radius:6px;outline:none;resize:vertical;transition:border-color 0.25s ease;"></textarea>
     </div>
@@ -280,6 +322,16 @@ body{
 
 <script>
 let threadsData = [];
+let activeTopic = 'all';
+
+const topicLabels = {
+  'setup': 'Setup & Tracking',
+  'daw': 'DAW Integration',
+  'gestures': 'Gestures & Mapping',
+  'feature-request': 'Feature Requests',
+  'bug': 'Bug Reports',
+  'general': 'General'
+};
 
 // Load threads on page load
 async function loadThreads() {
@@ -294,25 +346,38 @@ async function loadThreads() {
   }
 }
 
+function filterTopic(btn, topic) {
+  activeTopic = topic;
+  document.querySelectorAll('.topic-tab').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  renderThreads();
+}
+
 function renderThreads() {
   const container = document.getElementById('threads-container');
+  const filtered = activeTopic === 'all' ? threadsData : threadsData.filter(t => t.topic === activeTopic);
 
-  if (threadsData.length === 0) {
+  if (filtered.length === 0) {
     container.innerHTML = '<div class="empty-state"><div class="icon">—</div><h2>No questions yet</h2><p>Be the first to ask something!</p></div>';
     return;
   }
 
-  container.innerHTML = threadsData.map(thread => `
+  container.innerHTML = filtered.map(thread => {
+    const topicTag = thread.topic && topicLabels[thread.topic]
+      ? `<span class="topic-tag">${topicLabels[thread.topic]}</span>`
+      : '';
+    return `
     <a href="forum-thread.html?id=${thread.id}" class="thread-card">
+      ${topicTag}
       <div class="meta">
-        <span>${thread.name}</span>
+        <span>${escapeHtml(thread.name)}</span>
         <span>${new Date(thread.created_at).toLocaleDateString()}</span>
       </div>
       <h3>${escapeHtml(thread.title)}</h3>
       <div class="preview">${escapeHtml(thread.body)}</div>
       <div class="comment-count">${thread.comment_count || 0} ${thread.comment_count === 1 ? 'reply' : 'replies'}</div>
     </a>
-  `).join('');
+  `}).join('');
 }
 
 function showNewThreadForm() {

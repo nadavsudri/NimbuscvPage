@@ -76,6 +76,7 @@ body::before{
 }
 .tag.owner{color:var(--teal);border-color:rgba(0,229,180,0.45);background:rgba(0,229,180,0.06);display:inline-flex;align-items:center;gap:6px}
 .tag.owner::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 7px var(--teal)}
+.tag.cat{color:var(--cyan);border-color:rgba(34,211,238,0.35)}
 h1.title{
   font-family:'Instrument Serif',serif;font-weight:400;
   font-size:clamp(34px,5vw,52px);line-height:1.04;letter-spacing:-0.01em;margin:0 0 18px;text-wrap:balance;
@@ -321,9 +322,15 @@ h1.title{
     // Thread header
     var head = document.getElementById('threadHead');
     head.style.display = 'block';
+    var topicLabels = {
+      'setup': 'Setup & Tracking', 'daw': 'DAW Integration',
+      'gestures': 'Gestures & Mapping', 'feature-request': 'Feature Requests',
+      'bug': 'Bug Reports', 'general': 'General'
+    };
     var tagsHtml = '';
     if (threadData.owns_nimbus) tagsHtml += '<span class="tag owner">Nimbus Owner</span>';
-    tagsHtml += '<span class="tag">discussion</span>';
+    var topicLabel = topicLabels[threadData.topic] || threadData.topic || 'General';
+    tagsHtml += '<span class="tag cat">' + escapeHtml(topicLabel) + '</span>';
 
     var date = new Date(threadData.created_at);
     var dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
