@@ -1564,12 +1564,13 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
     var scrollY = 0;
     var BPM = 128;
     var beatInterval = 60 / BPM; // seconds per beat
+    var smoothPulse = 0;
     var layers = [
-      { speed: 1.0,  amp: 0.38, freq: 1.8, phase: 0,    color: 'rgba(0,229,180,0.35)', fill: 'rgba(0,229,180,0.10)' },
-      { speed: 0.7,  amp: 0.28, freq: 2.4, phase: 2.1,  color: 'rgba(34,211,238,0.28)', fill: 'rgba(34,211,238,0.07)' },
-      { speed: 1.3,  amp: 0.22, freq: 3.2, phase: 4.2,  color: 'rgba(0,229,180,0.22)', fill: 'rgba(0,229,180,0.05)' },
-      { speed: 0.5,  amp: 0.45, freq: 1.2, phase: 1.0,  color: 'rgba(59,130,246,0.18)', fill: 'rgba(59,130,246,0.04)' },
-      { speed: 0.9,  amp: 0.18, freq: 4.0, phase: 3.5,  color: 'rgba(0,229,180,0.16)', fill: 'rgba(0,229,180,0.03)' }
+      { speed: 0.4,  amp: 0.38, freq: 1.4, phase: 0,    color: 'rgba(0,229,180,0.35)', fill: 'rgba(0,229,180,0.10)' },
+      { speed: 0.3,  amp: 0.28, freq: 1.8, phase: 2.1,  color: 'rgba(34,211,238,0.28)', fill: 'rgba(34,211,238,0.07)' },
+      { speed: 0.5,  amp: 0.22, freq: 2.2, phase: 4.2,  color: 'rgba(0,229,180,0.22)', fill: 'rgba(0,229,180,0.05)' },
+      { speed: 0.2,  amp: 0.45, freq: 1.0, phase: 1.0,  color: 'rgba(59,130,246,0.18)', fill: 'rgba(59,130,246,0.04)' },
+      { speed: 0.35, amp: 0.18, freq: 2.6, phase: 3.5,  color: 'rgba(0,229,180,0.16)', fill: 'rgba(0,229,180,0.03)' }
     ];
 
     function resize() {
@@ -1590,21 +1591,27 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
     }, { passive: true });
 
     function beatPulse(t) {
-      // 4-on-the-floor: kick on every beat
-      var beatPos = (t % beatInterval) / beatInterval; // 0→1 within each beat
-      // sharp attack, exponential decay
-      var kick = Math.exp(-beatPos * 6.0) * 0.7;
-      // offbeat hi-hat at half beat
-      var hatPos = ((t + beatInterval * 0.5) % beatInterval) / beatInterval;
-      var hat = Math.exp(-hatPos * 10.0) * 0.2;
+      // 4-on-the-floor: smooth sine-based pulse
+      var beatPhase = (t % beatInterval) / beatInterval;
+      // Smooth raised cosine — swells up then eases down
+      var kick = (1 + Math.cos(beatPhase * Math.PI * 2)) * 0.3;
+      // Gentle offbeat swell
+      var hatPhase = ((t + beatInterval * 0.5) % beatInterval) / beatInterval;
+      var hat = (1 + Math.cos(hatPhase * Math.PI * 2)) * 0.1;
       return kick + hat;
     }
 
+    var lastT = 0;
     function draw(t) {
-      t /= 1000; // to seconds
+      t /= 1000;
+      var dt = Math.min(t - lastT, 0.05);
+      lastT = t;
       ctx.clearRect(0, 0, W, H);
 
-      var pulse = beatPulse(t);
+      var rawPulse = beatPulse(t);
+      // Smooth interpolation to avoid jerky transitions
+      smoothPulse += (rawPulse - smoothPulse) * Math.min(dt * 8, 1);
+      var pulse = smoothPulse;
       // 5% scroll influence, 95% beat-driven
       var scrollInfluence = Math.min(scrollY / 600, 1) * 0.05;
       var energy = pulse * 0.95 + scrollInfluence;
@@ -1617,20 +1624,31 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         ctx.beginPath();
         ctx.moveTo(0, H);
 
-        for (var x = 0; x <= W; x += 3) {
+        var step = 6;
+        var points = [];
+        for (var x = 0; x <= W; x += step) {
           var nx = x / W;
-          // Primary wave
+          // Primary slow wave
           var y1 = Math.sin(nx * Math.PI * layer.freq + t * layer.speed + layer.phase) * 0.6;
-          // Secondary harmonic
-          var y2 = Math.sin(nx * Math.PI * layer.freq * 2.1 + t * layer.speed * 1.4 + layer.phase * 0.7) * 0.25;
-          // Tertiary — liquidy wobble
-          var y3 = Math.sin(nx * Math.PI * layer.freq * 3.7 + t * layer.speed * 0.6 + layer.phase * 1.5) * 0.15;
-          // Beat-synced splash
-          var splash = Math.sin(nx * Math.PI * 6 + t * 2.0) * pulse * 0.3;
+          // Gentle secondary
+          var y2 = Math.sin(nx * Math.PI * layer.freq * 1.7 + t * layer.speed * 0.7 + layer.phase * 0.7) * 0.25;
+          // Soft wobble
+          var y3 = Math.sin(nx * Math.PI * layer.freq * 2.3 + t * layer.speed * 0.4 + layer.phase * 1.5) * 0.15;
+          // Gentle beat swell
+          var splash = Math.sin(nx * Math.PI * 2.5 + t * 0.8) * pulse * 0.25;
 
           var wave = (y1 + y2 + y3 + splash) * amp;
-          var py = baseY + wave;
-          ctx.lineTo(x, py);
+          points.push({ x: x, y: baseY + wave });
+        }
+        // Draw smooth curve through points using quadratic bezier
+        if (points.length > 1) {
+          ctx.lineTo(points[0].x, points[0].y);
+          for (var i = 0; i < points.length - 1; i++) {
+            var cx = (points[i].x + points[i+1].x) / 2;
+            var cy = (points[i].y + points[i+1].y) / 2;
+            ctx.quadraticCurveTo(points[i].x, points[i].y, cx, cy);
+          }
+          ctx.lineTo(points[points.length-1].x, points[points.length-1].y);
         }
 
         ctx.lineTo(W, H);
