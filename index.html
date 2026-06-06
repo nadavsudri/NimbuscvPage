@@ -75,6 +75,18 @@ body::before{
 @media(prefers-reduced-motion:reduce){.midi-scan::after{animation:none;display:none}}
 @media(max-width:760px){.midi-bg{display:none}}
 
+/* ─── LIQUID WAVEFORM ─── */
+.liquid-canvas{
+  position:absolute;
+  bottom:0;left:0;right:0;
+  width:100%;height:45%;
+  z-index:0;pointer-events:none;
+  opacity:0.55;
+  mask-image:linear-gradient(to top,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 50%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to top,rgba(0,0,0,0.7) 0%,rgba(0,0,0,0.3) 50%,transparent 100%);
+}
+@media(max-width:760px){.liquid-canvas{height:35%;opacity:0.35}}
+
 /* ─── HARDWARE DECOR ─── */
 .hw-decor{position:absolute;pointer-events:none;z-index:0}
 @media(max-width:880px){.hw-decor{display:none}}
@@ -879,6 +891,9 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 <!-- ═══════ HERO ═══════ -->
 <header class="hero">
 
+  <!-- Liquid waveform background -->
+  <canvas class="liquid-canvas" id="liquidCanvas" aria-hidden="true"></canvas>
+
   <!-- Akai-style pad grid background -->
   <div class="midi-bg" aria-hidden="true">
     <svg viewBox="0 0 658 362" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1539,6 +1554,103 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   }else{
     els.forEach(function(el){el.classList.add('show')});
   }
+
+  // ── LIQUID WAVEFORM ──
+  (function(){
+    var canvas = document.getElementById('liquidCanvas');
+    if (!canvas || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var ctx = canvas.getContext('2d');
+    var W, H;
+    var scrollY = 0;
+    var BPM = 128;
+    var beatInterval = 60 / BPM; // seconds per beat
+    var layers = [
+      { speed: 1.0,  amp: 0.38, freq: 1.8, phase: 0,    color: 'rgba(0,229,180,0.12)', fill: 'rgba(0,229,180,0.04)' },
+      { speed: 0.7,  amp: 0.28, freq: 2.4, phase: 2.1,  color: 'rgba(34,211,238,0.10)', fill: 'rgba(34,211,238,0.03)' },
+      { speed: 1.3,  amp: 0.22, freq: 3.2, phase: 4.2,  color: 'rgba(0,229,180,0.08)', fill: 'rgba(0,229,180,0.02)' },
+      { speed: 0.5,  amp: 0.45, freq: 1.2, phase: 1.0,  color: 'rgba(59,130,246,0.07)', fill: 'rgba(59,130,246,0.02)' },
+      { speed: 0.9,  amp: 0.18, freq: 4.0, phase: 3.5,  color: 'rgba(0,229,180,0.06)', fill: 'rgba(0,229,180,0.015)' }
+    ];
+
+    function resize() {
+      var rect = canvas.parentElement.getBoundingClientRect();
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      W = rect.width;
+      H = canvas.offsetHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // 5% scroll reactivity
+    window.addEventListener('scroll', function() {
+      scrollY = window.pageYOffset || document.documentElement.scrollTop;
+    }, { passive: true });
+
+    function beatPulse(t) {
+      // 4-on-the-floor: kick on every beat
+      var beatPos = (t % beatInterval) / beatInterval; // 0→1 within each beat
+      // sharp attack, exponential decay
+      var kick = Math.exp(-beatPos * 6.0) * 0.7;
+      // offbeat hi-hat at half beat
+      var hatPos = ((t + beatInterval * 0.5) % beatInterval) / beatInterval;
+      var hat = Math.exp(-hatPos * 10.0) * 0.2;
+      return kick + hat;
+    }
+
+    function draw(t) {
+      t /= 1000; // to seconds
+      ctx.clearRect(0, 0, W, H);
+
+      var pulse = beatPulse(t);
+      // 5% scroll influence, 95% beat-driven
+      var scrollInfluence = Math.min(scrollY / 600, 1) * 0.05;
+      var energy = pulse * 0.95 + scrollInfluence;
+
+      for (var l = 0; l < layers.length; l++) {
+        var layer = layers[l];
+        var baseY = H * (0.45 + l * 0.08);
+        var amp = H * layer.amp * (0.3 + energy * 0.7);
+
+        ctx.beginPath();
+        ctx.moveTo(0, H);
+
+        for (var x = 0; x <= W; x += 3) {
+          var nx = x / W;
+          // Primary wave
+          var y1 = Math.sin(nx * Math.PI * layer.freq + t * layer.speed + layer.phase) * 0.6;
+          // Secondary harmonic
+          var y2 = Math.sin(nx * Math.PI * layer.freq * 2.1 + t * layer.speed * 1.4 + layer.phase * 0.7) * 0.25;
+          // Tertiary — liquidy wobble
+          var y3 = Math.sin(nx * Math.PI * layer.freq * 3.7 + t * layer.speed * 0.6 + layer.phase * 1.5) * 0.15;
+          // Beat-synced splash
+          var splash = Math.sin(nx * Math.PI * 6 + t * 2.0) * pulse * 0.3;
+
+          var wave = (y1 + y2 + y3 + splash) * amp;
+          var py = baseY + wave;
+          ctx.lineTo(x, py);
+        }
+
+        ctx.lineTo(W, H);
+        ctx.closePath();
+
+        // Fill
+        ctx.fillStyle = layer.fill;
+        ctx.fill();
+
+        // Stroke
+        ctx.strokeStyle = layer.color;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      }
+
+      requestAnimationFrame(draw);
+    }
+
+    requestAnimationFrame(draw);
+  })();
 
   // EYE — static, no cursor tracking
 
