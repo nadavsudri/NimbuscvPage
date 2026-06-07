@@ -13,7 +13,7 @@
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Nimbus","applicationCategory":"MultimediaApplication","operatingSystem":"macOS","offers":{"@type":"Offer","price":"29.90","priceCurrency":"USD"}}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Urbanist:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z' fill='none' stroke='%2300e5b4' stroke-width='3'/><circle cx='50' cy='50' r='14' fill='none' stroke='%2300e5b4' stroke-width='2' opacity='0.5'/><rect x='48.8' y='40' width='2.4' height='20' rx='1.2' fill='%2300e5b4'/></svg>"/>
 <style>
 :root{
@@ -175,29 +175,20 @@ nav{
     radial-gradient(ellipse 30% 40% at 30% 60%,rgba(59,130,246,0.08) 0%,transparent 70%);
   pointer-events:none;z-index:0;
 }
-.hero-top{
-  display:flex;align-items:center;justify-content:space-between;
-  font-family:'JetBrains Mono',monospace;font-size:10.5px;
-  letter-spacing:0.18em;color:var(--ink-3);text-transform:uppercase;
-  padding-bottom:24px;border-bottom:1px solid var(--rule);
-  margin-bottom:40px;position:relative;
+.hero-nimbus{
+  font-family:'Urbanist',sans-serif;
+  font-size:clamp(56px,14vw,190px);
+  font-weight:800;
+  letter-spacing:0.22em;
+  text-align:center;
+  margin:0 0 40px;
+  position:relative;
+  z-index:1;
+  white-space:nowrap;
+  color:#fff;
+  text-shadow:0 2px 12px rgba(255,255,255,0.15), 0 4px 24px rgba(0,229,180,0.08);
 }
-.hero-top .left{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
-.hero-top .pill{
-  background:var(--teal);color:#06121a;
-  padding:3px 8px;border-radius:3px;
-  letter-spacing:0.16em;font-weight:600;
-}
-.hero-top .right{display:flex;gap:18px;color:var(--ink-3)}
-.hero-top .live{color:var(--teal)}
-.hero-top .live::before{
-  content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
-  background:var(--teal);margin-right:6px;
-  vertical-align:1px;
-  animation:pulse 2.5s ease-in-out infinite;
-}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-@media(max-width:680px){.hero-top .right{display:none}}
+@media(max-width:680px){.hero-nimbus{font-size:clamp(36px,14vw,72px);letter-spacing:0.14em}}
 
 .hero-grid{
   display:grid;grid-template-columns:1.4fr 1fr;gap:48px;
@@ -217,16 +208,6 @@ nav{
   -webkit-background-clip:text;background-clip:text;color:transparent;
 }
 .hero-side{display:flex;flex-direction:column;gap:20px;padding-bottom:8px}
-.hero-eye{
-  position:absolute;
-  width:clamp(240px,28vw,340px);
-  right:calc(6% + 20px);top:calc(18% - 95px);
-  opacity:0.18;
-  z-index:0;
-  pointer-events:none;
-  filter:blur(1.8px) drop-shadow(0 0 24px rgba(0,229,180,0.12));
-}
-@media(max-width:900px){.hero-eye{width:180px;right:4%;top:calc(22% - 25px);opacity:0.12}}
 .hero-sub{
   font-size:17px;line-height:1.5;color:var(--ink-2);
   max-width:380px;margin:0;
@@ -286,7 +267,7 @@ nav{
 /* hero gallery */
 .hero-gallery{
   position:relative;max-width:1140px;margin:0 auto;
-  padding:0 32px;height:340px;margin-top:-20px;margin-bottom:40px;
+  padding:0 32px;height:340px;margin-top:140px;margin-bottom:40px;
 }
 .hero-gallery-img{
   position:absolute;
@@ -487,6 +468,32 @@ nav{
 
 /* ─── CHAPTERS ─── */
 .chapters{padding:140px 0 100px;border-bottom:1px solid var(--rule);position:relative;overflow:hidden}
+/* ─── FLASHLIGHT ─── */
+.flashlight-section{position:relative}
+.flashlight-overlay{
+  position:absolute;inset:0;z-index:10;pointer-events:none;
+  background:#06121a;
+  opacity:0;
+  transition:opacity 0.6s ease;
+  mask-image:radial-gradient(circle 220px at var(--mx,50%) var(--my,50%),transparent 0%,transparent 30%,#000 70%);
+  -webkit-mask-image:radial-gradient(circle 220px at var(--mx,50%) var(--my,50%),transparent 0%,transparent 30%,#000 70%);
+}
+.flashlight-section.active .flashlight-overlay{opacity:0.55}
+.graffiti{
+  position:absolute;
+  bottom:80px;left:12%;transform:rotate(-2deg);
+  font-family:'Instrument Serif',serif;
+  font-style:italic;
+  font-size:clamp(22px,3vw,38px);
+  letter-spacing:0.05em;
+  color:var(--teal);
+  opacity:0;
+  z-index:1;
+  pointer-events:none;
+  user-select:none;
+  white-space:nowrap;
+  transition:opacity 0.3s ease;
+}
 .chapter{
   display:grid;grid-template-columns:140px 1fr 1.2fr;gap:48px;
   padding:56px 0;border-bottom:1px solid var(--rule);align-items:start;
@@ -968,50 +975,10 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   </div>
 
   <div class="wrap">
-    <div class="hero-top">
-      <div class="left">
-        <span class="pill">NEW &middot; 1.0.0</span>
-        <span>Brooklyn &middot; Berlin &middot; Tokyo</span>
-      </div>
-      <div class="right">
-        <span>VST3 &middot; AU &middot; Standalone</span>
-        <span>macOS 12+ / Win 10+</span>
-      </div>
-    </div>
 
-    <!-- Big tracking eye — behind hero content -->
-    <svg class="hero-eye" id="hero-eye" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-      <path d="M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z" fill="none" stroke="#00e5b4" stroke-width="1.2"/>
-      <g id="eye-pupil">
-        <circle cx="50" cy="50" r="14" fill="none" stroke="#00e5b4" stroke-width="0.8" opacity="0.45"/>
-        <rect x="43.2" y="47.5" width="1.6" height="5" rx="0.8" fill="#00e5b4"/>
-        <rect x="46.0" y="44" width="1.6" height="12" rx="0.8" fill="#00e5b4"/>
-        <rect x="48.8" y="41" width="1.6" height="18" rx="0.8" fill="#00e5b4"/>
-        <rect x="51.6" y="44" width="1.6" height="12" rx="0.8" fill="#00e5b4"/>
-        <rect x="54.4" y="47.5" width="1.6" height="5" rx="0.8" fill="#00e5b4"/>
-        <circle cx="44.5" cy="44.5" r="1.4" fill="#00e5b4"/>
-      </g>
-    </svg>
+    <h1 class="hero-nimbus">NIMBUS</h1>
 
     <div class="hero-grid">
-      <h1 class="hero-title">
-        <span class="it">Hands on,</span><br>
-        the last<br>
-        MIDI controller<br>
-        you'll need.
-      </h1>
-      <div class="hero-side">
-<p class="hero-sub">
-          <b>Nimbus</b> turns your webcam into expressive MIDI CC controllers.
-          No gloves. No sensors. <span class="serif italic accent">No nonsense.</span>
-          Two hands, twelve channels, real-time tracking.
-        </p>
-        <div class="hero-actions">
-          <a href="#pricing" class="btn-primary" style="text-decoration:none;display:inline-flex">
-            Get Nimbus          </a>
-          <a href="#how" class="btn-text">How it works</a>
-        </div>
-      </div>
     </div>
   </div>
 
@@ -1079,7 +1046,8 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 </div>
 
 <!-- ═══════ CHAPTERS ═══════ -->
-<section class="chapters" id="how">
+<section class="chapters flashlight-section" id="how">
+  <div class="flashlight-overlay" id="flashlightOverlay"></div>
 
   <!-- hw decor: fader strip -->
   <div class="hw-decor" aria-hidden="true" style="right:-8px;top:28%;opacity:0.14;width:100px">
@@ -1177,6 +1145,10 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
       </div>
     </div>
   </div>
+
+  <!-- Hidden graffiti — only visible under flashlight -->
+  <div class="graffiti" aria-hidden="true">type vision2026 for 10%</div>
+
 </section>
 
 <!-- ═══════ SHOWCASE ═══════ -->
@@ -1602,12 +1574,20 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
       scrollY = window.pageYOffset || document.documentElement.scrollTop;
     }, { passive: true });
 
+    // Cursor tracking — window-level so fast moves don't lose it
+    var smoothMouseX = -9999, smoothMouseY = -9999;
+    window.addEventListener('mousemove', function(e) {
+      var rect = canvas.getBoundingClientRect();
+      smoothMouseX = e.clientX - rect.left;
+      smoothMouseY = e.clientY - rect.top;
+    }, { passive: true });
+
+    // Directional flow speeds per layer (alternating LTR/RTL)
+    var flowSpeeds = [0.6, -0.45, 0.35, -0.25, 0.5];
+
     function beatPulse(t) {
-      // 4-on-the-floor: smooth sine-based pulse
       var beatPhase = (t % beatInterval) / beatInterval;
-      // Smooth raised cosine — swells up then eases down
       var kick = (1 + Math.cos(beatPhase * Math.PI * 2)) * 0.3;
-      // Gentle offbeat swell
       var hatPhase = ((t + beatInterval * 0.5) % beatInterval) / beatInterval;
       var hat = (1 + Math.cos(hatPhase * Math.PI * 2)) * 0.1;
       return kick + hat;
@@ -1620,11 +1600,10 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
       lastT = t;
       ctx.clearRect(0, 0, W, H);
 
+      // Smooth mouse position with lerp
       var rawPulse = beatPulse(t);
-      // Smooth interpolation to avoid jerky transitions
       smoothPulse += (rawPulse - smoothPulse) * Math.min(dt * 8, 1);
       var pulse = smoothPulse;
-      // 5% scroll influence, 95% beat-driven
       var scrollInfluence = Math.min(scrollY / 600, 1) * 0.05;
       var energy = pulse * 0.95 + scrollInfluence;
 
@@ -1632,6 +1611,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         var layer = layers[l];
         var baseY = H * (0.45 + l * 0.08);
         var amp = H * layer.amp * (0.3 + energy * 0.7);
+        var flow = flowSpeeds[l] || 0.4;
 
         ctx.beginPath();
         ctx.moveTo(0, H);
@@ -1640,16 +1620,30 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         var points = [];
         for (var x = 0; x <= W; x += step) {
           var nx = x / W;
-          // Primary slow wave
-          var y1 = Math.sin(nx * Math.PI * layer.freq + t * layer.speed + layer.phase) * 0.6;
+          // Directional flow: t * flow shifts phase uniformly → waves drift LTR or RTL
+          var flowOffset = t * flow;
+          // Primary slow wave with directional flow
+          var y1 = Math.sin(nx * Math.PI * layer.freq + flowOffset + t * layer.speed * 0.3 + layer.phase) * 0.6;
           // Gentle secondary
-          var y2 = Math.sin(nx * Math.PI * layer.freq * 1.7 + t * layer.speed * 0.7 + layer.phase * 0.7) * 0.25;
+          var y2 = Math.sin(nx * Math.PI * layer.freq * 1.7 + flowOffset * 0.8 + t * layer.speed * 0.2 + layer.phase * 0.7) * 0.25;
           // Soft wobble
-          var y3 = Math.sin(nx * Math.PI * layer.freq * 2.3 + t * layer.speed * 0.4 + layer.phase * 1.5) * 0.15;
+          var y3 = Math.sin(nx * Math.PI * layer.freq * 2.3 + flowOffset * 0.5 + t * layer.speed * 0.15 + layer.phase * 1.5) * 0.15;
           // Gentle beat swell
           var splash = Math.sin(nx * Math.PI * 2.5 + t * 0.8) * pulse * 0.25;
 
           var wave = (y1 + y2 + y3 + splash) * amp;
+
+          // Cursor reactivity: distance from static baseY (no feedback loop)
+          var dx = x - smoothMouseX;
+          var dy = baseY - smoothMouseY;
+          var dist = Math.sqrt(dx * dx + dy * dy);
+          var cursorRadius = 280;
+          if (dist < cursorRadius) {
+            var proximity = 1 - dist / cursorRadius;
+            var influence = proximity * proximity * (3 - 2 * proximity);
+            wave -= influence * amp * 0.5;
+          }
+
           points.push({ x: x, y: baseY + wave });
         }
         // Draw smooth curve through points using quadratic bezier
@@ -1666,11 +1660,9 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         ctx.lineTo(W, H);
         ctx.closePath();
 
-        // Fill
         ctx.fillStyle = layer.fill;
         ctx.fill();
 
-        // Stroke
         ctx.strokeStyle = layer.color;
         ctx.lineWidth = 1.2;
         ctx.stroke();
@@ -1682,7 +1674,41 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
     requestAnimationFrame(draw);
   })();
 
-  // EYE — static, no cursor tracking
+  // ── FLASHLIGHT EFFECT ──
+  (function(){
+    var section = document.querySelector('.flashlight-section');
+    var overlay = document.getElementById('flashlightOverlay');
+    if (!section || !overlay) return;
+
+    // Activate when section is in view
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        section.classList.toggle('active', e.isIntersecting);
+      });
+    }, { threshold: 0.15 });
+    io.observe(section);
+
+    var graffiti = section.querySelector('.graffiti');
+
+    // Track cursor position relative to section
+    window.addEventListener('mousemove', function(e){
+      var rect = section.getBoundingClientRect();
+      var x = e.clientX - rect.left;
+      var y = e.clientY - rect.top;
+      overlay.style.setProperty('--mx', x + 'px');
+      overlay.style.setProperty('--my', y + 'px');
+
+      // Reveal graffiti when flashlight is near
+      if (graffiti) {
+        var gr = graffiti.getBoundingClientRect();
+        var gcx = gr.left + gr.width / 2 - rect.left;
+        var gcy = gr.top + gr.height / 2 - rect.top;
+        var dist = Math.sqrt((x - gcx) * (x - gcx) + (y - gcy) * (y - gcy));
+        var reveal = Math.max(0, 1 - dist / 250);
+        graffiti.style.opacity = reveal * 0.6;
+      }
+    }, { passive: true });
+  })();
 
   // CHECKOUT — redirect to checkout page
   window.handleCheckout=function(){
