@@ -16,6 +16,11 @@
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Urbanist:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet"/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z' fill='none' stroke='%2300e5b4' stroke-width='3'/><circle cx='50' cy='50' r='14' fill='none' stroke='%2300e5b4' stroke-width='2' opacity='0.5'/><rect x='48.8' y='40' width='2.4' height='20' rx='1.2' fill='%2300e5b4'/></svg>"/>
 <style>
+@font-face{
+  font-family:'Jankora Street Melt';
+  src:url('assets/jankora-street-melt.ttf') format('truetype');
+  font-weight:400;font-style:normal;font-display:swap;
+}
 :root{
   --bg:#06121a;
   --bg-2:#0a1922;
@@ -207,8 +212,11 @@ nav{
   padding:12px 28px;
   position:relative;
   overflow:hidden;
-  border:1px solid transparent;
+  border:1px solid rgba(255,255,255,0.1);
   border-radius:6px;
+  background:rgba(255,255,255,0.04);
+  backdrop-filter:blur(12px) saturate(1.3);
+  -webkit-backdrop-filter:blur(12px) saturate(1.3);
   transition:color 0.3s ease, transform 0.3s cubic-bezier(0.16,1,0.3,1);
 }
 .btn-ghost:hover{transform:scale(1.08)}
@@ -248,18 +256,33 @@ nav{
 .hero-sub .accent{color:var(--teal)}
 .hero-actions{display:flex;gap:10px;flex-wrap:wrap}
 .btn-primary{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;
-  padding:14px 22px;background:var(--teal);color:#06121a;border-radius:8px;
   display:inline-flex;align-items:center;gap:10px;
-  box-shadow:0 0 0 1px rgba(0,229,180,0.25),0 8px 24px -8px rgba(0,229,180,0.3);
-  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+  font-family:'JetBrains Mono',monospace;
+  font-size:13px;letter-spacing:0.14em;text-transform:uppercase;font-weight:600;
+  color:var(--ink);
+  text-decoration:none;
+  padding:12px 28px;
+  position:relative;
+  overflow:hidden;
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:6px;
+  background:rgba(255,255,255,0.04);
+  backdrop-filter:blur(12px) saturate(1.3);
+  -webkit-backdrop-filter:blur(12px) saturate(1.3);
+  box-shadow:none;
+  transition:color 0.3s ease, transform 0.3s cubic-bezier(0.16,1,0.3,1);
 }
-.btn-primary:hover{
-  background:#1cf0c4;transform:translateY(-2px);
-  box-shadow:0 0 0 1px rgba(0,229,180,0.4),0 14px 32px -8px rgba(0,229,180,0.4);
+.btn-primary::before{
+  content:'';position:absolute;inset:0;
+  border:1px solid #fff;
+  border-radius:6px;
+  transform:scaleX(0);
+  transform-origin:left;
+  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
 }
-.btn-primary:active{transform:translateY(0) scale(0.97)}
+.btn-primary:hover::before{transform:scaleX(1)}
+.btn-primary:hover{transform:scale(1.08)}
+.btn-primary:active{transform:scale(0.97)}
 .btn-ghost{
   font-family:'JetBrains Mono',monospace;
   font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;
@@ -514,8 +537,8 @@ nav{
 .graffiti{
   position:absolute;
   bottom:80px;left:12%;transform:rotate(-2deg);
-  font-family:'Instrument Serif',serif;
-  font-style:italic;
+  font-family:'Jankora Street Melt',sans-serif;
+  font-style:normal;
   font-size:clamp(22px,3vw,38px);
   letter-spacing:0.05em;
   color:var(--teal);
@@ -523,7 +546,7 @@ nav{
   z-index:1;
   pointer-events:none;
   user-select:none;
-  white-space:nowrap;
+  line-height:1.2;
   transition:opacity 0.3s ease;
 }
 .chapter{
@@ -927,8 +950,9 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
     <div class="nav-links">
       <a href="#how">How it works</a>
       <a href="#pieces">The Pieces</a>
-      <a href="#voices">Voices</a>
+
       <a href="#pricing">Buy</a>
+      <a href="/products">Products</a>
       <a href="/docs">Docs</a>
       <a href="/forum">Forum</a>
       <a href="#faq">FAQ</a>
@@ -1175,7 +1199,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   </div>
 
   <!-- Hidden graffiti — only visible under flashlight -->
-  <div class="graffiti" aria-hidden="true">type vision2026 for 10%</div>
+  <div class="graffiti" aria-hidden="true">Type<br>vision2026<br>for 10% discount</div>
 
 </section>
 
@@ -1306,40 +1330,6 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 </section>
 
 <!-- ═══════ QUOTE ═══════ -->
-<section class="quote" id="voices">
-
-  <!-- hw decor: step sequencer LEDs -->
-  <div class="hw-decor" aria-hidden="true" style="right:5%;top:32px;opacity:0.18;width:140px">
-    <svg viewBox="0 0 140 18" fill="none">
-      <rect x="0" y="4" width="140" height="10" rx="3" fill="#0a1520" stroke="#152935" stroke-width="0.5"/>
-      <circle cx="12" cy="9" r="3" fill="#00e5b4" opacity="0.45"/>
-      <circle cx="28" cy="9" r="3" fill="#00e5b4" opacity="0.12"/>
-      <circle cx="44" cy="9" r="3" fill="#0e2433"/>
-      <circle cx="60" cy="9" r="3" fill="#22d3ee" opacity="0.35"/>
-      <circle cx="76" cy="9" r="3" fill="#0e2433"/>
-      <circle cx="92" cy="9" r="3" fill="#00e5b4" opacity="0.5"/>
-      <circle cx="108" cy="9" r="3" fill="#00e5b4" opacity="0.3"/>
-      <circle cx="124" cy="9" r="3" fill="#0e2433"/>
-    </svg>
-  </div>
-
-  <div class="quote-inner">
-    <div class="rv">
-      <p class="quote-text">
-        <span class="mark">&ldquo;</span>I bought it on a Tuesday and used it on a record by Friday.
-        <span class="it">The latency just isn't there.</span> It feels like the synth is reading my mind &mdash;
-        or at least my left hand.
-      </p>
-      <div class="quote-attr">
-        <span class="name">Lila Ostrowski</span>
-        <span class="sep">/</span>
-        <span>Producer &middot; Brooklyn</span>
-        <span class="sep">/</span>
-        <span>Sub Pop, Erased Tapes</span>
-      </div>
-    </div>
-  </div>
-</section>
 
 <!-- ═══════ DAW COMPAT ═══════ -->
 <div class="compat">
