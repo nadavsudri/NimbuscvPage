@@ -120,10 +120,17 @@ nav{
   position:fixed;top:0;left:0;right:0;z-index:100;
   display:flex;align-items:center;
   padding:14px 32px;
+  background:transparent;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+  border-bottom:1px solid transparent;
+  transition:background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+}
+nav.scrolled{
   background:rgba(6,18,26,0.78);
   backdrop-filter:blur(14px) saturate(1.3);
   -webkit-backdrop-filter:blur(14px) saturate(1.3);
-  border-bottom:1px solid var(--rule);
+  border-bottom-color:var(--rule);
 }
 .nav-inner{
   max-width:1400px;width:100%;margin:0 auto;
@@ -327,32 +334,24 @@ nav{
 .hero-gallery-img{
   position:absolute;
   width:420px;height:280px;
-  border-radius:14px;border:1px solid rgba(0,229,180,0.12);
-  background:var(--bg-2);overflow:hidden;
-  box-shadow:
-    0 24px 80px -20px rgba(0,0,0,0.7),
-    0 8px 30px -10px rgba(0,0,0,0.4),
-    0 0 0 1px rgba(0,229,180,0.08),
-    0 0 40px -10px rgba(0,229,180,0.06);
+  border:none;border-radius:0;
+  background:none;overflow:visible;
   display:grid;place-items:center;
-  font-family:'JetBrains Mono',monospace;font-size:11px;
-  color:var(--ink-3);letter-spacing:0.1em;text-transform:uppercase;
-  transition:transform 0.5s cubic-bezier(0.16,1,0.3,1),box-shadow 0.5s cubic-bezier(0.16,1,0.3,1);
+  transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.hero-gallery-img img{
+  mask-image:radial-gradient(ellipse 90% 85% at 50% 50%,#000 40%,transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 90% 85% at 50% 50%,#000 40%,transparent 100%);
 }
 .hero-gallery-img:hover{
-  transform:translateY(-10px) scale(1.04);
-  box-shadow:
-    0 36px 100px -24px rgba(0,0,0,0.8),
-    0 12px 40px -10px rgba(0,0,0,0.5),
-    0 0 0 1px rgba(0,229,180,0.15),
-    0 0 60px -10px rgba(0,229,180,0.1);
+  transform:translateY(-6px) scale(1.03);
 }
 .hero-gallery-img:nth-child(1){left:0;top:30px;z-index:1;transform:rotate(-2.5deg);width:360px;height:240px}
 .hero-gallery-img:nth-child(2){left:50%;top:-10px;transform:translateX(-50%) scale(1.02);z-index:3}
 .hero-gallery-img:nth-child(3){right:0;top:30px;z-index:2;transform:rotate(2.5deg);width:360px;height:240px}
-.hero-gallery-img:nth-child(1):hover{transform:rotate(-2.5deg) translateY(-10px) scale(1.04)}
-.hero-gallery-img:nth-child(2):hover{transform:translateX(-50%) translateY(-10px) scale(1.06)}
-.hero-gallery-img:nth-child(3):hover{transform:rotate(2.5deg) translateY(-10px) scale(1.04)}
+.hero-gallery-img:nth-child(1):hover{transform:rotate(-2.5deg) translateY(-6px) scale(1.03)}
+.hero-gallery-img:nth-child(2):hover{transform:translateX(-50%) translateY(-6px) scale(1.04)}
+.hero-gallery-img:nth-child(3):hover{transform:rotate(2.5deg) translateY(-6px) scale(1.03)}
 @media(max-width:900px){
   .hero-gallery{height:auto;display:flex;flex-direction:column;gap:16px;align-items:center}
   .hero-gallery-img{position:static;width:100%;max-width:400px;height:220px;transform:none!important}
@@ -1050,30 +1049,6 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 </div>
 
 <!-- ═══════ SPEC RIBBON ═══════ -->
-<div class="spec-ribbon">
-  <div class="spec-ribbon-inner">
-    <div class="spec">
-      <div class="spec-label">Tracking</div>
-      <div class="spec-val">30<small>Hz</small></div>
-      <div class="spec-note">Webcam at full RGB, any resolution.</div>
-    </div>
-    <div class="spec">
-      <div class="spec-label">Latency</div>
-      <div class="spec-val">Low</div>
-      <div class="spec-note">Real-time. Below perception.</div>
-    </div>
-    <div class="spec">
-      <div class="spec-label">Landmarks</div>
-      <div class="spec-val">21</div>
-      <div class="spec-note">Per hand. Sub-pixel precision.</div>
-    </div>
-    <div class="spec">
-      <div class="spec-label">CC channels</div>
-      <div class="spec-val">12</div>
-      <div class="spec-note">Map anything your DAW exposes.</div>
-    </div>
-  </div>
-</div>
 
 <!-- ═══════ MARQUEE ═══════ -->
 <div class="marquee" aria-hidden="true">
@@ -1727,6 +1702,12 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
       }
     }, { passive: true });
   })();
+
+  // Nav border on scroll
+  var navEl = document.getElementById('nav');
+  window.addEventListener('scroll', function(){
+    navEl.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
 
   // CHECKOUT — redirect to checkout page
   window.handleCheckout=function(){
