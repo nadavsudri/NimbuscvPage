@@ -612,9 +612,7 @@ nav.scrolled{
   margin-top:56px;
 }
 .pieces-grid .piece-card{grid-column:span 2}
-.pieces-grid .piece-card:nth-child(4){grid-column:2 / span 2}
-.pieces-grid .piece-card:nth-child(5){grid-column:4 / span 2}
-@media(max-width:960px){.pieces-grid{grid-template-columns:repeat(2,1fr)}.pieces-grid .piece-card{grid-column:span 1}.pieces-grid .piece-card:nth-child(4){grid-column:auto}.pieces-grid .piece-card:nth-child(5){grid-column:auto}}
+@media(max-width:960px){.pieces-grid{grid-template-columns:repeat(2,1fr)}.pieces-grid .piece-card{grid-column:span 1}}
 @media(max-width:600px){.pieces-grid{grid-template-columns:1fr}.pieces-grid .piece-card{grid-column:span 1}}
 .piece-card{
   border:1px solid var(--rule-2);border-radius:10px;
@@ -1287,6 +1285,16 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         <div class="piece-card-body">
           <h3>Strings</h3>
           <p>Six virtual strings on the canvas. One hand picks and strums &mdash; pinch like you're holding a pick and sweep up or down across the strings. The other hand shapes chords by signing numbers 1&ndash;5, each mapped to a chord from a 12-chord library. Two hands, two roles, one instrument.</p>
+        </div>
+      </div>
+
+      <div class="piece-card rv">
+        <div class="piece-card-img">
+          <img src="assets/piece-chords.png" alt="Chord Player with dual wheel interface" style="width:100%;height:100%;object-fit:cover">
+        </div>
+        <div class="piece-card-body">
+          <h3>Chord Player</h3>
+          <p>A full chord instrument split across two hands. Your left hand picks root notes from a radial wheel &mdash; A through G &mdash; while your right hand selects variations: major, minor, sus, dim, aug, 5ths, 6ths, and 9ths. Toggle Smooth mode for gliding transitions and legato chord changes. Two wheels, two hands, instant harmony.</p>
         </div>
       </div>
 
