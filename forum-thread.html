@@ -4,16 +4,16 @@
 <meta charset="utf-8"/>
 <title>Nimbus — Forum · Thread</title>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="theme-color" content="#06121a"/>
+<meta name="theme-color" content="#000000"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z' fill='none' stroke='%2300e5b4' stroke-width='3'/><circle cx='50' cy='50' r='14' fill='none' stroke='%2300e5b4' stroke-width='2' opacity='0.5'/><rect x='48.8' y='40' width='2.4' height='20' rx='1.2' fill='%2300e5b4'/></svg>"/>
 <style>
 :root{
-  --bg:#06121a; --bg-2:#0a1922; --bg-3:#0d2230; --panel:#0e2433;
-  --ink:#e6f5f3; --ink-2:#8aa6ad; --ink-3:#516b75; --ink-4:#2d3f48;
-  --rule:#152935; --rule-2:#1d3947;
+  --bg:#000000; --bg-2:#0a0a0b; --bg-3:#141415; --panel:#1a1a1c;
+  --ink:#efefef; --ink-2:#a0a0a6; --ink-3:#6b6b72; --ink-4:#3a3a40;
+  --rule:#222226; --rule-2:#2c2c32;
   --teal:#00e5b4; --teal-deep:#00b894; --cyan:#22d3ee; --blue:#3b82f6;
   --amber:#f5b94a; --rose:#ff7a8a;
 }
@@ -28,8 +28,8 @@ body{
 body::before{
   content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:
-    linear-gradient(rgba(34,211,238,0.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(34,211,238,0.04) 1px,transparent 1px);
+    linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);
   background-size:64px 64px;
   mask-image:radial-gradient(ellipse 90% 50% at 50% 0%,#000 0%,transparent 70%);
   -webkit-mask-image:radial-gradient(ellipse 90% 50% at 50% 0%,#000 0%,transparent 70%);
@@ -38,7 +38,7 @@ body::before{
 /* ── top nav ── */
 .nav{
   position:sticky;top:0;z-index:30;
-  background:rgba(6,18,26,0.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:rgba(10,10,11,0.82);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
   border-bottom:1px solid var(--rule);
 }
 .nav-inner{
