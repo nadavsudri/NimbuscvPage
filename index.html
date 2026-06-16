@@ -357,16 +357,8 @@ nav.scrolled{
   .hero-gallery-img{position:static;width:100%;max-width:400px;height:220px;transform:none!important}
 }
 
-/* showcase frame */
-.showcase{position:relative;padding:0 32px 80px;margin-bottom:-40px;z-index:2}
-.showcase-inner{max-width:1140px;margin:0 auto;position:relative}
-.showcase-meta{
-  display:flex;justify-content:space-between;
-  font-family:'JetBrains Mono',monospace;font-size:10px;
-  letter-spacing:0.16em;color:var(--ink-3);text-transform:uppercase;
-  padding-bottom:10px;
-}
-.showcase-meta .live{color:var(--teal)}
+/* showcase */
+.showcase-grid-wrap{max-width:1140px;margin:0 auto;padding:0 32px 80px;position:relative;z-index:2}
 .showcase-frame{
   border:1px solid var(--rule-2);border-radius:10px;
   background:var(--bg-2);overflow:hidden;position:relative;
@@ -477,8 +469,9 @@ nav.scrolled{
 /* ─── MARQUEE ─── */
 .marquee{
   background:var(--bg);
-  border-bottom:1px solid var(--rule);
+  border-bottom:none;
   overflow:hidden;padding:18px 0;
+  margin-bottom:80px;
 }
 .marquee-track{
   display:flex;gap:48px;white-space:nowrap;
@@ -521,7 +514,7 @@ nav.scrolled{
 .section-title .dim{color:var(--ink-3)}
 
 /* ─── CHAPTERS ─── */
-.chapters{padding:140px 0 100px;border-bottom:1px solid var(--rule);position:relative;overflow:hidden}
+.chapters{padding:140px 0 100px;border-bottom:none;position:relative;overflow:hidden}
 /* ─── FLASHLIGHT ─── */
 .flashlight-section{position:relative}
 .flashlight-overlay{
@@ -606,7 +599,7 @@ nav.scrolled{
 .chapter-vis-corner.right{left:auto;right:12px;color:var(--teal)}
 
 /* ─── THE PIECES ─── */
-.pieces{padding:160px 0;background:var(--bg);border-bottom:1px solid var(--rule);position:relative;overflow:hidden}
+.pieces{padding:160px 0;background:var(--bg);border-bottom:none;position:relative;overflow:hidden}
 .pieces-grid{
   display:grid;grid-template-columns:repeat(6,1fr);gap:24px;
   margin-top:56px;
@@ -617,42 +610,71 @@ nav.scrolled{
 .piece-card{
   border:1px solid var(--rule-2);border-radius:10px;
   background:var(--bg-2);overflow:hidden;
-  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1),border-color 0.35s ease,box-shadow 0.35s ease;
+  position:relative;
+  height:400px;
+  cursor:pointer;
+  transition:border-color 0.35s ease,box-shadow 0.35s ease,transform 0.4s cubic-bezier(0.16,1,0.3,1);
 }
-.piece-card.rv.show{transform:translateY(0)}
-.piece-card.rv.show:hover{
-  transform:translateY(-12px) !important;
+.piece-card:hover{
   border-color:rgba(0,229,180,0.25);
   box-shadow:0 12px 32px rgba(0,229,180,0.08);
 }
-.piece-card-img img{transition:transform 0.45s cubic-bezier(0.16,1,0.3,1)}
-.piece-card.rv.show:hover .piece-card-img img{transform:scale(1.06)}
-.piece-card-img:hover img{transform:scale(1.14) !important}
-.piece-card-img{
-  aspect-ratio:16/10;min-height:200px;
-  background:linear-gradient(135deg,var(--bg-3) 0%,var(--bg-2) 100%);
-  display:grid;place-items:center;
-  font-family:'JetBrains Mono',monospace;font-size:11px;
-  color:var(--ink-4);letter-spacing:0.1em;text-transform:uppercase;
-  border-bottom:1px solid var(--rule);
-  overflow:hidden;position:relative;
+/* Title — centered in the visible top area */
+.piece-card-body{
+  position:absolute;inset:0;
+  z-index:1;
+  display:flex;flex-direction:column;
+  padding:24px;
 }
-.piece-card-img::before{
-  content:'';position:absolute;inset:0;
-  background-image:
-    linear-gradient(rgba(0,229,180,0.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,229,180,0.04) 1px,transparent 1px);
-  background-size:20px 20px;opacity:0.5;
-}
-.piece-card-img img{width:100%;height:100%;object-fit:cover}
-.piece-card-body{padding:24px}
 .piece-card-body h3{
-  font-family:'Space Grotesk',sans-serif;font-weight:600;
-  font-size:17px;color:var(--ink);margin:0 0 8px;letter-spacing:-0.01em;
+  font-family:'Urbanist',sans-serif;font-weight:700;
+  font-size:22px;color:#fff;margin:0;letter-spacing:-0.01em;
+  height:40%;
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;
+  transition:opacity 0.4s ease;
 }
 .piece-card-body p{
   color:var(--ink-2);font-size:14px;line-height:1.65;margin:0;
+  padding-top:16px;
 }
+/* Image — covers bottom 60%, hides the text */
+.piece-card-img{
+  position:absolute;
+  left:0;right:0;bottom:0;
+  height:62%;
+  overflow:hidden;
+  z-index:2;
+  transition:transform 0.5s cubic-bezier(0.16,1,0.3,1);
+}
+.piece-card-img img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform 0.45s cubic-bezier(0.16,1,0.3,1);
+}
+.piece-card:hover .piece-card-img img{transform:scale(1.06)}
+/* Fade edge — top by default */
+.piece-card-img::after{
+  content:'';position:absolute;left:0;right:0;height:40px;
+  z-index:1;
+  transition:top 0.5s ease, bottom 0.5s ease, opacity 0.5s ease;
+  top:0;bottom:auto;
+  background:linear-gradient(to bottom,var(--bg-2),transparent);
+}
+/* OPEN state: image rises, reveals text, fade moves to bottom */
+.piece-card.open{
+  transform:scale(1.08);
+  z-index:5;
+  box-shadow:0 20px 60px rgba(0,0,0,0.4),0 0 40px rgba(0,229,180,0.1);
+}
+.piece-card.open .piece-card-img{
+  transform:translateY(-100%);
+}
+.piece-card.open .piece-card-body h3{opacity:0}
+.piece-card.open .piece-card-img::after{
+  top:auto;bottom:0;
+  background:linear-gradient(to top,var(--bg-2),transparent);
+}
+@media(max-width:600px){.piece-card{height:360px}}
 
 /* ─── QUOTE ─── */
 .quote{
@@ -708,7 +730,7 @@ nav.scrolled{
 
 /* ─── PRICING ─── */
 .pricing{
-  padding:160px 0;background:var(--bg);border-bottom:1px solid var(--rule);
+  padding:160px 0;background:var(--bg);border-bottom:none;
   position:relative;
 }
 .pricing-grid{
@@ -790,7 +812,7 @@ nav.scrolled{
 
 
 /* ─── FAQ ─── */
-.faq-section{padding:140px 0;border-bottom:1px solid var(--rule)}
+.faq-section{padding:140px 0;border-bottom:none}
 .faq-grid{display:grid;grid-template-columns:1fr 2fr;gap:80px}
 @media(max-width:880px){.faq-grid{grid-template-columns:1fr;gap:40px}}
 .faq-side h2{
@@ -945,7 +967,6 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
       </svg>
     </a>
     <div class="nav-links">
-      <a href="#how">How it works</a>
       <a href="#pieces">The Pieces</a>
 
       <a href="#pricing">Buy</a>
@@ -1071,124 +1092,18 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 </div>
 
 <!-- ═══════ CHAPTERS ═══════ -->
-<section class="chapters flashlight-section" id="how">
-  <div class="flashlight-overlay" id="flashlightOverlay"></div>
-
-  <!-- hw decor: fader strip -->
-  <div class="hw-decor" aria-hidden="true" style="right:-8px;top:28%;opacity:0.14;width:100px">
-    <svg viewBox="0 0 100 190" fill="none">
-      <!-- Track 1 -->
-      <rect x="8" y="8" width="3" height="140" rx="1.5" fill="#0e2433" stroke="#1d3947" stroke-width="0.4"/>
-      <rect x="8" y="56" width="3" height="92" rx="1.5" fill="#00e5b4" opacity="0.25"/>
-      <rect x="3" y="52" width="13" height="8" rx="2.5" fill="#1d3947" stroke="#00e5b4" stroke-width="0.5" stroke-opacity="0.4"/>
-      <line x1="6" y1="56" x2="13" y2="56" stroke="#00e5b4" stroke-width="0.6" opacity="0.5"/>
-      <text x="9.5" y="162" font-family="JetBrains Mono,monospace" font-size="5.5" fill="#516b75" text-anchor="middle" letter-spacing="0.08em">CC1</text>
-
-      <!-- Track 2 -->
-      <rect x="30" y="8" width="3" height="140" rx="1.5" fill="#0e2433" stroke="#1d3947" stroke-width="0.4"/>
-      <rect x="30" y="78" width="3" height="70" rx="1.5" fill="#22d3ee" opacity="0.2"/>
-      <rect x="25" y="74" width="13" height="8" rx="2.5" fill="#1d3947" stroke="#22d3ee" stroke-width="0.5" stroke-opacity="0.35"/>
-      <line x1="28" y1="78" x2="35" y2="78" stroke="#22d3ee" stroke-width="0.6" opacity="0.4"/>
-      <text x="31.5" y="162" font-family="JetBrains Mono,monospace" font-size="5.5" fill="#516b75" text-anchor="middle" letter-spacing="0.08em">CC2</text>
-
-      <!-- Track 3 -->
-      <rect x="52" y="8" width="3" height="140" rx="1.5" fill="#0e2433" stroke="#1d3947" stroke-width="0.4"/>
-      <rect x="52" y="38" width="3" height="110" rx="1.5" fill="#00e5b4" opacity="0.3"/>
-      <rect x="47" y="34" width="13" height="8" rx="2.5" fill="#1d3947" stroke="#00e5b4" stroke-width="0.5" stroke-opacity="0.5"/>
-      <line x1="50" y1="38" x2="57" y2="38" stroke="#00e5b4" stroke-width="0.6" opacity="0.6"/>
-      <text x="53.5" y="162" font-family="JetBrains Mono,monospace" font-size="5.5" fill="#516b75" text-anchor="middle" letter-spacing="0.08em">CC3</text>
-
-      <!-- Track 4 -->
-      <rect x="74" y="8" width="3" height="140" rx="1.5" fill="#0e2433" stroke="#1d3947" stroke-width="0.4"/>
-      <rect x="74" y="94" width="3" height="54" rx="1.5" fill="#00e5b4" opacity="0.15"/>
-      <rect x="69" y="90" width="13" height="8" rx="2.5" fill="#1d3947"/>
-      <text x="75.5" y="162" font-family="JetBrains Mono,monospace" font-size="5.5" fill="#516b75" text-anchor="middle" letter-spacing="0.08em">CC4</text>
-
-      <!-- Scale ticks -->
-      <g stroke="#1d3947" stroke-width="0.3" opacity="0.5">
-        <line x1="86" y1="8" x2="92" y2="8"/><line x1="86" y1="43" x2="90" y2="43"/>
-        <line x1="86" y1="78" x2="92" y2="78"/><line x1="86" y1="113" x2="90" y2="113"/>
-        <line x1="86" y1="148" x2="92" y2="148"/>
-      </g>
-      <text x="94" y="11" font-family="JetBrains Mono,monospace" font-size="4.5" fill="#2d3f48">127</text>
-      <text x="94" y="81" font-family="JetBrains Mono,monospace" font-size="4.5" fill="#2d3f48">64</text>
-      <text x="94" y="151" font-family="JetBrains Mono,monospace" font-size="4.5" fill="#2d3f48">0</text>
-    </svg>
-  </div>
-
-  <div class="wrap">
-    <div class="section-head rv">
-      <div class="section-kicker">&sect;&nbsp;01 &mdash; Signal flow</div>
-      <h2 class="section-title">
-        From pixel to MIDI<br>
-        in <span class="it">real</span> time.
-      </h2>
-    </div>
-
-    <div class="chapter rv">
-      <div class="chapter-num">01</div>
-      <div class="chapter-body">
-        <div class="meta">Stage &mdash; Capture</div>
-        <h3>Any webcam. <span class="it">Any light.</span></h3>
-        <p>MediaPipe pipeline at 30Hz, full RGB. No calibration, no markers, no gloves. The laptop camera you already own is enough.</p>
-        <p style="color:var(--ink-3);font-size:12.5px">Continuous auto-exposure, dynamic crop, optional 720p mode for older machines.</p>
-      </div>
-      <div class="chapter-vis">
-        <img src="assets/webcam-wireframe.png" alt="Wireframe 3D webcam with optical path and data stream visualisation" style="width:88%;height:88%;object-fit:contain;position:relative;z-index:1">
-      </div>
-    </div>
-
-    <div class="chapter rv">
-      <div class="chapter-num">02</div>
-      <div class="chapter-body">
-        <div class="meta">Stage &mdash; Track</div>
-        <h3><span class="it">Twenty-one</span> landmarks per hand.</h3>
-        <p>MediaPipe hand landmark detection finds every joint and fingertip per frame. Openness, pinch distance, rotation, snap, and custom gestures are all derived in real time.</p>
-        <p style="color:var(--ink-3);font-size:12.5px">One-euro filter, configurable dead-zone, sub-pixel temporal smoothing.</p>
-      </div>
-      <div class="chapter-vis">
-        <img src="assets/hand-tracking.png" alt="Hand tracking visualisation with twenty-one cyan wireframe landmarks and HUD overlay" style="width:88%;height:88%;object-fit:contain;position:relative;z-index:1">
-      </div>
-    </div>
-
-    <div class="chapter rv">
-      <div class="chapter-num">03</div>
-      <div class="chapter-body">
-        <div class="meta">Stage &mdash; Control</div>
-        <h3>MIDI <span class="it">out</span> &mdash; to anything.</h3>
-        <p>Smoothed CC channels with adjustable response curves, gain, and dead-zone. Right-click any synth knob, wiggle your hand, mapped.</p>
-        <p style="color:var(--ink-3);font-size:12.5px">Standard MIDI Learn. Works with Serum, Vital, Massive X, Diva, Pigments and anything else.</p>
-      </div>
-      <div class="chapter-vis">
-        <svg width="60%" viewBox="0 0 200 130" fill="none">
-          <circle cx="100" cy="68" r="44" stroke="#2d3f48" stroke-width="1"/>
-          <circle cx="100" cy="68" r="44" stroke="#00e5b4" stroke-width="3" stroke-dasharray="200 140" transform="rotate(-90 100 68)"/>
-          <line x1="100" y1="34" x2="100" y2="46" stroke="#e6f5f3" stroke-width="1.4" stroke-linecap="round"/>
-          <circle cx="100" cy="68" r="3" fill="#00e5b4"/>
-          <text x="100" y="124" font-family="JetBrains Mono,monospace" font-size="9" fill="#516b75" text-anchor="middle" letter-spacing="1">CC 1 &middot; CH 1</text>
-        </svg>
-      </div>
-    </div>
-  </div>
-
-  <!-- Hidden graffiti — only visible under flashlight -->
-  <div class="graffiti" aria-hidden="true">Type<br>vision2026<br>for 10% discount</div>
-
-</section>
 
 <!-- ═══════ SHOWCASE ═══════ -->
-<div class="showcase">
-  <div class="showcase-inner">
-    <div class="showcase-frame">
-      <div class="showcase-bar">
-        <span class="dot dot-r"></span>
-        <span class="dot dot-y"></span>
-        <span class="dot dot-g"></span>
-        <span class="title">Ableton Live &middot; Nimbus.vst3</span>
-      </div>
-      <div class="showcase-screen">
-        <!-- Replace with: <img src="nimbus-ui.png" alt="Nimbus plugin interface"/> or <video src="demo.mp4" autoplay muted loop playsinline></video> -->
-      </div>
+<div class="showcase-grid-wrap">
+  <div class="showcase-frame">
+    <div class="showcase-bar">
+      <span class="dot dot-r"></span>
+      <span class="dot dot-y"></span>
+      <span class="dot dot-g"></span>
+      <span class="title">Ableton Live &middot; Nimbus.vst3</span>
+    </div>
+    <div class="showcase-screen">
+      <!-- Replace with: <video src="demo.mp4" autoplay muted loop playsinline></video> -->
     </div>
   </div>
 </div>
@@ -1248,64 +1163,52 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 
     <div class="pieces-grid">
 
-      <div class="piece-card rv">
-        <div class="piece-card-img">
-          <img src="assets/piece-prerecorded.png" alt="Pre-recorded gestures" style="width:100%;height:100%;object-fit:cover">
-        </div>
+      <div class="piece-card" onclick="togglePiece(this)">
         <div class="piece-card-body">
           <h3>Pre-recorded gestures</h3>
           <p>Ship with a library of ready-made gesture mappings. Hand openness, height, X position, distance between hands, pinch, and snap &mdash; all pre-wired and ready to assign to any parameter.</p>
         </div>
+        <div class="piece-card-img"><img src="assets/piece-prerecorded.png" alt="Pre-recorded gestures"></div>
       </div>
 
-      <div class="piece-card rv">
-        <div class="piece-card-img">
-          <img src="assets/piece-recorder.png" alt="Gesture recorder" style="width:100%;height:100%;object-fit:cover">
-        </div>
+      <div class="piece-card" onclick="togglePiece(this)">
         <div class="piece-card-body">
           <h3>Gesture recorder</h3>
           <p>Record any hand pose or movement, name it, and map it to a CC channel. Choose trigger mode for on/off switches or scale mode for continuous control. Your vocabulary, your rules.</p>
         </div>
+        <div class="piece-card-img"><img src="assets/piece-recorder.png" alt="Gesture recorder"></div>
       </div>
 
-      <div class="piece-card rv">
-        <div class="piece-card-img">
-          <img src="assets/piece-keys.png" alt="Keys" style="width:100%;height:100%;object-fit:cover">
-        </div>
+      <div class="piece-card" onclick="togglePiece(this)">
         <div class="piece-card-body">
           <h3>Keys</h3>
           <p>A virtual piano keyboard on the canvas. Curl individual fingers to play notes. Pair with the arp laser for BPM-synced sequences &mdash; 16-step sequencer with per-step note assignment via a built-in piano picker.</p>
         </div>
+        <div class="piece-card-img"><img src="assets/piece-keys.png" alt="Keys"></div>
       </div>
 
-      <div class="piece-card rv">
-        <div class="piece-card-img">
-          <img src="assets/piece-strings.png" alt="Strings" style="width:100%;height:100%;object-fit:cover">
-        </div>
+      <div class="piece-card" onclick="togglePiece(this)">
         <div class="piece-card-body">
           <h3>Strings</h3>
           <p>Six virtual strings on the canvas. One hand picks and strums &mdash; pinch like you're holding a pick and sweep up or down across the strings. The other hand shapes chords by signing numbers 1&ndash;5, each mapped to a chord from a 12-chord library. Two hands, two roles, one instrument.</p>
         </div>
+        <div class="piece-card-img"><img src="assets/piece-strings.png" alt="Strings"></div>
       </div>
 
-      <div class="piece-card rv">
-        <div class="piece-card-img">
-          <img src="assets/piece-chords.png" alt="Chord Player with dual wheel interface" style="width:100%;height:100%;object-fit:cover">
-        </div>
+      <div class="piece-card" onclick="togglePiece(this)">
         <div class="piece-card-body">
           <h3>Chord Player</h3>
           <p>A full chord instrument split across two hands. Your left hand picks root notes from a radial wheel &mdash; A through G &mdash; while your right hand selects variations: major, minor, sus, dim, aug, 5ths, 6ths, and 9ths. Toggle Smooth mode for gliding transitions and legato chord changes. Two wheels, two hands, instant harmony.</p>
         </div>
+        <div class="piece-card-img"><img src="assets/piece-chords.png" alt="Chord Player"></div>
       </div>
 
-      <div class="piece-card rv">
-        <div class="piece-card-img">
-          <img src="assets/piece-knobs.png" alt="Sliders & Knobs" style="width:100%;height:100%;object-fit:cover">
-        </div>
+      <div class="piece-card" onclick="togglePiece(this)">
         <div class="piece-card-body">
           <h3>Sliders &amp; Knobs</h3>
           <p>Drag sliders and knobs onto the canvas. Grab a slider with a fist grip and slide along the line. Pinch near a knob and twist your wrist to rotate. Each one maps to any CC channel with adjustable range.</p>
         </div>
+        <div class="piece-card-img"><img src="assets/piece-knobs.png" alt="Sliders & Knobs"></div>
       </div>
 
     </div>
@@ -1716,6 +1619,13 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   window.addEventListener('scroll', function(){
     navEl.classList.toggle('scrolled', window.scrollY > 20);
   }, { passive: true });
+
+  // Piece cards — only one open at a time
+  window.togglePiece = function(el){
+    var wasOpen = el.classList.contains('open');
+    document.querySelectorAll('.piece-card.open').forEach(function(c){ c.classList.remove('open') });
+    if (!wasOpen) el.classList.add('open');
+  };
 
   // CHECKOUT — redirect to checkout page
   window.handleCheckout=function(){
