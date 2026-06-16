@@ -22,16 +22,16 @@
   font-weight:400;font-style:normal;font-display:swap;
 }
 :root{
-  --bg:#06121a;
-  --bg-2:#0a1922;
-  --bg-3:#0d2230;
-  --panel:#0e2433;
+  --bg:#000000;
+  --bg-2:#0a0a0b;
+  --bg-3:#141415;
+  --panel:#1a1a1c;
   --ink:#e6f5f3;
   --ink-2:#8aa6ad;
   --ink-3:#516b75;
   --ink-4:#2d3f48;
-  --rule:#152935;
-  --rule-2:#1d3947;
+  --rule:#222226;
+  --rule-2:#2c2c32;
   --teal:#00e5b4;
   --teal-deep:#00b894;
   --cyan:#22d3ee;
@@ -51,8 +51,8 @@ body{
 body::before{
   content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
   background-image:
-    linear-gradient(rgba(34,211,238,0.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(34,211,238,0.04) 1px,transparent 1px);
+    linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);
   background-size:64px 64px;
   mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 0%,transparent 70%);
   -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 0%,transparent 70%);
@@ -61,8 +61,8 @@ body::before{
 .midi-bg{
   position:absolute;
   width:clamp(560px,72vw,960px);
-  top:48%;left:50%;
-  transform:translate(-50%,-38%) perspective(800px) rotateX(56deg) rotateZ(-2deg);
+  top:42%;left:50%;
+  transform:translate(-50%,-50%) perspective(800px) rotateX(56deg) rotateZ(-2deg);
   z-index:0;pointer-events:none;
   mask-image:radial-gradient(ellipse 80% 76% at 50% 46%,#000 10%,transparent 64%);
   -webkit-mask-image:radial-gradient(ellipse 80% 76% at 50% 46%,#000 10%,transparent 64%);
@@ -83,8 +83,8 @@ body::before{
 /* ─── LIQUID WAVEFORM ─── */
 .liquid-canvas{
   position:absolute;
-  bottom:-80px;left:0;right:0;
-  width:100%;height:45%;
+  bottom:-20px;left:0;right:0;
+  width:100%;height:40%;
   z-index:0;pointer-events:none;
   opacity:1;
   mask-image:linear-gradient(to bottom,transparent 0%,rgba(0,0,0,0.4) 10%,#000 30%,#000 70%,rgba(0,0,0,0.3) 88%,transparent 100%);
@@ -115,69 +115,51 @@ img{display:block;max-width:100%}
 .wrap{max-width:1200px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
 .wrap-wide{max-width:1400px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
 
-/* ─── NAV ─── */
+/* ─── NAV (floating pill) ─── */
 nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;
-  padding:14px 32px;
-  background:transparent;
-  backdrop-filter:none;
-  -webkit-backdrop-filter:none;
-  border-bottom:1px solid transparent;
-  transition:background 0.4s ease, border-color 0.4s ease, backdrop-filter 0.4s ease;
+  position:fixed;top:20px;left:50%;transform:translateX(-50%);
+  z-index:100;
+  width:calc(100% - 48px);max-width:1200px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 28px;
+  background:rgba(20,20,21,0.85);
+  backdrop-filter:blur(20px) saturate(1.4);
+  -webkit-backdrop-filter:blur(20px) saturate(1.4);
+  border:1px solid var(--rule);
+  border-radius:80px;
+  transition:top 0.5s cubic-bezier(0.16,1,0.3,1);
 }
-nav.scrolled{
-  background:rgba(6,18,26,0.78);
-  backdrop-filter:blur(14px) saturate(1.3);
-  -webkit-backdrop-filter:blur(14px) saturate(1.3);
-  border-bottom-color:var(--rule);
+nav.hidden{top:-100px}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-logo svg{width:36px;height:36px}
+.nav-logo span{
+  font-family:'Urbanist',sans-serif;font-weight:700;font-size:16px;
+  letter-spacing:0.12em;color:var(--ink);
 }
-.nav-inner{
-  max-width:1400px;width:100%;margin:0 auto;
-  display:flex;align-items:center;justify-content:space-between;gap:24px;
-}
-.logo{display:flex;align-items:center;gap:10px}
-.logo svg{width:46px;height:46px;filter:drop-shadow(0 0 8px rgba(0,229,180,0.2))}
-.logo .name{
-  font-family:'JetBrains Mono',monospace;font-size:11px;
-  letter-spacing:0.32em;color:var(--ink);font-weight:500;
-}
-.logo .ver{
-  font-family:'JetBrains Mono',monospace;font-size:10px;
-  color:var(--teal);letter-spacing:0.1em;
-  padding:2px 6px;border:1px solid var(--rule-2);
-  margin-left:4px;background:rgba(0,229,180,0.04);
-}
-.nav-links{display:flex;gap:28px}
+.nav-links{display:flex;align-items:center;gap:32px}
 .nav-links a{
-  font-size:13px;color:var(--ink-2);
-  position:relative;padding-bottom:2px;
-  transition:color 0.3s cubic-bezier(0.16,1,0.3,1);
+  font-size:14px;font-weight:400;color:var(--ink-2);
+  transition:color 0.3s;
 }
 .nav-links a:hover{color:var(--ink)}
-.nav-links a::after{
-  content:'';position:absolute;left:0;right:0;bottom:-2px;height:1px;
-  background:var(--teal);transform:scaleX(0);transform-origin:left;
-  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
-}
-.nav-links a:hover::after{transform:scaleX(1)}
 .nav-cta{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
-  padding:9px 14px;border-radius:6px;
+  font-size:13px;font-weight:600;letter-spacing:0.04em;
+  padding:10px 28px;border-radius:32px;
   background:var(--teal);color:#06121a;
-  font-weight:600;
-  box-shadow:0 0 0 1px rgba(0,229,180,0.2),0 4px 16px -6px rgba(0,229,180,0.25);
   transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
 }
-.nav-cta:hover{background:#1cf0c4;box-shadow:0 0 0 1px rgba(0,229,180,0.3),0 8px 24px -6px rgba(0,229,180,0.35)}
-.nav-cta:active{transform:scale(0.96)}
-@media(max-width:760px){.nav-links{display:none}}
+.nav-cta:hover{background:#1cf0c4;box-shadow:0 0 24px rgba(0,229,180,0.3)}
+@media(max-width:760px){
+  .nav-links{display:none}
+  nav{padding:12px 20px;width:calc(100% - 32px)}
+}
 
 /* ─── HERO ─── */
 .hero{
-  padding:80px 0 0;position:relative;
-  border-bottom:none;overflow:visible;
+  height:100vh;
+  padding:0;position:relative;
+  border-bottom:none;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
 }
 .hero::after{
   content:'';position:absolute;
@@ -193,7 +175,7 @@ nav.scrolled{
   font-weight:800;
   letter-spacing:0.22em;
   text-align:center;
-  margin:0 0 40px;
+  margin:0;
   position:relative;
   z-index:1;
   white-space:nowrap;
@@ -201,6 +183,109 @@ nav.scrolled{
   text-shadow:0 2px 12px rgba(255,255,255,0.15), 0 4px 24px rgba(0,229,180,0.08);
 }
 @media(max-width:680px){.hero-nimbus{font-size:clamp(36px,14vw,72px);letter-spacing:0.14em}}
+
+/* ─── HERO SPLIT (below fold) ─── */
+.hero-split{
+  min-height:100vh;
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  padding:80px 0;
+}
+/* Floating particles */
+.hero-split-particles{
+  position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;
+}
+.hero-split-particles .dot{
+  position:absolute;
+  width:2px;height:2px;
+  background:#fff;border-radius:50%;
+  opacity:0;
+  animation:floatUp linear infinite;
+}
+@keyframes floatUp{
+  0%{transform:translateY(0) scale(1);opacity:0}
+  10%{opacity:var(--dot-o,0.6)}
+  80%{opacity:var(--dot-o,0.6)}
+  100%{transform:translateY(calc(-100vh - 20px)) scale(0.3);opacity:0}
+}
+.hero-split-inner{
+  display:grid;grid-template-columns:1fr 1.2fr;gap:0;align-items:center;
+  width:100%;max-width:100%;
+}
+@media(max-width:960px){
+  .hero-split-inner{grid-template-columns:1fr;gap:48px}
+  .hero-split-visual{max-height:400px}
+}
+.hero-split-text{
+  position:relative;z-index:2;
+  padding:0 40px 0 max(64px, calc((100vw - 1400px)/2 + 64px));
+  max-width:640px;
+}
+@media(max-width:960px){.hero-split-text{padding:0 24px;max-width:100%}}
+.hero-split-kicker{
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--teal);margin-bottom:24px;
+  display:flex;align-items:center;gap:12px;
+}
+.hero-split-kicker::before{content:'';width:32px;height:1px;background:var(--teal)}
+.hero-split-text h2{
+  font-family:'Urbanist',sans-serif;
+  font-size:clamp(36px,5vw,56px);
+  font-weight:800;line-height:1.08;
+  letter-spacing:-0.02em;
+  color:#fff;margin:0 0 24px;
+}
+.hero-split-text p{
+  font-size:18px;line-height:1.6;color:var(--ink-2);
+  max-width:440px;margin:0 0 40px;
+}
+.hero-split-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.btn-pill{
+  font-family:'Inter','Space Grotesk',sans-serif;font-size:14px;font-weight:600;
+  padding:14px 36px;border-radius:40px;
+  background:var(--teal);color:#000;
+  border:none;cursor:pointer;
+  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+  text-decoration:none;display:inline-block;
+}
+.btn-pill:hover{background:#1cf0c4;transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,229,180,0.25)}
+.btn-outline-pill{
+  font-size:14px;font-weight:500;
+  padding:14px 36px;border-radius:40px;
+  background:transparent;color:var(--ink);
+  border:1px solid var(--rule-2);cursor:pointer;
+  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-outline-pill:hover{border-color:var(--ink-3);background:rgba(255,255,255,0.03)}
+.btn-outline-pill .arrow{display:inline-block;transition:transform 0.3s;font-size:16px}
+.btn-outline-pill:hover .arrow{transform:translateX(4px)}
+
+/* Visual — bleeds off right edge */
+.hero-split-visual{
+  position:relative;overflow:hidden;
+  border-radius:16px 0 0 16px;
+  background:var(--bg-2);
+  height:80vh;max-height:700px;
+}
+.hero-split-visual img{
+  width:100%;height:100%;object-fit:cover;object-position:left center;
+  transition:transform 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+.hero-split-visual:hover img{transform:scale(1.03)}
+.hero-split-visual::before{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(90deg,var(--bg) 0%,transparent 30%,transparent 80%,rgba(0,0,0,0.4) 100%);
+}
+@media(max-width:960px){
+  .hero-split-visual{border-radius:16px;height:auto;aspect-ratio:16/10;max-height:none}
+  .hero-split-visual::before{background:none}
+}
+/* Reveal from left / right */
+.rv-left{opacity:0;transform:translateX(-80px);transition:opacity 1.4s ease,transform 1.4s cubic-bezier(0.16,1,0.3,1)}
+.rv-right{opacity:0;transform:translateX(80px);transition:opacity 1.4s ease,transform 1.4s cubic-bezier(0.16,1,0.3,1);transition-delay:0.15s}
+.rv-left.show,.rv-right.show{opacity:1;transform:none}
 .hero-tagline{
   text-align:center;
   max-width:720px;
@@ -400,8 +485,8 @@ nav.scrolled{
 .showcase-screen::before{
   content:'';position:absolute;inset:0;
   background-image:
-    linear-gradient(rgba(34,211,238,0.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(34,211,238,0.04) 1px,transparent 1px);
+    linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);
   background-size:32px 32px;
   mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,#000 0%,transparent 80%);
   -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,#000 0%,transparent 80%);
@@ -585,8 +670,8 @@ nav.scrolled{
 .chapter-vis::before{
   content:'';position:absolute;inset:0;pointer-events:none;
   background-image:
-    linear-gradient(rgba(34,211,238,0.05) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(34,211,238,0.05) 1px,transparent 1px);
+    linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);
   background-size:24px 24px;
   mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,#000 30%,transparent 90%);
   -webkit-mask-image:radial-gradient(ellipse 80% 80% at 50% 50%,#000 30%,transparent 90%);
@@ -639,8 +724,8 @@ nav.scrolled{
 .piece-card::after{ /* faint instrument grid */
   content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
   background-image:
-    linear-gradient(rgba(34,211,238,0.05) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(34,211,238,0.05) 1px,transparent 1px);
+    linear-gradient(rgba(255,255,255,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,0.04) 1px,transparent 1px);
   background-size:26px 26px;
   mask-image:radial-gradient(ellipse 95% 80% at 50% 30%,#000 8%,transparent 86%);
   -webkit-mask-image:radial-gradient(ellipse 95% 80% at 50% 30%,#000 8%,transparent 86%);
@@ -996,29 +1081,26 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 
 <!-- ═══════ NAV ═══════ -->
 <nav id="nav">
-  <div class="nav-inner">
-    <a href="#" class="logo">
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z" fill="none" stroke="#00e5b4" stroke-width="3"/>
-        <circle cx="50" cy="50" r="14" fill="none" stroke="#00e5b4" stroke-width="2" opacity="0.5"/>
-        <rect x="42.8" y="47" width="2.4" height="6" rx="1.2" fill="#00e5b4"/>
-        <rect x="45.8" y="43" width="2.4" height="14" rx="1.2" fill="#00e5b4"/>
-        <rect x="48.8" y="40" width="2.4" height="20" rx="1.2" fill="#00e5b4"/>
-        <rect x="51.8" y="43" width="2.4" height="14" rx="1.2" fill="#00e5b4"/>
-        <rect x="54.8" y="47" width="2.4" height="6" rx="1.2" fill="#00e5b4"/>
-        <circle cx="44" cy="44" r="1.8" fill="#00e5b4"/>
-      </svg>
-    </a>
-    <div class="nav-links">
-      <a href="#pieces">The Pieces</a>
-
-      <a href="#pricing">Buy</a>
-      <a href="/products">Products</a>
-      <a href="/docs">Docs</a>
-      <a href="/forum">Forum</a>
-      <a href="#faq">FAQ</a>
-    </div>
+  <div class="nav-logo">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z" fill="none" stroke="#00e5b4" stroke-width="3"/>
+      <circle cx="50" cy="50" r="14" fill="none" stroke="#00e5b4" stroke-width="2" opacity="0.5"/>
+      <rect x="42.8" y="47" width="2.4" height="6" rx="1.2" fill="#00e5b4"/>
+      <rect x="45.8" y="43" width="2.4" height="14" rx="1.2" fill="#00e5b4"/>
+      <rect x="48.8" y="40" width="2.4" height="20" rx="1.2" fill="#00e5b4"/>
+      <rect x="51.8" y="43" width="2.4" height="14" rx="1.2" fill="#00e5b4"/>
+      <rect x="54.8" y="47" width="2.4" height="6" rx="1.2" fill="#00e5b4"/>
+      <circle cx="44" cy="44" r="1.8" fill="#00e5b4"/>
+    </svg>
+    <span>NIMBUS</span>
   </div>
+  <div class="nav-links">
+    <a href="#pieces">Instruments</a>
+    <a href="#pricing">Pricing</a>
+    <a href="/docs">Docs</a>
+    <a href="/forum">Forum</a>
+  </div>
+  <a href="#pricing" class="nav-cta">Get Nimbus</a>
 </nav>
 
 <!-- ═══════ HERO ═══════ -->
@@ -1091,24 +1173,26 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   <div class="wrap">
 
     <h1 class="hero-nimbus">NIMBUS</h1>
-    <p class="hero-tagline">Nimbus turns your webcam into expressive MIDI CC controllers. No gloves. No sensors. No nonsense. Two hands, twelve channels, real-time tracking.</p>
-    <div class="hero-cta"><a href="#pricing" class="btn-ghost">Buy Nimbus</a></div>
   </div>
 
 </header>
 
-<!-- ═══════ HERO GALLERY ═══════ -->
-<div class="hero-gallery rv">
-  <div class="hero-gallery-img">
-    <img src="assets/screenshot-instruments.png" alt="Nimbus canvas with sliders, knobs, guitar strings and piano keyboard" style="width:100%;height:100%;object-fit:cover">
+<!-- ═══════ HERO SPLIT ═══════ -->
+<section class="hero-split">
+  <div class="hero-split-particles" id="heroParticles"></div>
+  <div class="hero-split-inner">
+    <div class="hero-split-text rv-left">
+      <h2>Your hands are the instrument.</h2>
+      <p>Nimbus turns your webcam into an expressive MIDI controller. Two hands, twelve CC channels, real-time tracking. No gloves, no hardware.</p>
+      <div class="hero-split-actions">
+        <a href="#pricing" class="btn-pill">Get Nimbus &mdash; $29.90</a>
+      </div>
+    </div>
+    <div class="hero-split-visual rv-right">
+      <img src="assets/screenshot-main.png" alt="Nimbus interface showing hand tracking with MIDI mapping"/>
+    </div>
   </div>
-  <div class="hero-gallery-img">
-    <img src="assets/screenshot-main.png" alt="Nimbus plugin interface showing hand tracking with MIDI CC mapping" style="width:100%;height:100%;object-fit:cover">
-  </div>
-  <div class="hero-gallery-img">
-    <img src="assets/screenshot-guitar-arp.png" alt="Nimbus guitar strings with chord switching, arp sequencer, sound pads and dead zone" style="width:100%;height:100%;object-fit:cover">
-  </div>
-</div>
+</section>
 
 <!-- ═══════ SPEC RIBBON ═══════ -->
 
@@ -1490,15 +1574,46 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 
 <script>
 (function(){
-  var els=document.querySelectorAll('.rv');
+  // Regular reveal elements
+  var rvEls=document.querySelectorAll('.rv');
   if('IntersectionObserver' in window){
     var obs=new IntersectionObserver(function(es){
       es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('show');obs.unobserve(e.target)}});
     },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
-    els.forEach(function(el){obs.observe(el)});
+    rvEls.forEach(function(el){obs.observe(el)});
+
+    // Hero split elements — trigger later (must be mostly visible)
+    var heroEls=document.querySelectorAll('.rv-left,.rv-right');
+    var heroObs=new IntersectionObserver(function(es){
+      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('show');heroObs.unobserve(e.target)}});
+    },{threshold:0.4,rootMargin:'0px 0px 0px 0px'});
+    heroEls.forEach(function(el){heroObs.observe(el)});
   }else{
-    els.forEach(function(el){el.classList.add('show')});
+    document.querySelectorAll('.rv,.rv-left,.rv-right').forEach(function(el){el.classList.add('show')});
   }
+
+  // ── HERO SPLIT PARTICLES ──
+  (function(){
+    var container = document.getElementById('heroParticles');
+    if (!container || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var count = 35;
+    for (var i = 0; i < count; i++){
+      var dot = document.createElement('div');
+      dot.className = 'dot';
+      var size = 1 + Math.random() * 2.5;
+      var opacity = 0.2 + Math.random() * 0.5;
+      var duration = 6 + Math.random() * 10;
+      var delay = Math.random() * duration;
+      var left = Math.random() * 100;
+      dot.style.cssText =
+        'width:'+size+'px;height:'+size+'px;'+
+        'left:'+left+'%;bottom:'+(-(Math.random()*40))+'px;'+
+        '--dot-o:'+opacity+';'+
+        'animation-duration:'+duration+'s;'+
+        'animation-delay:-'+delay+'s;';
+      container.appendChild(dot);
+    }
+  })();
 
   // ── LIQUID WAVEFORM ──
   (function(){
@@ -1671,10 +1786,17 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
     }, { passive: true });
   })();
 
-  // Nav border on scroll
+  // Nav: visible at top, hides on scroll down, reappears on scroll up
   var navEl = document.getElementById('nav');
+  var lastScrollY = 0;
   window.addEventListener('scroll', function(){
-    navEl.classList.toggle('scrolled', window.scrollY > 20);
+    var y = window.scrollY;
+    if(y > lastScrollY && y > 60){
+      navEl.classList.add('hidden');
+    } else {
+      navEl.classList.remove('hidden');
+    }
+    lastScrollY = y;
   }, { passive: true });
 
   // Piece cards — only one open at a time

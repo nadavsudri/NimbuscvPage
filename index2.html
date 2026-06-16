@@ -2,955 +2,850 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>Nimbus — Hand-tracked MIDI Controller</title>
+<title>Nimbus — Hand-tracked MIDI</title>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="description" content="Expressive hand-tracked MIDI for producers. 11ms latency, works with any DAW. No hardware needed, just your webcam."/>
-<meta name="theme-color" content="#06121a"/>
-<meta property="og:title" content="Nimbus — Hand-tracked MIDI for producers"/>
-<meta property="og:description" content="Control synths with hand gestures. 11ms latency, any DAW. $29.90 lifetime."/>
-<meta property="og:type" content="product"/>
-<meta name="twitter:card" content="summary_large_image"/>
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Nimbus","applicationCategory":"MultimediaApplication","operatingSystem":"macOS 12+, Windows 10+","offers":{"@type":"Offer","price":"29.90","priceCurrency":"USD"}}</script>
+<meta name="description" content="Nimbus turns your webcam into expressive MIDI CC controllers. 30Hz hand tracking, low latency, no special hardware. VST3 / AU / Standalone."/>
+<meta name="theme-color" content="#000000"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Urbanist:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet"/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z' fill='none' stroke='%2300e5b4' stroke-width='3'/><circle cx='50' cy='50' r='14' fill='none' stroke='%2300e5b4' stroke-width='2' opacity='0.5'/><rect x='48.8' y='40' width='2.4' height='20' rx='1.2' fill='%2300e5b4'/></svg>"/>
 <style>
 :root{
-  --bg:#06121a;
-  --bg-2:#0a1922;
-  --bg-3:#0d2230;
-  --panel:#0e2433;
-  --ink:#e6f5f3;
-  --ink-2:#8aa6ad;
-  --ink-3:#516b75;
-  --ink-4:#2d3f48;
-  --rule:#152935;
-  --rule-2:#1d3947;
-  --teal:#00e5b4;
-  --teal-deep:#00b894;
-  --cyan:#22d3ee;
-  --blue:#3b82f6;
-  --blue-deep:#1e40af;
-  --glow:rgba(0,229,180,0.18);
-  --alert:#ff6b6b;
+  --black:#000000;
+  --bg:#0a0a0b;
+  --bg-2:#141415;
+  --bg-3:#1a1a1c;
+  --surface:#1e1e20;
+  --ink:#efefef;
+  --ink-2:#a0a0a6;
+  --ink-3:#6b6b72;
+  --ink-4:#3a3a40;
+  --rule:#222226;
+  --rule-2:#2c2c32;
+  --accent:#00e5b4;
+  --accent-deep:#00b894;
+  --accent-glow:rgba(0,229,180,0.15);
 }
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+html{scroll-behavior:smooth}
 body{
-  margin:0;background:var(--bg);color:var(--ink);
-  font-family:'Space Grotesk',system-ui,-apple-system,sans-serif;
-  font-size:15px;line-height:1.55;
-  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  margin:0;background:var(--black);color:var(--ink);
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  font-size:17px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
 }
-body::before{
-  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
-  background-image:
-    linear-gradient(rgba(34,211,238,0.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(34,211,238,0.04) 1px,transparent 1px);
-  background-size:64px 64px;
-  mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 0%,transparent 70%);
-  -webkit-mask-image:radial-gradient(ellipse 80% 60% at 50% 30%,#000 0%,transparent 70%);
-}
-a{color:inherit;text-decoration:none;transition:color 0.3s cubic-bezier(0.16,1,0.3,1)}
-button{font:inherit;cursor:pointer;border:none;background:none;color:inherit;transition:all 0.3s cubic-bezier(0.16,1,0.3,1)}
-img{display:block;max-width:100%}
-:focus-visible{outline:2px solid var(--teal);outline-offset:3px;border-radius:4px}
-.skip-link{
-  position:fixed;top:-100%;left:16px;z-index:200;
-  padding:10px 16px;background:var(--teal);color:#06121a;
-  font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;
-  border-radius:0 0 6px 6px;transition:top 0.2s;
-}
-.skip-link:focus{top:0}
-.serif{font-family:'Instrument Serif',Georgia,serif;font-weight:400}
-.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
-.italic{font-style:italic}
 
-/* ─── LAYOUT ─── */
-.wrap{max-width:1200px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
-.wrap-wide{max-width:1400px;margin:0 auto;padding:0 32px;position:relative;z-index:1}
-
-/* ─── NAV ─── */
+/* ═══════ NAV — floating pill, hidden at top, slides in on scroll ═══════ */
 nav{
-  position:fixed;top:0;left:0;right:0;z-index:100;
-  display:flex;align-items:center;
-  padding:14px 32px;
-  background:rgba(6,18,26,0.78);
-  backdrop-filter:blur(14px) saturate(1.3);
-  -webkit-backdrop-filter:blur(14px) saturate(1.3);
-  border-bottom:1px solid var(--rule);
+  position:fixed;top:-100px;left:50%;transform:translateX(-50%);
+  z-index:100;
+  width:calc(100% - 48px);max-width:1200px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 28px;
+  background:rgba(20,20,21,0.85);
+  backdrop-filter:blur(20px) saturate(1.4);
+  -webkit-backdrop-filter:blur(20px) saturate(1.4);
+  border:1px solid var(--rule);
+  border-radius:80px;
+  transition:top 0.5s cubic-bezier(0.16,1,0.3,1);
 }
-.nav-inner{
-  max-width:1400px;width:100%;margin:0 auto;
-  display:flex;align-items:center;justify-content:space-between;gap:24px;
+nav.visible{top:20px}
+.nav-logo{display:flex;align-items:center;gap:10px}
+.nav-logo svg{width:36px;height:36px}
+.nav-logo span{
+  font-family:'Urbanist',sans-serif;font-weight:700;font-size:16px;
+  letter-spacing:0.12em;color:var(--ink);
 }
-.logo{display:flex;align-items:center;gap:10px}
-.logo svg{width:34px;height:34px;filter:drop-shadow(0 0 8px rgba(0,229,180,0.2))}
-.logo .name{
-  font-family:'JetBrains Mono',monospace;font-size:11px;
-  letter-spacing:0.32em;color:var(--ink);font-weight:500;
-}
-.nav-links{display:flex;gap:28px}
+.nav-links{display:flex;align-items:center;gap:32px}
 .nav-links a{
-  font-size:13px;color:var(--ink-2);
-  position:relative;padding-bottom:2px;
-  transition:color 0.3s cubic-bezier(0.16,1,0.3,1);
+  font-size:14px;font-weight:400;color:var(--ink-2);
+  text-decoration:none;transition:color 0.3s;
 }
 .nav-links a:hover{color:var(--ink)}
-.nav-links a::after{
-  content:'';position:absolute;left:0;right:0;bottom:-2px;height:1px;
-  background:var(--teal);transform:scaleX(0);transform-origin:left;
-  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
-}
-.nav-links a:hover::after{transform:scaleX(1)}
 .nav-cta{
-  font-family:'JetBrains Mono',monospace;
-  font-size:11px;letter-spacing:0.1em;text-transform:uppercase;
-  padding:9px 14px;border-radius:6px;
-  background:var(--teal);color:#06121a;
-  font-weight:600;
-  box-shadow:0 0 0 1px rgba(0,229,180,0.2),0 4px 16px -6px rgba(0,229,180,0.25);
+  font-size:13px;font-weight:600;letter-spacing:0.04em;
+  padding:10px 28px;border-radius:32px;
+  background:var(--accent);color:#000;
   transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+  text-decoration:none;
 }
-.nav-cta:hover{background:#1cf0c4;box-shadow:0 0 0 1px rgba(0,229,180,0.3),0 8px 24px -6px rgba(0,229,180,0.35)}
-.nav-cta:active{transform:scale(0.96)}
-@media(max-width:760px){.nav-links{display:none}}
+.nav-cta:hover{background:#1cf0c4;box-shadow:0 0 24px rgba(0,229,180,0.3)}
+@media(max-width:760px){
+  .nav-links{display:none}
+  nav{padding:12px 20px;width:calc(100% - 32px)}
+}
 
-/* ─── HERO ─── */
+a{color:inherit;text-decoration:none}
+
+/* ═══════ HERO — full viewport, text left, visual right ═══════ */
 .hero{
-  padding:120px 0 60px;position:relative;
-  border-bottom:1px solid var(--rule);
+  min-height:100vh;
+  display:flex;align-items:center;
+  position:relative;overflow:hidden;
+  padding:0 64px;
 }
-.hero::after{
-  content:'';position:absolute;
-  width:1200px;height:700px;top:-140px;left:50%;transform:translateX(-50%);
-  background:
-    radial-gradient(ellipse 50% 60% at 50% 50%,rgba(0,229,180,0.10) 0%,transparent 70%),
-    radial-gradient(ellipse 30% 40% at 30% 60%,rgba(59,130,246,0.08) 0%,transparent 70%);
-  pointer-events:none;z-index:0;
-}
-.hero-top{
-  display:flex;align-items:center;justify-content:space-between;
-  font-family:'JetBrains Mono',monospace;font-size:10.5px;
-  letter-spacing:0.18em;color:var(--ink-3);text-transform:uppercase;
-  padding-bottom:24px;border-bottom:1px solid var(--rule);
-  margin-bottom:40px;position:relative;
-}
-.hero-top .left{display:flex;gap:24px;align-items:center;flex-wrap:wrap}
-.hero-top .pill{
-  background:var(--alert);color:#fff;
-  padding:3px 8px;border-radius:3px;
-  letter-spacing:0.16em;font-weight:600;
-}
-.hero-top .right{display:flex;gap:18px;color:var(--ink-3)}
-.hero-top .live{color:var(--teal)}
-.hero-top .live::before{
-  content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
-  background:var(--teal);margin-right:6px;
-  vertical-align:1px;
-  animation:pulse 2.5s ease-in-out infinite;
-}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
-@media(max-width:680px){.hero-top .right{display:none}}
-
-.hero-grid{
-  display:grid;grid-template-columns:1.4fr 1fr;gap:48px;
-  align-items:start;padding-bottom:48px;position:relative;
-}
-@media(max-width:900px){.hero-grid{grid-template-columns:1fr;gap:32px}}
-
-.hero-title{
-  font-family:'Instrument Serif',serif;font-weight:400;
-  font-size:clamp(48px,9vw,96px);
-  line-height:0.95;letter-spacing:-0.02em;
-  margin:0 0 24px;color:var(--ink);
-}
-.hero-title .em{
-  font-style:italic;
-  background:linear-gradient(120deg,var(--teal) 0%,var(--cyan) 60%,var(--blue) 100%);
-  -webkit-background-clip:text;background-clip:text;color:transparent;
-}
-.hero-side{display:flex;flex-direction:column;gap:20px;padding-bottom:8px}
-.hero-sub{
-  font-size:17px;line-height:1.6;color:var(--ink-2);
-  max-width:420px;margin:0 0 24px;
-}
-.hero-sub b{color:var(--ink);font-weight:600}
-.hero-sub .accent{color:var(--teal)}
-.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
-.btn-primary{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:600;
-  padding:16px 28px;background:var(--teal);color:#06121a;border-radius:8px;
-  display:inline-flex;align-items:center;gap:10px;
-  box-shadow:0 0 0 1px rgba(0,229,180,0.25),0 8px 24px -8px rgba(0,229,180,0.3);
-  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
-}
-.btn-primary:hover{
-  background:#1cf0c4;transform:translateY(-2px);
-  box-shadow:0 0 0 1px rgba(0,229,180,0.4),0 14px 32px -8px rgba(0,229,180,0.4);
-}
-.btn-primary:active{transform:translateY(0) scale(0.97)}
-.btn-primary .arr{font-family:serif;font-size:18px;line-height:0;margin-top:2px}
-.btn-ghost{
-  font-family:'JetBrains Mono',monospace;
-  font-size:12px;letter-spacing:0.12em;text-transform:uppercase;font-weight:500;
-  padding:14px 20px;border-radius:8px;
-  border:1px solid var(--rule-2);color:var(--ink);background:transparent;
-  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
-}
-.btn-ghost:hover{border-color:var(--teal);background:rgba(0,229,180,0.04);color:var(--teal)}
-.btn-ghost:active{transform:scale(0.97)}
-
-.hero-quote{
-  background:rgba(0,229,180,0.06);
-  border-left:3px solid var(--teal);
-  padding:20px 24px;
-  border-radius:6px;
-  margin-bottom:24px;
-  font-size:14px;
-  color:var(--ink-2);
-  font-style:italic;
-  line-height:1.6;
-  position:relative;
-}
-.hero-quote b{color:var(--ink);font-weight:600;font-style:normal}
-
-/* ─── SHOWCASE FRAME ─── */
-.showcase{position:relative;padding:0 32px 0;margin-bottom:0;z-index:2}
-.showcase-inner{max-width:1140px;margin:0 auto;position:relative}
-.showcase-frame{
-  border:1px solid var(--rule-2);border-radius:12px;
-  background:var(--bg-2);overflow:hidden;position:relative;
-  box-shadow:
-    0 30px 80px -20px rgba(0,0,0,0.6),
-    0 0 0 1px rgba(0,229,180,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.03);
-}
-.showcase-bar{
-  display:flex;align-items:center;gap:8px;
-  padding:11px 16px;background:var(--bg-3);
-  border-bottom:1px solid var(--rule);
-}
-.showcase-bar .dot{width:10px;height:10px;border-radius:50%}
-.showcase-bar .dot-r{background:#ff5f57}
-.showcase-bar .dot-y{background:#febc2e}
-.showcase-bar .dot-g{background:#28c840}
-.showcase-bar .title{
-  margin-left:12px;font-size:11px;color:var(--ink-2);
-  font-family:'JetBrains Mono',monospace;letter-spacing:0.04em;
-}
-.showcase-bar .right{
-  margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;
-  color:var(--ink-3);letter-spacing:0.1em;display:flex;gap:14px;
-}
-.showcase-screen{
-  aspect-ratio:16/9;
-  background:
-    radial-gradient(ellipse 60% 50% at 50% 50%,rgba(0,229,180,0.05) 0%,transparent 70%),
-    var(--bg);
-  position:relative;display:grid;place-items:center;overflow:hidden;
-}
-.showcase-screen::before{
+.hero::before{
   content:'';position:absolute;inset:0;
-  background-image:
-    linear-gradient(rgba(34,211,238,0.04) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(34,211,238,0.04) 1px,transparent 1px);
-  background-size:32px 32px;
-  mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,#000 0%,transparent 80%);
-  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 50%,#000 0%,transparent 80%);
+  background:radial-gradient(ellipse 60% 80% at 70% 50%,rgba(0,229,180,0.06),transparent 70%);
+  pointer-events:none;
 }
-.showcase-content{
-  width:90%;max-width:900px;text-align:center;position:relative;z-index:1;
+.hero-content{
+  max-width:560px;position:relative;z-index:2;
 }
-.showcase-label{
-  font-family:'JetBrains Mono',monospace;font-size:10px;
-  letter-spacing:0.2em;color:var(--teal);text-transform:uppercase;
-  margin-bottom:20px;font-weight:600;
+.hero-kicker{
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:24px;
+  display:flex;align-items:center;gap:12px;
 }
-.showcase-text{
-  font-family:'Instrument Serif',serif;font-style:italic;
-  font-size:24px;color:var(--ink-2);margin:0 0 20px;
-  line-height:1.4;
+.hero-kicker::before{
+  content:'';width:32px;height:1px;background:var(--accent);
 }
-.showcase-img{
-  width:100%;max-width:700px;height:auto;border-radius:8px;
-  background:var(--bg-3);
-  min-height:300px;
-  display:flex;align-items:center;justify-content:center;
-  color:var(--ink-3);
-  font-size:13px;
-  font-family:'JetBrains Mono',monospace;
+.hero h1{
+  font-family:'Urbanist',sans-serif;
+  font-size:clamp(44px,6.5vw,72px);
+  font-weight:800;line-height:1.05;
+  letter-spacing:-0.02em;
+  color:#fff;margin:0 0 24px;
+}
+.hero p{
+  font-size:18px;line-height:1.6;color:var(--ink-2);
+  max-width:440px;margin:0 0 40px;
+}
+.hero-actions{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+
+/* Pill buttons */
+.btn-pill{
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:600;
+  padding:14px 36px;border-radius:40px;
+  background:var(--accent);color:#000;
+  border:none;cursor:pointer;
+  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+  text-decoration:none;display:inline-block;
+}
+.btn-pill:hover{background:#1cf0c4;transform:translateY(-2px);box-shadow:0 8px 32px rgba(0,229,180,0.25)}
+.btn-outline{
+  font-family:'Inter',sans-serif;font-size:14px;font-weight:500;
+  padding:14px 36px;border-radius:40px;
+  background:transparent;color:var(--ink);
+  border:1px solid var(--rule-2);cursor:pointer;
+  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
+  text-decoration:none;display:inline-flex;align-items:center;gap:8px;
+}
+.btn-outline:hover{border-color:var(--ink-3);background:rgba(255,255,255,0.03)}
+.btn-outline .arrow{display:inline-block;transition:transform 0.3s;font-size:16px}
+.btn-outline:hover .arrow{transform:translateX(4px)}
+
+/* Hero visual */
+.hero-visual{
+  position:absolute;right:-5%;top:50%;transform:translateY(-50%);
+  width:55%;height:80%;
+  z-index:1;border-radius:24px;overflow:hidden;
+}
+.hero-visual img{
+  width:100%;height:100%;object-fit:cover;
+  filter:brightness(0.85) saturate(1.1);
+}
+.hero-visual::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(90deg,var(--black) 0%,transparent 30%,transparent 80%,rgba(0,0,0,0.4) 100%);
+}
+@media(max-width:960px){
+  .hero{padding:140px 32px 80px;flex-direction:column;justify-content:center;text-align:center}
+  .hero-content{max-width:100%}
+  .hero-kicker{justify-content:center}
+  .hero p{margin:0 auto 40px}
+  .hero-actions{justify-content:center}
+  .hero-visual{position:relative;right:auto;top:auto;transform:none;width:100%;height:300px;margin-top:48px;border-radius:16px}
+  .hero-visual::after{background:linear-gradient(180deg,var(--black) 0%,transparent 30%,transparent 80%,rgba(0,0,0,0.4) 100%)}
 }
 
-/* ─── SPEC RIBBON ─── */
-.spec-ribbon{
-  background:var(--bg-2);
-  border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);
-  position:relative;
-  margin-top:60px;
-}
-.spec-ribbon::before,.spec-ribbon::after{
-  content:'';position:absolute;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,var(--teal),transparent);
-  opacity:0.5;
-}
-.spec-ribbon::before{top:-1px}.spec-ribbon::after{bottom:-1px}
-.spec-ribbon-inner{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  max-width:1400px;margin:0 auto;
-}
-@media(max-width:680px){.spec-ribbon-inner{grid-template-columns:repeat(2,1fr)}}
-.spec{
-  padding:36px 28px;border-right:1px solid var(--rule);
-  display:flex;flex-direction:column;gap:6px;position:relative;
-}
-.spec:last-child{border-right:none}
-@media(max-width:680px){
-  .spec:nth-child(2n){border-right:none}
-  .spec:nth-child(-n+2){border-bottom:1px solid var(--rule)}
-}
-.spec-label{
-  font-family:'JetBrains Mono',monospace;
-  font-size:10px;letter-spacing:0.22em;text-transform:uppercase;
-  color:var(--ink-3);font-weight:600;display:flex;align-items:center;gap:8px;
-}
-.spec-label::before{
-  content:'';width:6px;height:6px;border-radius:50%;
-  background:var(--teal);
-}
-.spec-val{
-  font-family:'Instrument Serif',serif;
-  font-size:52px;line-height:1;letter-spacing:-0.02em;color:var(--ink);
-}
-.spec-val small{
-  font-size:16px;color:var(--teal);font-family:'JetBrains Mono',monospace;
-  font-weight:500;margin-left:4px;
-}
-.spec-note{font-size:12px;color:var(--ink-3);line-height:1.4}
+/* ═══════ LAYOUT ═══════ */
+.wrap{max-width:1200px;margin:0 auto;padding:0 48px}
+@media(max-width:760px){.wrap{padding:0 24px}}
+section{padding:140px 0;position:relative}
 
-/* ─── TESTIMONIALS ─── */
-.testimonials{
-  padding:120px 0;background:var(--bg);border-bottom:1px solid var(--rule);
-}
-.testimonials-grid{
-  display:grid;grid-template-columns:repeat(2,1fr);gap:40px;max-width:1000px;margin:0 auto;
-}
-@media(max-width:760px){.testimonials-grid{grid-template-columns:1fr}}
-.testimonial-card{
-  background:linear-gradient(180deg,rgba(0,229,180,0.06),rgba(0,229,180,0.02));
-  border:1px solid rgba(0,229,180,0.2);
-  border-radius:12px;
-  padding:32px;
-  position:relative;
-}
-.testimonial-quote{
-  font-family:'Instrument Serif',serif;
-  font-size:18px;font-style:italic;line-height:1.5;
-  color:var(--ink);margin:0 0 24px;
-}
-.testimonial-attr{
-  display:flex;align-items:center;gap:16px;
-}
-.testimonial-avatar{
-  width:48px;height:48px;border-radius:50%;
-  background:linear-gradient(135deg,var(--teal),var(--cyan));
-}
-.testimonial-info{
-  flex:1;
-}
-.testimonial-name{
-  font-weight:600;color:var(--ink);font-size:14px;display:block;margin-bottom:2px;
-}
-.testimonial-role{
-  font-size:12px;color:var(--ink-3);font-family:'JetBrains Mono',monospace;
-  letter-spacing:0.1em;
-}
-.testimonial-card::before{
-  content:'★';position:absolute;top:16px;right:24px;
-  font-size:28px;color:var(--teal);opacity:0.3;
-}
-
-/* ─── FEATURES ─── */
-.features{padding:120px 0;background:var(--bg);border-bottom:1px solid var(--rule)}
-.section-head{
-  text-align:center;margin-bottom:80px;
-}
-.section-kicker{
+/* Section headers */
+.section-label{
   font-family:'JetBrains Mono',monospace;font-size:11px;
-  letter-spacing:0.22em;text-transform:uppercase;color:var(--teal);
-  font-weight:600;margin-bottom:16px;
-  display:inline-flex;align-items:center;gap:8px;
+  letter-spacing:0.2em;text-transform:uppercase;
+  color:var(--accent);margin-bottom:20px;
+  display:flex;align-items:center;gap:12px;
 }
-.section-kicker::before{
-  content:'';width:8px;height:8px;border-radius:50%;
-  background:var(--teal);
-}
+.section-label::before{content:'';width:24px;height:1px;background:var(--accent)}
 .section-title{
-  font-family:'Instrument Serif',serif;
-  font-size:clamp(36px,6vw,68px);
-  line-height:1;letter-spacing:-0.02em;
-  margin:0;color:var(--ink);font-weight:400;
+  font-family:'Urbanist',sans-serif;
+  font-size:clamp(32px,5vw,56px);
+  font-weight:800;line-height:1.08;
+  letter-spacing:-0.02em;
+  color:#fff;margin:0 0 20px;
 }
-.section-title .em{font-style:italic;color:var(--teal)}
+.section-desc{
+  font-size:17px;line-height:1.65;color:var(--ink-2);
+  max-width:480px;margin:0;
+}
+
+/* ═══════ GRADIENT DIVIDER ═══════ */
+.divider{
+  width:100%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--rule-2) 20%,var(--rule-2) 80%,transparent);
+}
+
+/* ═══════ STATS ROW ═══════ */
+.stats{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:48px;
+  padding:100px 0;text-align:center;
+}
+@media(max-width:760px){.stats{grid-template-columns:repeat(2,1fr);gap:32px;padding:80px 0}}
+.stat-num{
+  font-family:'Urbanist',sans-serif;font-weight:800;
+  font-size:clamp(36px,5vw,56px);color:#fff;
+  letter-spacing:-0.02em;margin-bottom:4px;
+}
+.stat-num .accent{color:var(--accent)}
+.stat-label{font-size:14px;color:var(--ink-3);letter-spacing:0.02em}
+
+/* ═══════ SPLIT SECTION ═══════ */
+.split{
+  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
+}
+.split.reverse{direction:rtl}
+.split.reverse > *{direction:ltr}
+@media(max-width:960px){
+  .split{grid-template-columns:1fr;gap:48px}
+  .split.reverse{direction:ltr}
+}
+.split-media{
+  position:relative;border-radius:20px;overflow:hidden;
+  background:var(--bg-2);aspect-ratio:4/3;
+}
+.split-media img{
+  width:100%;height:100%;object-fit:cover;
+  transition:transform 0.6s cubic-bezier(0.16,1,0.3,1);
+}
+.split-media:hover img{transform:scale(1.04)}
+.split-media::after{
+  content:'';position:absolute;inset:0;
+  border:1px solid var(--rule);border-radius:20px;pointer-events:none;
+}
+
+/* ═══════ FEATURES GRID ═══════ */
 .features-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:40px;
-  max-width:1000px;margin:0 auto;
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  margin-top:72px;
 }
-@media(max-width:880px){.features-grid{grid-template-columns:1fr;gap:32px}}
+@media(max-width:960px){.features-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.features-grid{grid-template-columns:1fr}}
+
 .feature-card{
-  background:rgba(0,229,180,0.03);border:1px solid var(--rule-2);
-  border-radius:12px;padding:32px;
-  transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+  background:var(--bg-2);
+  border:1px solid var(--rule);
+  border-radius:16px;padding:40px 32px;
+  transition:border-color 0.4s ease,transform 0.4s cubic-bezier(0.16,1,0.3,1),box-shadow 0.4s ease;
 }
 .feature-card:hover{
-  border-color:var(--teal);
-  background:rgba(0,229,180,0.08);
+  border-color:rgba(0,229,180,0.3);
   transform:translateY(-4px);
+  box-shadow:0 20px 60px -20px rgba(0,0,0,0.6);
 }
 .feature-icon{
-  font-size:32px;margin-bottom:16px;line-height:1;
+  width:48px;height:48px;display:grid;place-items:center;
+  border-radius:12px;background:rgba(0,229,180,0.08);margin-bottom:24px;
 }
-.feature-title{
-  font-family:'Instrument Serif',serif;font-size:18px;
-  color:var(--ink);font-weight:400;margin:0 0 12px;
+.feature-icon svg{width:24px;height:24px;color:var(--accent)}
+.feature-card h3{
+  font-family:'Urbanist',sans-serif;font-weight:700;
+  font-size:20px;color:#fff;margin:0 0 12px;
 }
-.feature-desc{
-  font-size:14px;color:var(--ink-2);line-height:1.6;margin:0;
-}
+.feature-card p{color:var(--ink-2);font-size:15px;line-height:1.6;margin:0}
 
-/* ─── PRICING ─── */
-.pricing{
-  padding:120px 0;background:var(--bg);border-bottom:1px solid var(--rule);
+/* ═══════ BENTO PIECES ═══════ */
+.bento{
+  display:grid;
+  grid-template-columns:repeat(12,1fr);
+  grid-template-rows:280px 280px 340px;
+  gap:16px;margin-top:72px;
 }
-.pricing-grid{
-  display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;
-  max-width:1100px;margin:0 auto;
+.bento .b1{grid-column:1/5;grid-row:1/3}
+.bento .b2{grid-column:5/13;grid-row:1/2}
+.bento .b3{grid-column:5/9;grid-row:2/3}
+.bento .b4{grid-column:9/13;grid-row:2/3}
+.bento .b5{grid-column:1/7;grid-row:3/4}
+.bento .b6{grid-column:7/13;grid-row:3/4}
+@media(max-width:960px){
+  .bento{grid-template-columns:1fr 1fr;grid-template-rows:none;gap:16px}
+  .bento > *{grid-column:auto!important;grid-row:auto!important;height:320px}
 }
-@media(max-width:880px){.pricing-grid{grid-template-columns:1fr;gap:48px}}
-.pricing-text h2{
-  font-family:'Instrument Serif',serif;font-weight:400;
-  font-size:clamp(36px,5.2vw,64px);line-height:1;letter-spacing:-0.02em;
-  margin:0 0 24px;color:var(--ink);
-}
-.pricing-text h2 .em{
-  font-style:italic;color:var(--teal);
-}
-.pricing-text p{color:var(--ink-2);font-size:15px;line-height:1.6;max-width:450px;margin:0 0 24px}
-.pricing-table{
-  font-family:'JetBrains Mono',monospace;font-size:12px;
-  color:var(--ink-3);line-height:2;
-  border:1px solid var(--rule-2);border-radius:8px;
-  padding:24px;margin:24px 0;
-  background:linear-gradient(180deg,rgba(0,229,180,0.02),transparent);
-}
-.pricing-row{display:flex;justify-content:space-between;align-items:center}
-.pricing-row.total{
-  border-top:1px dashed var(--rule-2);padding-top:16px;margin-top:16px;
-}
-.pricing-row.total .label{color:var(--ink);font-weight:600;letter-spacing:0.1em;text-transform:uppercase;font-size:11px}
-.pricing-row.total .value{color:var(--teal);font-weight:600;font-size:24px}
-.pricing-actions{display:flex;flex-direction:column;gap:14px;margin-top:32px}
+@media(max-width:600px){.bento{grid-template-columns:1fr}}
 
-.price-sticker{
-  text-align:center;padding:48px 32px;
-  background:linear-gradient(135deg,rgba(0,229,180,0.1),rgba(34,211,238,0.05));
-  border:2px solid var(--teal);border-radius:16px;
-  position:relative;
-  overflow:hidden;
+.bento-card{
+  position:relative;overflow:hidden;
+  border-radius:16px;background:var(--bg-2);
+  border:1px solid var(--rule);cursor:pointer;
+  transition:border-color 0.4s ease,box-shadow 0.4s ease,transform 0.5s cubic-bezier(0.16,1,0.3,1);
 }
-.price-sticker::before{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(45deg,transparent 30%,rgba(0,229,180,0.05) 50%,transparent 70%);
-  animation:shimmer 3s infinite;
+.bento-card:hover{
+  border-color:rgba(0,229,180,0.35);
+  box-shadow:0 24px 60px -20px rgba(0,0,0,0.7),0 0 40px -10px rgba(0,229,180,0.15);
+  transform:translateY(-3px);
 }
-@keyframes shimmer{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
-.price-sticker-content{position:relative;z-index:1}
-.price-currency{
-  font-family:'Instrument Serif',serif;font-size:18px;color:var(--teal);
-  margin-bottom:8px;letter-spacing:0.1em;
+.bento-card .card-bg{position:absolute;inset:0;z-index:0;overflow:hidden;border-radius:16px}
+.bento-card .card-bg img{
+  width:100%;height:100%;object-fit:cover;
+  transform:scale(1.02);
+  transition:transform 0.6s cubic-bezier(0.16,1,0.3,1),filter 0.5s ease;
 }
-.price-amount{
-  font-family:'Instrument Serif',serif;font-size:96px;font-weight:400;
-  color:var(--ink);line-height:0.9;margin-bottom:16px;
+.bento-card:hover .card-bg img{transform:scale(1.08);filter:brightness(0.35)}
+/* scrim */
+.bento-card .card-bg::before{
+  content:'';position:absolute;inset:0;z-index:1;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,0.75) 0%,rgba(0,0,0,0.1) 30%,transparent 50%,rgba(0,0,0,0.5) 75%,rgba(0,0,0,0.92) 100%);
+  transition:background 0.4s ease;
 }
-.price-terms{
-  font-family:'JetBrains Mono',monospace;font-size:11px;
-  letter-spacing:0.15em;color:var(--ink-3);text-transform:uppercase;
+.bento-card:hover .card-bg::before{
+  background:linear-gradient(180deg,rgba(0,0,0,0.9) 0%,rgba(0,0,0,0.55) 35%,rgba(0,0,0,0.45) 55%,rgba(0,0,0,0.7) 75%,rgba(0,0,0,0.96) 100%);
 }
-.price-terms b{color:var(--teal);font-weight:600}
+/* scan line */
+.bento-card .card-bg::after{
+  content:'';position:absolute;top:0;bottom:0;width:36%;z-index:2;
+  background:linear-gradient(90deg,transparent,rgba(0,229,180,0.08),transparent);
+  left:-50%;opacity:0;pointer-events:none;
+}
+.bento-card:hover .card-bg::after{opacity:1;animation:cardSweep 1.4s cubic-bezier(0.4,0,0.2,1)}
+@keyframes cardSweep{0%{left:-50%}100%{left:120%}}
 
-/* ─── FAQ ─── */
-.faq-section{padding:120px 0;border-bottom:1px solid var(--rule);background:var(--bg)}
-.faq-list{
-  display:flex;flex-direction:column;max-width:800px;margin:0 auto;
-}
-.faq-item{border-top:1px solid var(--rule)}
-.faq-item:last-child{border-bottom:1px solid var(--rule)}
-.faq-item summary{
-  list-style:none;cursor:pointer;
-  padding:24px 0;position:relative;
-  font-family:'Instrument Serif',serif;font-weight:400;
-  font-size:20px;line-height:1.3;letter-spacing:-0.005em;color:var(--ink);
+.bento-card .card-head{
+  position:absolute;top:0;left:0;right:0;z-index:3;
   display:flex;align-items:center;justify-content:space-between;
-  gap:20px;transition:color 0.3s cubic-bezier(0.16,1,0.3,1);
+  padding:16px 18px;font-family:'JetBrains Mono',monospace;
 }
-.faq-item summary::-webkit-details-marker{display:none}
-.faq-item summary:hover{color:var(--teal)}
-.faq-toggle{
-  color:var(--teal);font-family:serif;font-size:28px;line-height:0.8;
-  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);flex-shrink:0;
+.bento-card .card-head .num{font-size:11px;letter-spacing:0.14em;color:var(--ink-3);font-weight:600}
+.bento-card .card-head .num b{color:var(--accent)}
+.bento-card .card-head .tag{
+  font-size:9px;letter-spacing:0.18em;text-transform:uppercase;
+  color:var(--ink-2);font-weight:500;
+  padding:4px 10px;border:1px solid var(--rule);border-radius:6px;
+  background:rgba(0,0,0,0.5);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
 }
-.faq-item[open] .faq-toggle{transform:rotate(45deg)}
-.faq-body{
-  padding:0 0 24px;color:var(--ink-2);font-size:15px;line-height:1.65;
+.bento-card .card-foot{
+  position:absolute;left:0;right:0;bottom:0;z-index:3;padding:20px 20px 24px;
+}
+.bento-card .card-foot h3{
+  font-family:'Urbanist',sans-serif;font-weight:700;
+  font-size:clamp(18px,1.8vw,24px);color:#fff;margin:0;
+  text-shadow:0 2px 12px rgba(0,0,0,0.6);
+}
+.bento-card .card-foot p{
+  color:var(--ink-2);font-size:13px;line-height:1.55;margin:0;
+  max-height:0;opacity:0;overflow:hidden;
+  transition:max-height 0.5s cubic-bezier(0.16,1,0.3,1),opacity 0.4s ease,margin-top 0.4s ease;
+}
+.bento-card:hover .card-foot p{max-height:160px;opacity:1;margin-top:10px}
+
+/* corner brackets */
+.bento-card .brk{
+  position:absolute;width:12px;height:12px;
+  border:1.5px solid rgba(0,229,180,0.3);z-index:4;
+  opacity:0.3;transition:opacity 0.4s,width 0.4s,height 0.4s;
+}
+.bento-card .brk.tl{top:10px;left:10px;border-right:none;border-bottom:none}
+.bento-card .brk.tr{top:10px;right:10px;border-left:none;border-bottom:none}
+.bento-card .brk.bl{bottom:10px;left:10px;border-right:none;border-top:none}
+.bento-card .brk.br{bottom:10px;right:10px;border-left:none;border-top:none}
+.bento-card:hover .brk{opacity:0.8;width:16px;height:16px}
+
+/* ═══════ SHOWCASE ═══════ */
+.showcase-frame{
+  margin-top:72px;position:relative;
+  border-radius:20px;overflow:hidden;
+  background:var(--bg-2);border:1px solid var(--rule);
+  aspect-ratio:16/9;
+}
+.showcase-frame img{width:100%;height:100%;object-fit:cover}
+.showcase-frame .overlay{
+  position:absolute;inset:0;display:grid;place-items:center;
+  background:rgba(0,0,0,0.3);transition:background 0.4s;cursor:pointer;
+}
+.showcase-frame .overlay:hover{background:rgba(0,0,0,0.15)}
+.play-btn{
+  width:72px;height:72px;border-radius:50%;
+  background:rgba(0,229,180,0.9);display:grid;place-items:center;
+  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1),box-shadow 0.35s;
+}
+.play-btn:hover{transform:scale(1.1);box-shadow:0 0 40px rgba(0,229,180,0.4)}
+.play-btn svg{width:24px;height:24px;margin-left:3px}
+
+/* ═══════ DAW COMPAT ═══════ */
+.compat{text-align:center;padding:80px 0}
+.compat-label{font-size:14px;color:var(--ink-3);margin-bottom:32px;letter-spacing:0.04em}
+.compat-logos{
+  display:flex;gap:40px;align-items:center;justify-content:center;flex-wrap:wrap;
+}
+.compat-logos img{
+  height:28px;width:auto;opacity:0.35;
+  filter:brightness(0) invert(0.7);
+  transition:opacity 0.35s,transform 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+.compat-logos img:hover{opacity:0.85;transform:scale(1.12)}
+
+/* ═══════ PRICING ═══════ */
+.pricing-card{
+  max-width:520px;margin:72px auto 0;
+  background:var(--bg-2);border:1px solid var(--rule);
+  border-radius:24px;padding:48px;text-align:center;
+  position:relative;overflow:hidden;
+}
+.pricing-card::before{
+  content:'';position:absolute;top:-1px;left:20%;right:20%;height:1px;
+  background:linear-gradient(90deg,transparent,var(--accent),transparent);
+}
+.pricing-card .price{
+  font-family:'Urbanist',sans-serif;font-weight:800;
+  font-size:56px;color:#fff;margin:0 0 4px;letter-spacing:-0.02em;
+}
+.pricing-card .price sup{font-size:28px;vertical-align:super;color:var(--ink-2)}
+.pricing-card .price-note{font-size:14px;color:var(--ink-3);margin-bottom:32px}
+.pricing-list{text-align:left;list-style:none;padding:0;margin:0 0 36px}
+.pricing-list li{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 0;border-bottom:1px solid var(--rule);
+  font-size:15px;color:var(--ink-2);
+}
+.pricing-list li:last-child{border-bottom:none}
+.pricing-list .check{
+  width:20px;height:20px;border-radius:50%;
+  background:rgba(0,229,180,0.1);display:grid;place-items:center;flex-shrink:0;
+}
+.pricing-list .check svg{width:12px;height:12px;color:var(--accent)}
+
+/* ═══════ CTA BAND ═══════ */
+.cta-band{text-align:center;padding:140px 0;position:relative}
+.cta-band::before{
+  content:'';position:absolute;
+  width:600px;height:400px;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  background:radial-gradient(ellipse at center,rgba(0,229,180,0.1),transparent 70%);
+  pointer-events:none;
+}
+.cta-band h2{
+  font-family:'Urbanist',sans-serif;font-weight:800;
+  font-size:clamp(36px,5vw,60px);color:#fff;
+  letter-spacing:-0.02em;margin:0 0 20px;position:relative;
+}
+.cta-band p{
+  font-size:17px;color:var(--ink-2);margin:0 auto 40px;
+  max-width:440px;position:relative;
 }
 
-/* ─── CTA ─── */
-.final-cta{
-  padding:120px 0;text-align:center;position:relative;
-  background:var(--bg);border-bottom:1px solid var(--rule);
+/* ═══════ FOOTER ═══════ */
+footer{
+  background:var(--bg-2);border-top:1px solid var(--rule);
+  padding:60px 0 32px;
 }
-.final-cta h2{
-  font-family:'Instrument Serif',serif;font-weight:400;
-  font-size:clamp(40px,7vw,80px);line-height:1;letter-spacing:-0.02em;
-  margin:0 0 32px;color:var(--ink);
-}
-.final-cta h2 .em{font-style:italic;color:var(--teal)}
-.final-actions{display:flex;gap:16px;justify-content:center;flex-wrap:wrap}
-
-/* ─── FOOTER ─── */
-footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1;border-top:1px solid var(--rule)}
 .foot-grid{
-  display:grid;grid-template-columns:2fr 1fr 1fr;gap:48px;
-  padding-bottom:48px;border-bottom:1px solid var(--rule);
-  max-width:1200px;margin:0 auto;padding-left:32px;padding-right:32px;
+  display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:48px;
+  margin-bottom:48px;
 }
-@media(max-width:760px){.foot-grid{grid-template-columns:1fr;gap:32px}}
-.foot-brand p{margin:0;color:var(--ink-2);font-size:13px;line-height:1.6;max-width:280px}
-.foot-col h5{
-  font-family:'JetBrains Mono',monospace;font-size:10px;
-  letter-spacing:0.22em;text-transform:uppercase;color:var(--ink-3);
-  font-weight:600;margin:0 0 16px;
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr;gap:32px}}
+.foot-brand p{color:var(--ink-3);font-size:14px;line-height:1.6;margin:16px 0 0;max-width:280px}
+.foot-col h4{
+  font-family:'Urbanist',sans-serif;font-weight:700;font-size:14px;
+  color:var(--ink);margin:0 0 16px;letter-spacing:0.04em;
 }
 .foot-col a{
-  display:block;font-size:13px;color:var(--ink-2);
-  padding:4px 0;transition:color 0.15s;
+  display:block;font-size:14px;color:var(--ink-3);
+  padding:4px 0;transition:color 0.3s;
 }
-.foot-col a:hover{color:var(--teal)}
+.foot-col a:hover{color:var(--ink)}
 .foot-bottom{
-  padding-top:28px;display:flex;justify-content:space-between;align-items:center;
-  flex-wrap:wrap;gap:14px;
-  font-family:'JetBrains Mono',monospace;font-size:10.5px;
-  letter-spacing:0.14em;color:var(--ink-4);text-transform:uppercase;
-  max-width:1200px;margin:0 auto;padding-left:32px;padding-right:32px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+  padding-top:24px;border-top:1px solid var(--rule);
+  font-size:13px;color:var(--ink-4);
 }
-
-/* ─── REVEAL ─── */
-.rv{opacity:0;transform:translateY(20px);transition:opacity 0.8s cubic-bezier(0.16,1,0.3,1),transform 0.8s cubic-bezier(0.16,1,0.3,1)}
-.rv.show{opacity:1;transform:none}
-.rv-d1{transition-delay:0.12s}
-.rv-d2{transition-delay:0.24s}
-
-/* ─── MOBILE ─── */
-@media(max-width:560px){
-  .wrap{padding:0 20px}
-  .hero{padding-top:96px}
-  .showcase{padding:0 20px}
-  .features-grid{padding:0 20px}
-  .price-amount{font-size:72px}
-  .final-cta{padding:100px 20px}
+.foot-socials{display:flex;gap:16px}
+.foot-socials a{
+  width:32px;height:32px;border-radius:50%;
+  background:var(--surface);display:grid;place-items:center;
+  transition:background 0.3s;
 }
+.foot-socials a:hover{background:var(--bg-3)}
+.foot-socials svg{width:16px;height:16px;color:var(--ink-3)}
+
+/* ═══════ SCROLL REVEAL ═══════ */
+.rv{opacity:0;transform:translateY(32px);transition:opacity 0.7s ease,transform 0.7s cubic-bezier(0.16,1,0.3,1)}
+.rv.in{opacity:1;transform:none}
+.rv-d1{transition-delay:0.1s}
+.rv-d2{transition-delay:0.2s}
+.rv-d3{transition-delay:0.3s}
 </style>
 </head>
 <body>
-<a href="#features" class="skip-link">Skip to content</a>
 
 <!-- ═══════ NAV ═══════ -->
-<nav id="nav">
-  <div class="nav-inner">
-    <a href="#" class="logo">
-      <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-        <path d="M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z" fill="none" stroke="#00e5b4" stroke-width="3"/>
-        <circle cx="50" cy="50" r="14" fill="none" stroke="#00e5b4" stroke-width="2" opacity="0.5"/>
-        <rect x="48.8" y="40" width="2.4" height="20" rx="1.2" fill="#00e5b4"/>
-      </svg>
-      <span class="name">NIMBUS</span>
-    </a>
-    <div class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#testimonials">Testimonials</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#faq">FAQ</a>
-    </div>
-    <a href="#pricing" class="nav-cta">Buy &mdash; $29.90</a>
+<nav id="mainNav">
+  <div class="nav-logo">
+    <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+      <path d="M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z" fill="none" stroke="#00e5b4" stroke-width="3"/>
+      <circle cx="50" cy="50" r="14" fill="none" stroke="#00e5b4" stroke-width="2" opacity="0.5"/>
+      <rect x="42.8" y="47" width="2.4" height="6" rx="1.2" fill="#00e5b4"/>
+      <rect x="45.8" y="43" width="2.4" height="14" rx="1.2" fill="#00e5b4"/>
+      <rect x="48.8" y="40" width="2.4" height="20" rx="1.2" fill="#00e5b4"/>
+      <rect x="51.8" y="43" width="2.4" height="14" rx="1.2" fill="#00e5b4"/>
+      <rect x="54.8" y="47" width="2.4" height="6" rx="1.2" fill="#00e5b4"/>
+      <circle cx="44" cy="44" r="1.8" fill="#00e5b4"/>
+    </svg>
+    <span>NIMBUS</span>
   </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#pieces">Instruments</a>
+    <a href="#pricing">Pricing</a>
+    <a href="/docs">Docs</a>
+  </div>
+  <a href="#pricing" class="nav-cta">Get Nimbus</a>
 </nav>
 
 <!-- ═══════ HERO ═══════ -->
-<header class="hero">
-  <div class="wrap">
-    <div class="hero-top">
-      <div class="left">
-        <span class="pill">⚡ New: Gesture Editor</span>
-        <span>Works with every DAW</span>
-      </div>
-      <div class="right">
-        <span>VST3 &middot; AU &middot; AAX</span>
-      </div>
-    </div>
-
-    <div class="hero-grid">
-      <div>
-        <h1 class="hero-title">
-          Control synths with<br>
-          <span class="em">hand gestures.</span>
-        </h1>
-        <p class="hero-sub">
-          <b>Nimbus</b> turns your webcam into expressive MIDI control. 11ms latency, zero setup, $29.90 lifetime. Works with Serum, Vital, Massive X, and everything else.
-        </p>
-        <div class="hero-quote">
-          <b>"The latency isn't there."</b> It feels like the synth is reading my hands directly. Used it on a record by Friday. — <b>Lila, Producer</b>
-        </div>
-        <div class="hero-actions">
-          <button class="btn-primary" onclick="handleCheckout()">
-            Get Nimbus <span class="arr">→</span>
-          </button>
-          <a href="#features" class="btn-ghost">See how it works</a>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:center">
-        <div style="
-          background:rgba(0,229,180,0.1);
-          border:2px dashed var(--teal);
-          border-radius:12px;
-          width:100%;
-          aspect-ratio:1/1.2;
-          display:flex;
-          align-items:center;
-          justify-content:center;
-          flex-direction:column;
-          gap:16px;
-          color:var(--ink-3);
-          text-align:center;
-        ">
-          <div style="font-size:32px">🎹</div>
-          <div style="font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:0.1em">DEMO VIDEO HERE</div>
-          <div style="font-size:11px;max-width:140px">Hand tracking in action with your favorite synth</div>
-        </div>
-      </div>
+<section class="hero">
+  <div class="hero-content rv">
+    <div class="hero-kicker">Hand-tracked MIDI control</div>
+    <h1>Your hands are the instrument.</h1>
+    <p>Nimbus turns your webcam into an expressive MIDI controller. Two hands, twelve CC channels, real-time tracking. No gloves, no hardware.</p>
+    <div class="hero-actions">
+      <a href="#pricing" class="btn-pill">Get Nimbus &mdash; $29.90</a>
+      <a href="#showcase" class="btn-outline">Watch demo <span class="arrow">&rarr;</span></a>
     </div>
   </div>
-
-  <!-- Showcase frame -->
-  <div class="showcase">
-    <div class="showcase-inner">
-      <div class="showcase-frame">
-        <div class="showcase-bar">
-          <span class="dot dot-r"></span>
-          <span class="dot dot-y"></span>
-          <span class="dot dot-g"></span>
-          <span class="title">Ableton Live &middot; Nimbus.vst3</span>
-        </div>
-        <div class="showcase-screen">
-          <div class="showcase-content">
-            <div class="showcase-label">🎥 Plugin Interface Screenshot or Video</div>
-            <div class="showcase-text">Add a screenshot of the Nimbus UI here or embed a 30-second demo video</div>
-            <div class="showcase-img">Replace with: &lt;img src="nimbus-ui.png"/&gt; or &lt;video autoplay muted loop&gt;</div>
-          </div>
-        </div>
-      </div>
-    </div>
+  <div class="hero-visual">
+    <img src="assets/screenshot-main.png" alt="Nimbus interface showing hand tracking with MIDI mapping"/>
   </div>
-</header>
+</section>
 
-<!-- ═══════ SPEC RIBBON ═══════ -->
-<div class="spec-ribbon">
-  <div class="spec-ribbon-inner">
-    <div class="spec">
-      <div class="spec-label">Tracking Speed</div>
-      <div class="spec-val">60<small>fps</small></div>
-      <div class="spec-note">Any webcam, any resolution.</div>
+<!-- ═══════ STATS ═══════ -->
+<div class="divider"></div>
+<div class="wrap">
+  <div class="stats">
+    <div class="rv">
+      <div class="stat-num">30<span class="accent">Hz</span></div>
+      <div class="stat-label">Tracking speed</div>
     </div>
-    <div class="spec">
-      <div class="spec-label">Latency</div>
-      <div class="spec-val">11<small>ms</small></div>
-      <div class="spec-note">Below perception threshold.</div>
+    <div class="rv rv-d1">
+      <div class="stat-num">12<span class="accent">CC</span></div>
+      <div class="stat-label">Channels per hand</div>
     </div>
-    <div class="spec">
-      <div class="spec-label">Hand Precision</div>
-      <div class="spec-val">21<small>pts</small></div>
-      <div class="spec-note">Sub-pixel accuracy per hand.</div>
+    <div class="rv rv-d2">
+      <div class="stat-num">&lt;8<span class="accent">ms</span></div>
+      <div class="stat-label">Latency</div>
     </div>
-    <div class="spec">
-      <div class="spec-label">MIDI Channels</div>
-      <div class="spec-val">12</div>
-      <div class="spec-note">Map anything you want.</div>
+    <div class="rv rv-d3">
+      <div class="stat-num">0<span class="accent">hw</span></div>
+      <div class="stat-label">Extra hardware needed</div>
     </div>
   </div>
 </div>
+<div class="divider"></div>
 
-<!-- ═══════ TESTIMONIALS ═══════ -->
-<section class="testimonials" id="testimonials">
+<!-- ═══════ SPLIT: HOW IT WORKS ═══════ -->
+<section id="features">
   <div class="wrap">
-    <div class="section-head rv">
-      <div class="section-kicker">What Producers Say</div>
-      <h2 class="section-title">Built by musicians.<br>Loved by <span class="em">producers.</span></h2>
-    </div>
-    <div class="testimonials-grid">
-      <div class="testimonial-card rv">
-        <div class="testimonial-quote">"Feels like I'm playing the synth directly with my hands. No learning curve, just map and go."</div>
-        <div class="testimonial-attr">
-          <div class="testimonial-avatar"></div>
-          <div class="testimonial-info">
-            <span class="testimonial-name">Lila Ostrowski</span>
-            <span class="testimonial-role">Producer • Brooklyn</span>
-          </div>
-        </div>
+    <div class="split">
+      <div class="rv">
+        <div class="section-label">How it works</div>
+        <h2 class="section-title">Point your camera.<br>Move your hands.</h2>
+        <p class="section-desc">Nimbus uses MediaPipe hand tracking to read your gestures in real time. Each finger curl, hand height, and wrist rotation maps to a MIDI CC channel &mdash; fully configurable, zero calibration.</p>
       </div>
-      <div class="testimonial-card rv rv-d1">
-        <div class="testimonial-quote">"Used it live on stage. The latency is completely transparent. My hands feel connected to the synth."</div>
-        <div class="testimonial-attr">
-          <div class="testimonial-avatar"></div>
-          <div class="testimonial-info">
-            <span class="testimonial-name">Marcus Chen</span>
-            <span class="testimonial-role">Live Performer • Tokyo</span>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial-card rv rv-d2">
-        <div class="testimonial-quote">"Works with everything. Serum, Vital, Massive—just right-click and map. Finally stopped reaching for the mouse."</div>
-        <div class="testimonial-attr">
-          <div class="testimonial-avatar"></div>
-          <div class="testimonial-info">
-            <span class="testimonial-name">Jordan Kelly</span>
-            <span class="testimonial-role">Electronic Artist • Berlin</span>
-          </div>
-        </div>
-      </div>
-      <div class="testimonial-card rv rv-d2">
-        <div class="testimonial-quote">"The gesture editor is killer. Record hand shapes, trigger drums, layer in complexity. It's a real instrument."</div>
-        <div class="testimonial-attr">
-          <div class="testimonial-avatar"></div>
-          <div class="testimonial-info">
-            <span class="testimonial-name">Sophie Wright</span>
-            <span class="testimonial-role">Producer • London</span>
-          </div>
-        </div>
+      <div class="split-media rv rv-d1">
+        <img src="assets/webcam-wireframe.png" alt="Hand tracking wireframe visualization"/>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════ FEATURES ═══════ -->
-<section class="features" id="features">
+<!-- ═══════ SPLIT: SIGNAL FLOW (reversed) ═══════ -->
+<section>
   <div class="wrap">
-    <div class="section-head rv">
-      <div class="section-kicker">Why It Works</div>
-      <h2 class="section-title">Everything you need to<br>perform <span class="em">expressively.</span></h2>
+    <div class="split reverse">
+      <div class="rv">
+        <div class="section-label">Signal flow</div>
+        <h2 class="section-title">Camera to DAW in one hop.</h2>
+        <p class="section-desc">Runs as a VST3, AU, or standalone app. MIDI output routes directly to your DAW &mdash; no virtual cables, no middleware. Just drop it on a track and play.</p>
+      </div>
+      <div class="split-media rv rv-d1">
+        <img src="assets/screenshot-instruments.png" alt="Nimbus instruments panel"/>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ FEATURES GRID ═══════ -->
+<section>
+  <div class="wrap">
+    <div class="rv">
+      <div class="section-label">Built different</div>
+      <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
     </div>
     <div class="features-grid">
       <div class="feature-card rv">
-        <div class="feature-icon">🎹</div>
-        <h3 class="feature-title">Works Everywhere</h3>
-        <p class="feature-desc">VST3, AU, AAX. Ableton, Logic, FL Studio, Reaper, Bitwig, Cubase, Pro Tools. No special setup.</p>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>Six instruments</h3>
+        <p>Strings, keys, knobs, chord wheels, gesture recorder, and a pre-mapped library. Mix them on one canvas.</p>
       </div>
       <div class="feature-card rv rv-d1">
-        <div class="feature-icon">⚡</div>
-        <h3 class="feature-title">Instant Mapping</h3>
-        <p class="feature-desc">Right-click any parameter, wiggle a finger. Standard MIDI Learn—works with every synth on the planet.</p>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <h3>Real-time, low latency</h3>
+        <p>30Hz tracking at under 8ms. Fast enough for live performance, tight enough for studio recording.</p>
       </div>
       <div class="feature-card rv rv-d2">
-        <div class="feature-icon">🎯</div>
-        <h3 class="feature-title">11ms Latency</h3>
-        <p class="feature-desc">Below perception threshold. Play live, on stage, in the studio. Your hands feel directly connected.</p>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Just a webcam</h3>
+        <p>No gloves, no Leap Motion, no special hardware. Your built-in webcam is the controller.</p>
       </div>
       <div class="feature-card rv">
-        <div class="feature-icon">✋</div>
-        <h3 class="feature-title">Smart Smoothing</h3>
-        <p class="feature-desc">Tremors stay out, fast articulations come through. Adaptive filtering tuned for musical expressiveness.</p>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        </div>
+        <h3>Custom gestures</h3>
+        <p>Record any hand pose, name it, map it. Trigger mode or scale mode. Your vocabulary, your rules.</p>
       </div>
       <div class="feature-card rv rv-d1">
-        <div class="feature-icon">📝</div>
-        <h3 class="feature-title">40+ Presets</h3>
-        <p class="feature-desc">Curated mappings for Serum, Vital, Massive X, Diva, Pigments. Start playing immediately or build your own.</p>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <h3>Dead zones &amp; smoothing</h3>
+        <p>Per-channel sensitivity, dead zones, and signal smoothing. Dial in exactly the response curve you want.</p>
       </div>
       <div class="feature-card rv rv-d2">
-        <div class="feature-icon">🔒</div>
-        <h3 class="feature-title">100% Offline</h3>
-        <p class="feature-desc">Zero cloud. Zero telemetry. Your camera feed never leaves your machine. Open source tracking core.</p>
+        <div class="feature-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg>
+        </div>
+        <h3>VST3 / AU / Standalone</h3>
+        <p>Runs inside your DAW or as a standalone app. macOS 12+ and Windows 10+. Works with every major DAW.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════ PRICING ═══════ -->
-<section class="pricing" id="pricing">
-  <div class="wrap">
-    <div class="pricing-grid">
-      <div class="pricing-text rv">
-        <h2>One price. Forever.</h2>
-        <p>No subscription. No "Pro" tier hiding features. No upgrade tax in 18 months. Pay once, own it, get lifetime updates.</p>
-
-        <div class="pricing-table">
-          <div class="pricing-row">
-            <span>Nimbus + all plugins</span>
-            <span>✓</span>
-          </div>
-          <div class="pricing-row">
-            <span>Two-hand tracking</span>
-            <span>✓</span>
-          </div>
-          <div class="pricing-row">
-            <span>12 MIDI channels</span>
-            <span>✓</span>
-          </div>
-          <div class="pricing-row">
-            <span>40+ synth presets</span>
-            <span>✓</span>
-          </div>
-          <div class="pricing-row">
-            <span>Gesture editor</span>
-            <span>✓</span>
-          </div>
-          <div class="pricing-row">
-            <span>Use on 3 machines</span>
-            <span>✓</span>
-          </div>
-          <div class="pricing-row">
-            <span>Lifetime updates</span>
-            <span>✓</span>
-          </div>
-          <div class="pricing-row total">
-            <span class="label">Total</span>
-            <span class="value">$29.90</span>
-          </div>
-        </div>
-
-        <div class="pricing-actions">
-          <button class="btn-primary" onclick="handleCheckout()">
-            Get Nimbus Now <span class="arr">→</span>
-          </button>
-          <a href="#faq" class="btn-ghost">Questions?</a>
-        </div>
-      </div>
-
-      <div class="price-sticker rv rv-d1">
-        <div class="price-sticker-content">
-          <div class="price-currency">PAY ONCE</div>
-          <div class="price-amount">$29.90</div>
-          <div class="price-terms">Forever <b>&amp; Ever</b></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════ FAQ ═══════ -->
-<section class="faq-section" id="faq">
-  <div class="wrap">
-    <div class="section-head rv" style="margin-bottom:60px">
-      <div class="section-kicker">Got Questions?</div>
-      <h2 class="section-title">We've got <span class="em">answers.</span></h2>
-    </div>
-
-    <div class="faq-list rv">
-      <details class="faq-item">
-        <summary>Does this work with my DAW? <span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Yes. Nimbus is VST3, AU, and AAX. Works with Ableton Live, Logic Pro, FL Studio, Reaper, Bitwig, Cubase, Pro Tools, and anything else that supports standard MIDI.</div>
-      </details>
-      <details class="faq-item">
-        <summary>Can I really use it live on stage? <span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Absolutely. Under 12ms end-to-end latency—well below the threshold of perception. A lot of users mount a small camera on a mic stand and perform with it like an instrument.</div>
-      </details>
-      <details class="faq-item">
-        <summary>What hardware do I need? <span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Your laptop's built-in webcam is enough. Or any USB camera. That's it. No gloves, no Leap Motion, no Kinect, no extra sensors. macOS 12+ or Windows 10+.</div>
-      </details>
-      <details class="faq-item">
-        <summary>How much CPU does it use? <span class="faq-toggle">+</span></summary>
-        <div class="faq-body">8–15% of one core on a modern laptop. Runs on its own background thread, so audio stays bulletproof. You can perform with confidence.</div>
-      </details>
-      <details class="faq-item">
-        <summary>Is there a money-back guarantee? <span class="faq-toggle">+</span></summary>
-        <div class="faq-body">30-day full refund if it doesn't work for you. We're confident you'll love it, but no risk.</div>
-      </details>
-      <details class="faq-item">
-        <summary>Does my camera feed leave my machine? <span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Absolutely not. Zero cloud, zero telemetry, zero tracking. The tracking core is open source—audit it yourself if you'd like.</div>
-      </details>
-      <details class="faq-item">
-        <summary>Can I use it with my favorite synths? <span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Yes. Standard MIDI Learn works with every synth. We include 40+ presets for Serum, Vital, Massive X, Diva, Pigments, Phase Plant, and more.</div>
-      </details>
-      <details class="faq-item">
-        <summary>What if I need help? <span class="faq-toggle">+</span></summary>
-        <div class="faq-body">Email hello@nimbus.audio or join our Discord. We read everything and respond fast. You're not buying from a faceless corporation.</div>
-      </details>
-    </div>
-  </div>
-</section>
-
-<!-- ═══════ FINAL CTA ═══════ -->
-<section class="final-cta">
+<!-- ═══════ PIECES BENTO ═══════ -->
+<section id="pieces">
   <div class="wrap">
     <div class="rv">
-      <h2>Stop reaching for the <span class="em">mouse.</span></h2>
-      <div class="final-actions">
-        <button class="btn-primary" onclick="handleCheckout()">
-          Get Nimbus &mdash; $29.90 <span class="arr">→</span>
-        </button>
+      <div class="section-label">The toolkit</div>
+      <h2 class="section-title">Six instruments.<br>Two hands. One canvas.</h2>
+      <p class="section-desc">Mix and match instruments on the same canvas &mdash; strum with one hand while the other rides a filter knob.</p>
+    </div>
+
+    <div class="bento">
+      <div class="bento-card b1 rv">
+        <div class="card-bg"><img src="assets/piece-prerecorded.png" alt="Pre-recorded gestures"/></div>
+        <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
+        <div class="card-head"><span class="num"><b>01</b>&thinsp;/&thinsp;06</span><span class="tag">Gesture library</span></div>
+        <div class="card-foot">
+          <h3>Pre-recorded gestures</h3>
+          <p>Hand openness, height, X position, distance, pinch and snap &mdash; all pre-wired and ready to assign.</p>
+        </div>
+      </div>
+
+      <div class="bento-card b2 rv rv-d1">
+        <div class="card-bg"><img src="assets/piece-strings.png" alt="Strings"/></div>
+        <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
+        <div class="card-head"><span class="num"><b>02</b>&thinsp;/&thinsp;06</span><span class="tag">Instrument &middot; 6 strings</span></div>
+        <div class="card-foot">
+          <h3>Strings</h3>
+          <p>Pinch like a pick, sweep across the strings. The other hand shapes chords by signing 1&ndash;5.</p>
+        </div>
+      </div>
+
+      <div class="bento-card b3 rv rv-d2">
+        <div class="card-bg"><img src="assets/piece-recorder.png" alt="Gesture recorder"/></div>
+        <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
+        <div class="card-head"><span class="num"><b>03</b>&thinsp;/&thinsp;06</span><span class="tag">Rec</span></div>
+        <div class="card-foot">
+          <h3>Gesture recorder</h3>
+          <p>Record any hand pose, name it, map it to CC. Trigger or scale mode.</p>
+        </div>
+      </div>
+
+      <div class="bento-card b4 rv rv-d3">
+        <div class="card-bg"><img src="assets/piece-keys.png" alt="Keys"/></div>
+        <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
+        <div class="card-head"><span class="num"><b>04</b>&thinsp;/&thinsp;06</span><span class="tag">16-step arp</span></div>
+        <div class="card-foot">
+          <h3>Keys</h3>
+          <p>Curl fingers to play notes. Pair with the arp laser for BPM-synced sequences.</p>
+        </div>
+      </div>
+
+      <div class="bento-card b5 rv">
+        <div class="card-bg"><img src="assets/piece-chords.png" alt="Chord player"/></div>
+        <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
+        <div class="card-head"><span class="num"><b>05</b>&thinsp;/&thinsp;06</span><span class="tag">Instrument &middot; 12 chords</span></div>
+        <div class="card-foot">
+          <h3>Chord Player</h3>
+          <p>Left hand picks root notes from a radial wheel; right hand selects variations &mdash; maj, min, sus, dim, aug.</p>
+        </div>
+      </div>
+
+      <div class="bento-card b6 rv rv-d1">
+        <div class="card-bg"><img src="assets/piece-knobs.png" alt="Sliders & Knobs"/></div>
+        <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
+        <div class="card-head"><span class="num"><b>06</b>&thinsp;/&thinsp;06</span><span class="tag">Controls &middot; any CC</span></div>
+        <div class="card-foot">
+          <h3>Sliders &amp; Knobs</h3>
+          <p>Fist to slide, pinch &amp; twist to rotate. Each maps to any CC channel with adjustable range.</p>
+        </div>
       </div>
     </div>
+  </div>
+</section>
+
+<!-- ═══════ SHOWCASE ═══════ -->
+<section id="showcase">
+  <div class="wrap">
+    <div class="rv" style="text-align:center;margin-bottom:8px">
+      <div class="section-label" style="justify-content:center">See it in action</div>
+      <h2 class="section-title">One take. No edits.</h2>
+    </div>
+    <div class="showcase-frame rv rv-d1">
+      <img src="assets/screenshot-main.png" alt="Nimbus demo"/>
+      <div class="overlay">
+        <div class="play-btn">
+          <svg viewBox="0 0 24 24" fill="#000"><polygon points="8,5 20,12 8,19"/></svg>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ DAW COMPAT ═══════ -->
+<div class="divider"></div>
+<div class="wrap">
+  <div class="compat rv">
+    <div class="compat-label">Tested &amp; happy in</div>
+    <div class="compat-logos">
+      <img src="assets/ableton.svg" alt="Ableton Live"/>
+      <img src="assets/logicpro.png" alt="Logic Pro"/>
+      <img src="assets/flstudio.png" alt="FL Studio"/>
+      <img src="assets/bitwig.svg" alt="Bitwig"/>
+      <img src="assets/reaper.svg" alt="Reaper"/>
+      <img src="assets/cubase.svg" alt="Cubase"/>
+      <img src="assets/protools.svg" alt="Pro Tools"/>
+    </div>
+  </div>
+</div>
+<div class="divider"></div>
+
+<!-- ═══════ PRICING ═══════ -->
+<section id="pricing">
+  <div class="wrap">
+    <div class="rv" style="text-align:center">
+      <div class="section-label" style="justify-content:center">Pricing</div>
+      <h2 class="section-title">One price. Yours forever.</h2>
+      <p class="section-desc" style="margin:0 auto">No subscription. No tiers. Pay once, own it, get every future update free.</p>
+    </div>
+    <div class="pricing-card rv rv-d1">
+      <div class="price">$29<sup>.90</sup></div>
+      <div class="price-note">One-time payment &middot; Lifetime updates</div>
+      <ul class="pricing-list">
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>VST3 / AU / Standalone</li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Two-hand tracking &middot; 12 CC channels</li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>All 6 instruments + gesture recorder</li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>3 machines &middot; macOS &amp; Windows</li>
+        <li><span class="check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></span>Lifetime updates &mdash; no upgrade tax</li>
+      </ul>
+      <a href="/checkout" class="btn-pill" style="width:100%;text-align:center">Get Nimbus</a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════ CTA BAND ═══════ -->
+<section class="cta-band">
+  <div class="wrap">
+    <h2 class="rv">Your hands are already<br>the instrument. Let them play.</h2>
+    <p class="rv rv-d1">Join hundreds of musicians making music with nothing but a webcam.</p>
+    <a href="#pricing" class="btn-pill rv rv-d2">Get Nimbus &mdash; $29.90</a>
   </div>
 </section>
 
 <!-- ═══════ FOOTER ═══════ -->
 <footer>
-  <div class="foot-grid">
-    <div class="foot-brand">
-      <p><b>Nimbus</b> is made by two musicians in Brooklyn who got tired of reaching for the mouse. We built this because we wanted to perform with our hands, not our keyboards.</p>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <svg viewBox="0 0 100 100" width="36" height="36" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z" fill="none" stroke="#00e5b4" stroke-width="3"/>
+          <circle cx="50" cy="50" r="14" fill="none" stroke="#00e5b4" stroke-width="2" opacity="0.5"/>
+          <rect x="48.8" y="40" width="2.4" height="20" rx="1.2" fill="#00e5b4"/>
+        </svg>
+        <p>Hand-tracked MIDI control. Built in Tel Aviv by musicians, for musicians.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Product</h4>
+        <a href="#features">Features</a>
+        <a href="#pieces">Instruments</a>
+        <a href="#pricing">Pricing</a>
+        <a href="/docs">Documentation</a>
+      </div>
+      <div class="foot-col">
+        <h4>Community</h4>
+        <a href="/forum">Forum</a>
+        <a href="/docs">Getting started</a>
+        <a href="/products">All products</a>
+      </div>
+      <div class="foot-col">
+        <h4>Company</h4>
+        <a href="#">About</a>
+        <a href="#">Contact</a>
+        <a href="#">Privacy</a>
+      </div>
     </div>
-    <div class="foot-col">
-      <h5>Product</h5>
-      <a href="#features">Features</a>
-      <a href="#pricing">Pricing</a>
-      <a href="#faq">FAQ</a>
-      <a href="#">Docs</a>
-      <a href="#">Presets</a>
+    <div class="foot-bottom">
+      <span>&copy; 2026 Nimbus Audio &middot; Tel Aviv</span>
+      <div class="foot-socials">
+        <a href="#" aria-label="Twitter">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg>
+        </a>
+        <a href="#" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="4"/><polygon points="10,8 16,12 10,16"/></svg>
+        </a>
+        <a href="#" aria-label="Discord">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 12a1 1 0 1 0 0 2 1 1 0 0 0 0-2zm6 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2z"/><path d="M7.5 7.5c3-1 6.5-1 9 0"/><path d="M7.5 16.5c3 1 6.5 1 9 0"/><path d="M15.5 17c0 1 1.5 3 2 3 1.5 0 2.8-1.4 3.5-3 .7-2 .5-6.5-1-10.5-1.5-1-3-1.5-3-1.5l-.5 2"/><path d="M8.5 17c0 1-1.5 3-2 3-1.5 0-2.8-1.4-3.5-3-.7-2-.5-6.5 1-10.5 1.5-1 3-1.5 3-1.5l.5 2"/></svg>
+        </a>
+      </div>
     </div>
-    <div class="foot-col">
-      <h5>Connect</h5>
-      <a href="#">Discord</a>
-      <a href="#">YouTube</a>
-      <a href="mailto:hello@nimbus.audio">Email</a>
-      <a href="#">Privacy</a>
-      <a href="#">Terms</a>
-    </div>
-  </div>
-  <div class="foot-bottom">
-    <span>&copy; 2026 Nimbus Audio • Brooklyn NY</span>
-    <span>Made by two hands • One obsession</span>
   </div>
 </footer>
 
 <script>
+// Nav: slide in on scroll
 (function(){
-  var els=document.querySelectorAll('.rv');
-  if('IntersectionObserver' in window){
-    var obs=new IntersectionObserver(function(es){
-      es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('show');obs.unobserve(e.target)}});
-    },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
-    els.forEach(function(el){obs.observe(el)});
-  }else{
-    els.forEach(function(el){el.classList.add('show')});
-  }
+  var nav = document.getElementById('mainNav');
+  window.addEventListener('scroll', function(){
+    if(window.scrollY > 80) nav.classList.add('visible');
+    else nav.classList.remove('visible');
+  });
+})();
 
-  window.handleCheckout=function(){
-    alert('Wire up your payment provider here.\n\nSee handleCheckout() in index2.html.');
-  };
+// Scroll reveal
+(function(){
+  var els = document.querySelectorAll('.rv');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}
+      });
+    },{threshold:0.12,rootMargin:'0px 0px -40px 0px'});
+    els.forEach(function(el){io.observe(el)});
+  } else {
+    els.forEach(function(el){el.classList.add('in')});
+  }
 })();
 </script>
 </body>
