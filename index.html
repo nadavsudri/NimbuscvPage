@@ -178,7 +178,7 @@ nav.mega-open{border-radius:80px;}
 .mega-panel{
   position:fixed;
   top:calc(20px + 62px);
-  width:calc((100% - 48px) * 0.66);max-width:800px;
+  width:calc((100% - 48px) * 0.75);max-width:960px;
   background:rgba(20,20,21,0.95);
   backdrop-filter:blur(20px) saturate(1.4);
   -webkit-backdrop-filter:blur(20px) saturate(1.4);
@@ -201,7 +201,7 @@ nav.mega-open{border-radius:80px;}
   transition:left 0.3s ease,width 0.3s ease;
 }
 .mega-inner{
-  display:grid;grid-template-columns:1fr 320px;gap:0;min-height:260px;
+  display:grid;grid-template-columns:1fr 400px;gap:0;min-height:260px;
 }
 .mega-links{
   padding:32px 36px;
@@ -229,9 +229,10 @@ nav.mega-open{border-radius:80px;}
   border-left:1px solid var(--rule);padding:28px;
   display:flex;flex-direction:column;
   background:rgba(255,255,255,0.02);border-radius:0 0 16px 0;
+  overflow:hidden;
 }
-.mega-visual img{
-  width:100%;border-radius:10px;border:1px solid var(--rule);
+.mega-visual > img{
+  width:100%;border-radius:10px;border:2px solid rgba(255,255,255,0.25);
   object-fit:cover;aspect-ratio:16/10;margin-bottom:16px;
   box-shadow:-8px 10px 24px -4px rgba(0,0,0,0.5);
 }
@@ -1341,7 +1342,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         <a class="mega-link" href="/docs"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><div class="mega-link-text"><h4>Documentation</h4><p>Full guide &mdash; installation, setup, every instrument and gesture explained.</p></div></a>
       </div>
       <div class="mega-visual">
-        <img src="assets/screenshot-main.png" alt="Nimbus documentation cover"/>
+        <img src="assets/docs-manual.png" alt="Nimbus user manual cover" style="aspect-ratio:auto;object-fit:contain;width:70%;"/>
         <a href="/docs" class="mega-visual-link">Open docs <svg class="arrow-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
         <p class="mega-visual-desc">Everything you need to get started.</p>
       </div>
@@ -1356,7 +1357,10 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         <a class="mega-link" href="/forum"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="mega-link-text"><h4>Bug Reports</h4><p>Found a bug? Report it and help us improve</p></div></a>
       </div>
       <div class="mega-visual">
-        <img src="assets/screenshot-main.png" alt="Nimbus community forum"/>
+        <div style="position:relative;margin-bottom:16px;overflow:visible;">
+          <img src="assets/forum-preview.png" alt="Nimbus in Ableton Live" style="width:100%;aspect-ratio:auto;object-fit:contain;display:block;border-radius:10px;border:2px solid rgba(255,255,255,0.25);box-shadow:-8px 10px 24px -4px rgba(0,0,0,0.5);"/>
+          <img src="assets/forum-mapping.png" alt="Nimbus CC mapping" style="position:absolute;right:-10%;bottom:0;height:66%;width:auto;object-fit:contain;border-radius:10px;border:2px solid rgba(255,255,255,0.25);box-shadow:-8px 10px 24px -4px rgba(0,0,0,0.5);"/>
+        </div>
         <a href="/forum" class="mega-visual-link">Visit forum <svg class="arrow-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
         <p class="mega-visual-desc">Join the community. Share your setups.</p>
       </div>
