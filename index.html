@@ -2170,11 +2170,11 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 
     var btn = drop.querySelector('.nav-drop-btn');
     var btnRect = btn.getBoundingClientRect();
-    var panelWidth = megaPanel.offsetWidth || 800;
-    var desiredLeft = btnRect.left + btnRect.width/2 - panelWidth/2;
-    var minLeft = 24;
-    var maxLeft = window.innerWidth - panelWidth - 24;
-    var finalLeft = Math.max(minLeft, Math.min(desiredLeft, maxLeft));
+    var navRect = navEl.getBoundingClientRect();
+    var panelWidth = megaPanel.offsetWidth || 960;
+    var navCenter = navRect.left + navRect.width / 2;
+    var finalLeft = navCenter - panelWidth / 2;
+    finalLeft = Math.max(24, Math.min(finalLeft, window.innerWidth - panelWidth - 24));
     megaPanel.style.left = finalLeft + 'px';
     megaPanel.style.right = 'auto';
     megaPanel.style.transform = 'none';
