@@ -966,7 +966,7 @@ nav.mega-open{border-radius:80px;}
   filter:brightness(0) invert(1);
 }
 
-/* ─── PRICING v3 — dramatic ─── */
+/* ─── PRICING v4 — plan card ─── */
 .pricing{
   padding:160px 0 120px;background:var(--bg);
   position:relative;overflow:hidden;
@@ -990,57 +990,85 @@ nav.mega-open{border-radius:80px;}
 }
 @media(max-width:960px){.pricing-layout{grid-template-columns:1fr;gap:48px}}
 .pricing-left{position:relative;z-index:1}
-.pricing-headline{
-  font-family:'Urbanist',sans-serif;font-weight:800;
-  font-size:clamp(40px,5.5vw,68px);line-height:1.05;
-  letter-spacing:-0.02em;color:#fff;margin:0 0 24px;
+
+/* ── Plan card ── */
+.plan-card{
+  border-radius:20px;
+  box-shadow:0 30px 30px -25px rgba(74,159,217,0.25);
+  padding:12px;
+  background:var(--panel);
+  color:var(--ink-2);
+  width:100%;max-width:460px;
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  transition:transform 0.3s ease,box-shadow 0.3s ease;
 }
-.pricing-headline .price-inline{
-  background:linear-gradient(135deg,var(--teal),#7BC4F0);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  background-clip:text;
+.plan-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 36px 40px -20px rgba(74,159,217,0.3);
 }
-.pricing-desc{
-  font-size:17px;line-height:1.7;color:var(--ink-2);
-  max-width:480px;margin:0 0 36px;
+.plan-card strong{font-weight:600;color:var(--ink)}
+.plan-inner{
+  align-items:center;padding:28px 28px 28px;padding-top:48px;
+  background:rgba(74,159,217,0.06);
+  border-radius:14px;position:relative;
 }
-.pricing-pills{
-  display:flex;flex-wrap:wrap;gap:10px;margin-bottom:40px;
+.plan-badge{
+  position:absolute;top:0;right:0;
+  background:rgba(74,159,217,0.18);
+  border-radius:99em 0 0 99em;
+  display:flex;align-items:center;
+  padding:0.6em 0.85em;
+  font-size:1.35rem;font-weight:700;color:var(--ink);
 }
-.pricing-pills .pill{
-  font-family:'JetBrains Mono',monospace;font-size:11px;
-  letter-spacing:0.1em;text-transform:uppercase;
-  color:var(--ink-2);padding:8px 18px;
-  border-radius:40px;border:1px solid var(--rule-2);
-  background:rgba(255,255,255,0.03);
-  transition:all 0.3s ease;
+.plan-badge small{
+  color:var(--ink-3);font-size:0.7em;
+  margin-left:0.3em;font-weight:500;
 }
-.pricing-pills .pill:hover{
-  border-color:var(--teal);color:var(--ink);
-  background:rgba(74,159,217,0.08);
+.plan-title{
+  font-family:'Urbanist',sans-serif;
+  font-weight:700;font-size:1.4rem;color:var(--ink);
+  margin:0 0 12px;
 }
-.pricing-cta-wrap{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
-.pricing-cta{
-  display:inline-flex;align-items:center;gap:12px;
-  padding:18px 36px;border:none;border-radius:14px;
-  background:linear-gradient(135deg,var(--teal),#7BC4F0);
+.plan-info{
+  font-size:0.95rem;line-height:1.55;color:var(--ink-2);
+  margin:0 0 20px;
+}
+.plan-features{
+  display:flex;flex-direction:column;
+  list-style:none;padding:0;margin:0 0 24px;
+}
+.plan-features li{
+  display:flex;align-items:center;gap:10px;
+  font-size:0.95rem;color:var(--ink-2);
+}
+.plan-features li+li{margin-top:12px}
+.plan-features .pf-icon{
+  background:var(--teal);
+  display:inline-flex;align-items:center;justify-content:center;
+  color:#000;border-radius:50%;
+  width:22px;height:22px;flex-shrink:0;
+}
+.plan-features .pf-icon svg{width:14px;height:14px}
+.plan-action{width:100%;display:flex}
+.plan-btn{
+  width:100%;
+  background:var(--teal);border-radius:10px;
   color:#000;font-family:'Space Grotesk',sans-serif;
-  font-size:17px;font-weight:700;letter-spacing:0.02em;
-  cursor:pointer;text-decoration:none;
-  transition:all 0.35s cubic-bezier(0.16,1,0.3,1);
-  box-shadow:0 8px 32px -8px rgba(74,159,217,0.4);
+  font-weight:700;font-size:1.05rem;
+  text-align:center;border:0;outline:0;
+  padding:14px 20px;cursor:pointer;
+  text-decoration:none;
+  transition:background 0.25s ease,transform 0.25s ease,box-shadow 0.25s ease;
+  box-shadow:0 4px 16px -4px rgba(74,159,217,0.3);
 }
-.pricing-cta .arrow{
-  font-size:20px;transition:transform 0.3s ease;
+.plan-btn:hover{
+  background:#5FB5E8;
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px -4px rgba(74,159,217,0.4);
 }
-.pricing-cta:hover{
-  transform:translateY(-3px) scale(1.02);
-  box-shadow:0 16px 48px -8px rgba(74,159,217,0.5);
-}
-.pricing-cta:hover .arrow{transform:translateX(4px)}
-.pricing-meta{
-  font-family:'JetBrains Mono',monospace;font-size:11px;
-  letter-spacing:0.12em;text-transform:uppercase;color:var(--ink-3);
+.plan-btn:active{
+  transform:translateY(0);
+  box-shadow:0 2px 8px -2px rgba(74,159,217,0.3);
 }
 
 /* Visual side */
@@ -1073,8 +1101,9 @@ nav.mega-open{border-radius:80px;}
 .pricing-trust-item svg{width:16px;height:16px;stroke:var(--ink-3);fill:none;stroke-width:1.5}
 
 @media(max-width:600px){
-  .pricing-headline{font-size:32px}
-  .pricing-cta{padding:16px 28px;font-size:15px}
+  .plan-card{max-width:100%}
+  .plan-features{grid-template-columns:1fr}
+  .plan-price{font-size:1.4em}
   .pricing{padding:100px 0 80px}
 }
 
@@ -1608,38 +1637,49 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   </div>
 </div>
 
-<!-- ═══════ PRICING v3 ═══════ -->
+<!-- ═══════ PRICING v4 ═══════ -->
 <section class="pricing" id="pricing">
   <div class="pricing-slash"></div>
   <div class="pricing-particles" id="pricingParticles"></div>
   <div class="wrap">
     <div class="pricing-layout">
 
-      <div class="pricing-left">
-        <div class="section-kicker rv" style="margin-bottom:20px">&sect;&nbsp;03 &mdash; The deal</div>
+      <div class="pricing-left rv">
+        <div class="section-kicker" style="margin-bottom:20px">&sect;&nbsp;03 &mdash; The deal</div>
 
-        <h2 class="pricing-headline rv">
-          Full access.<br/><span class="price-inline">$29.90</span> once.
-        </h2>
-
-        <p class="pricing-desc rv">
-          One payment, lifetime license. Every format, every update, every feature &mdash; yours forever. No subscriptions, no hidden costs.
-        </p>
-
-        <div class="pricing-pills rv">
-          <span class="pill">VST3 / AU / Standalone</span>
-          <span class="pill">12 CC Channels</span>
-          <span class="pill">Gesture Library</span>
-          <span class="pill">3 Machines</span>
-          <span class="pill">Lifetime Updates</span>
-          <span class="pill">Recorder + Arpeggiator</span>
-        </div>
-
-        <div class="pricing-cta-wrap rv">
-          <button class="pricing-cta" onclick="handleCheckout()">
-            Get Nimbus <span class="arrow">&rarr;</span>
-          </button>
-          <span class="pricing-meta">One-time &middot; No subscription</span>
+        <div class="plan-card">
+          <div class="plan-inner">
+            <span class="plan-badge">
+              <span>$29.90 <small>/ once</small></span>
+            </span>
+            <p class="plan-title">Nimbus &mdash; Lifetime License</p>
+            <p class="plan-info">Hand-tracked MIDI control. Your webcam becomes an expressive controller &mdash; two hands, twelve CC channels, real-time tracking.</p>
+            <ul class="plan-features">
+              <li>
+                <span class="pf-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg></span>
+                <span><strong>VST3 / AU / Standalone</strong> &mdash; all formats</span>
+              </li>
+              <li>
+                <span class="pf-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg></span>
+                <span>Two-hand tracking &middot; <strong>12 CC channels</strong></span>
+              </li>
+              <li>
+                <span class="pf-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg></span>
+                <span><strong>Gesture library</strong> &middot; Recorder &middot; Arpeggiator</span>
+              </li>
+              <li>
+                <span class="pf-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg></span>
+                <span>Install on up to <strong>3 machines</strong></span>
+              </li>
+              <li>
+                <span class="pf-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg></span>
+                <span><strong>Lifetime updates</strong> &mdash; no upgrade fees</span>
+              </li>
+            </ul>
+            <div class="plan-action">
+              <button class="plan-btn" onclick="handleCheckout()">Get Nimbus &mdash; $29.90</button>
+            </div>
+          </div>
         </div>
       </div>
 
