@@ -226,16 +226,22 @@ nav.mega-open{border-radius:80px;}
 .mega-link:hover .mega-link-text h4{color:var(--teal);transform:scale(1.04);transform-origin:left center}
 .mega-link-text p{font-size:12px;color:var(--ink-3);margin:0;line-height:1.4}
 .mega-visual{
-  border-left:1px solid var(--rule);padding:28px;
+  border-left:none;padding:28px;position:relative;
   display:flex;flex-direction:column;
   background:rgba(255,255,255,0.02);border-radius:0 0 16px 0;
   overflow:hidden;
+}
+.mega-visual::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(to bottom,transparent 0%,rgba(255,255,255,0.35) 30%,rgba(255,255,255,0.35) 70%,transparent 100%);
 }
 .mega-visual > img{
   width:100%;border-radius:10px;border:2px solid rgba(255,255,255,0.25);
   object-fit:cover;aspect-ratio:16/10;margin-bottom:16px;
   box-shadow:-8px 10px 24px -4px rgba(0,0,0,0.5);
+  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);
 }
+.mega-visual > img:hover{transform:scale(1.04)}
 .mega-visual-link{
   display:flex;align-items:center;gap:8px;
   font-family:'Space Grotesk',sans-serif;
@@ -250,6 +256,11 @@ nav.mega-open{border-radius:80px;}
 .mega-visual-link:hover .arrow-icon{transform:translate(2px,-2px)}
 .mega-visual-desc{font-size:12px;color:var(--ink-3);margin:4px 0 0;line-height:1.4}
 .mega-links.single{grid-template-columns:1fr}
+.mega-visual-right{position:relative}
+.mega-visual-right::before{
+  content:'';position:absolute;left:0;top:0;bottom:0;width:2px;
+  background:linear-gradient(to bottom,transparent 0%,rgba(255,255,255,0.35) 30%,rgba(255,255,255,0.35) 70%,transparent 100%);
+}
 @media(max-width:760px){
   .nav-links{display:none}
   .nav-buttons .nav-contact{display:none}
@@ -1306,16 +1317,23 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   <!-- INSTRUMENTS -->
   <div class="mega-content" data-for="instruments" style="display:none">
     <div class="mega-inner">
-      <div class="mega-links">
-        <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><div class="mega-link-text"><h4>Pre-recorded Gestures</h4><p>Ready-made hand mappings &mdash; openness, height, pinch, snap</p></div></a>
-        <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg></div><div class="mega-link-text"><h4>Strings</h4><p>Pick and strum 6 virtual strings with pinch gestures</p></div></a>
-        <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div><div class="mega-link-text"><h4>Gesture Recorder</h4><p>Record any hand pose, name it, map it to CC</p></div></a>
+      <div class="mega-links" style="grid-template-columns:1fr;gap:4px;">
         <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><rect x="2" y="10" width="3" height="10" rx="1"/><rect x="7" y="6" width="3" height="14" rx="1"/><rect x="12" y="3" width="3" height="17" rx="1"/><rect x="17" y="8" width="3" height="12" rx="1"/></svg></div><div class="mega-link-text"><h4>Keys</h4><p>Virtual piano + 16-step arpeggiator, BPM-synced</p></div></a>
         <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></div><div class="mega-link-text"><h4>Chord Player</h4><p>Two-hand chord instrument &mdash; roots &amp; variations</p></div></a>
-        <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div><div class="mega-link-text"><h4>Sliders &amp; Knobs</h4><p>Drag controls onto canvas, map to any CC channel</p></div></a>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+          <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><div class="mega-link-text"><h4>Pre-recorded Gestures</h4><p>Ready-made hand mappings &mdash; openness, height, pinch, snap</p></div></a>
+          <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg></div><div class="mega-link-text"><h4>Strings</h4><p>Pick and strum 6 virtual strings with pinch gestures</p></div></a>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
+          <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div><div class="mega-link-text"><h4>Gesture Recorder</h4><p>Record any hand pose, name it, map it to CC</p></div></a>
+          <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div><div class="mega-link-text"><h4>Sliders &amp; Knobs</h4><p>Drag controls onto canvas, map to any CC channel</p></div></a>
+        </div>
       </div>
       <div class="mega-visual">
-        <img src="assets/screenshot-instruments.png" alt="Nimbus instruments overview"/>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:16px;">
+          <img src="assets/screenshot-instruments.png" alt="Nimbus instruments overview" style="width:100%;border-radius:10px;border:2px solid rgba(255,255,255,0.25);box-shadow:-8px 10px 24px -4px rgba(0,0,0,0.5);transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);" onmouseenter="this.style.transform='scale(1.04)'" onmouseleave="this.style.transform='scale(1)'"/>
+          <img src="assets/instruments-bar.png" alt="Nimbus instrument bar" style="width:100%;border-radius:10px;border:2px solid rgba(255,255,255,0.25);box-shadow:-8px 10px 24px -4px rgba(0,0,0,0.5);transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);" onmouseenter="this.style.transform='scale(1.04)'" onmouseleave="this.style.transform='scale(1)'"/>
+        </div>
         <a href="#pieces" class="mega-visual-link">Explore all instruments <svg class="arrow-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
         <p class="mega-visual-desc">Six instruments, infinite expression.</p>
       </div>
@@ -1323,15 +1341,15 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   </div>
   <!-- PRICING -->
   <div class="mega-content" data-for="pricing" style="display:none">
-    <div class="mega-inner">
-      <div class="mega-links single">
-        <a class="mega-link" href="#pricing"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div class="mega-link-text"><h4>Lifetime License &mdash; $29.90</h4><p>One-time payment. Every format, every update, every feature &mdash; yours forever.</p></div></a>
-        <a class="mega-link" href="#pricing"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="mega-link-text"><h4>Secure Checkout</h4><p>Powered by Stripe. All major cards accepted. Instant delivery to your email.</p></div></a>
-      </div>
-      <div class="mega-visual">
+    <div class="mega-inner" style="grid-template-columns:400px 1fr;">
+      <div class="mega-visual" style="border-left:none;border-radius:0 0 0 16px;border-right:none;">
         <img src="assets/screenshot-main.png" alt="Nimbus plugin interface"/>
         <a href="#pricing" class="mega-visual-link">See pricing <svg class="arrow-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
         <p class="mega-visual-desc">One payment, lifetime access.</p>
+      </div>
+      <div class="mega-links single mega-visual-right">
+        <a class="mega-link" href="#pricing"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></div><div class="mega-link-text"><h4>Lifetime License &mdash; $29.90</h4><p>One-time payment. Every format, every update, every feature &mdash; yours forever.</p></div></a>
+        <a class="mega-link" href="#pricing"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="mega-link-text"><h4>Secure Checkout</h4><p>Powered by Stripe. All major cards accepted. Instant delivery to your email.</p></div></a>
       </div>
     </div>
   </div>
@@ -1342,7 +1360,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         <a class="mega-link" href="/docs"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><div class="mega-link-text"><h4>Documentation</h4><p>Full guide &mdash; installation, setup, every instrument and gesture explained.</p></div></a>
       </div>
       <div class="mega-visual">
-        <img src="assets/docs-manual.png" alt="Nimbus user manual cover" style="aspect-ratio:auto;object-fit:contain;width:70%;"/>
+        <img src="assets/docs-settings.png" alt="Nimbus settings panel" style="aspect-ratio:auto;object-fit:contain;width:65%;transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);" onmouseenter="this.style.transform='scale(1.04)'" onmouseleave="this.style.transform='scale(1)'"/>
         <a href="/docs" class="mega-visual-link">Open docs <svg class="arrow-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
         <p class="mega-visual-desc">Everything you need to get started.</p>
       </div>
@@ -1358,8 +1376,8 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
       </div>
       <div class="mega-visual">
         <div style="position:relative;margin-bottom:16px;overflow:visible;">
-          <img src="assets/forum-preview.png" alt="Nimbus in Ableton Live" style="width:100%;aspect-ratio:auto;object-fit:contain;display:block;border-radius:10px;border:2px solid rgba(255,255,255,0.25);box-shadow:-8px 10px 24px -4px rgba(0,0,0,0.5);"/>
-          <img src="assets/forum-mapping.png" alt="Nimbus CC mapping" style="position:absolute;right:-10%;bottom:0;height:66%;width:auto;object-fit:contain;border-radius:10px;border:2px solid rgba(255,255,255,0.25);box-shadow:-8px 10px 24px -4px rgba(0,0,0,0.5);"/>
+          <img src="assets/forum-preview.png" alt="Nimbus in Ableton Live" style="width:100%;aspect-ratio:auto;object-fit:contain;display:block;border-radius:10px;border:2px solid rgba(255,255,255,0.25);box-shadow:-8px 10px 24px -4px rgba(0,0,0,0.5);transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);" onmouseenter="this.style.transform='scale(1.04)'" onmouseleave="this.style.transform='scale(1)'"/>
+          <img src="assets/forum-mapping.png" alt="Nimbus CC mapping" style="position:absolute;right:-10%;bottom:0;height:66%;width:auto;object-fit:contain;border-radius:10px;border:2px solid rgba(255,255,255,0.25);box-shadow:-8px 10px 24px -4px rgba(0,0,0,0.5);transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);" onmouseenter="this.style.transform='scale(1.04)'" onmouseleave="this.style.transform='scale(1)'"/>
         </div>
         <a href="/forum" class="mega-visual-link">Visit forum <svg class="arrow-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
         <p class="mega-visual-desc">Join the community. Share your setups.</p>
