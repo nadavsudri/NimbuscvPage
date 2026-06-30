@@ -4,13 +4,32 @@
 <meta charset="utf-8"/>
 <title>Nimbus — Link Expired</title>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<meta name="theme-color" content="#000000"/>
+<meta name="theme-color" content="#f3ecdd" id="metaThemeColor"/>
+<script>(function(){try{var t=localStorage.getItem("nimbus-theme")||"light";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","light");}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Urbanist:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z' fill='none' stroke='%234A9FD9' stroke-width='3'/><circle cx='50' cy='50' r='14' fill='none' stroke='%234A9FD9' stroke-width='2' opacity='0.5'/><rect x='48.8' y='40' width='2.4' height='20' rx='1.2' fill='%234A9FD9'/></svg>"/>
 <style>
 :root{
+
+  --bg:#f3ecdd;
+  --bg-2:#efe7d6;
+  --ink:#1b2a2f;
+  --ink-2:#52676d;
+  --ink-3:#85969c;
+  --rule:#ddd3bf;
+  --teal:#2f86c0;
+  --nav-glass:rgba(251,246,234,0.82);
+  --nav-glass-strong:rgba(251,246,234,0.95);
+  --grid-line:rgba(0,0,0,0.05);
+  --surface-1:rgba(27,42,47,0.025);
+  --surface-2:rgba(27,42,47,0.045);
+  --on-teal:#06121a;
+  --teal-hover:#246b9c;
+}
+:root[data-theme="dark"]{
+
   --bg:#000000;
   --bg-2:#0a0a0b;
   --ink:#efefef;
@@ -18,7 +37,23 @@
   --ink-3:#6b6b72;
   --rule:#222226;
   --teal:#4A9FD9;
+  --nav-glass:var(--nav-glass);
+  --nav-glass-strong:var(--nav-glass-strong);
+  --grid-line:var(--grid-line);
+  --surface-1:rgba(255,255,255,0.02);
+  --surface-2:rgba(255,255,255,0.05);
+  --on-teal:#06121a;
+  --teal-hover:var(--teal-hover);
 }
+body,nav{transition:background-color .4s ease,color .4s ease}
+
+.theme-toggle{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:var(--surface-1);border:1.5px solid var(--rule-2);color:var(--ink-2);cursor:pointer;flex-shrink:0;transition:color .3s,border-color .3s,background .3s,transform .3s cubic-bezier(0.16,1,0.3,1)}
+.theme-toggle:hover{color:var(--teal);border-color:var(--teal);transform:rotate(18deg)}
+.theme-toggle svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.theme-toggle .icon-moon{display:none}
+:root[data-theme="dark"] .theme-toggle .icon-sun{display:none}
+:root[data-theme="dark"] .theme-toggle .icon-moon{display:block}
+
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
 body{
   font-family:'Space Grotesk',system-ui,sans-serif;
@@ -66,10 +101,10 @@ p{
 nav{
   position:fixed;top:20px;left:50%;transform:translateX(-50%);
   z-index:100;
-  width:calc(100% - 48px);max-width:1200px;
+  width:calc(100% - 48px);max-width:none;
   display:flex;align-items:center;justify-content:space-between;
   padding:14px 28px;
-  background:rgba(20,20,21,0.85);
+  background:var(--nav-glass);
   backdrop-filter:blur(20px) saturate(1.4);
   -webkit-backdrop-filter:blur(20px) saturate(1.4);
   border:1px solid var(--rule);
@@ -85,12 +120,12 @@ nav{
 .nav-links{display:flex;align-items:center;gap:20px;margin:0 12px}
 .nav-links a{
   font-family:'Space Grotesk',sans-serif;
-  font-size:16px;font-weight:600;color:#fff;
+  font-size:16px;font-weight:600;color:var(--ink);
   padding:8px 14px;border-radius:8px;
   transition:color 0.3s,background 0.3s;
   text-decoration:none;
 }
-.nav-links a:hover{color:#fff;background:rgba(255,255,255,0.05)}
+.nav-links a:hover{color:var(--ink);background:var(--surface-2)}
 .nav-contact{
   font-size:13px;font-weight:600;letter-spacing:0.04em;
   padding:10px 28px;border-radius:32px;
@@ -139,6 +174,7 @@ nav{
     <a href="/forum">Forum</a>
   </div>
   <div class="nav-buttons">
+    <button class="theme-toggle" type="button" id="themeToggle" aria-label="Toggle light and dark theme" title="Toggle theme"><svg class="icon-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><line x1="12" y1="2.5" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="21.5"/><line x1="2.5" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="21.5" y2="12"/><line x1="5" y1="5" x2="6.8" y2="6.8"/><line x1="17.2" y1="17.2" x2="19" y2="19"/><line x1="5" y1="19" x2="6.8" y2="17.2"/><line x1="17.2" y1="6.8" x2="19" y2="5"/></svg><svg class="icon-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.6 6.6 0 0 0 9.8 9.8z"/></svg></button>
     <a href="mailto:hello@nimbus.audio" class="nav-contact">Contact Us</a>
     <a href="/#pricing" class="nav-cta">Get Nimbus</a>
   </div>
@@ -164,5 +200,7 @@ nav{
     Still stuck? <a href="mailto:hello@nimbus.audio">Email us</a> and we'll sort it out.
   </div>
 </div>
+
+<script>(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),m=document.getElementById("metaThemeColor"),C={light:"#f3ecdd",dark:"#06121a"};function ap(t){r.setAttribute("data-theme",t);try{localStorage.setItem("nimbus-theme",t);}catch(e){}if(m)m.setAttribute("content",C[t]||C.light);if(window.__applyWaveTheme)window.__applyWaveTheme();}if(b)b.addEventListener("click",function(){ap(r.getAttribute("data-theme")==="dark"?"light":"dark");});})();</script>
 </body>
 </html>
