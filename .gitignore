@@ -3,3 +3,7 @@
 node_modules/
 .DS_Store
 .vercel/
+
+# Local Claude Code skills / tooling (not site content)
+.claude/
+skills-lock.json
