@@ -375,6 +375,13 @@ a{text-decoration:none}
     </div>
   </div>
 
+  <!-- Create account CTA -->
+  <div id="accountCta" class="license-section" style="text-align:center;animation:fadeUp 0.6s 0.25s ease both">
+    <h2>Keep your license <span style="font-style:italic;color:var(--teal)">forever</span></h2>
+    <p style="font-size:14px;color:var(--ink-2);margin:-4px 0 20px">Create a free account to re-download Nimbus anytime and find your license key whenever you need it &mdash; no expiry.</p>
+    <a id="accountCtaBtn" class="download-btn" href="/account?signup=1" style="font-size:14px;padding:14px 34px">Create my account</a>
+  </div>
+
   <!-- Footer -->
   <div class="footer-links">
     <a href="/" class="footer-link">Home</a>
@@ -423,6 +430,10 @@ a{text-decoration:none}
     })
     .then(function(data){
       if (!data) return;
+      if (data.email) {
+        var acb = document.getElementById('accountCtaBtn');
+        if (acb) acb.href = '/account?signup=1&email=' + encodeURIComponent(data.email);
+      }
       if (data.download_token) {
         btn.href = '/api/download?token=' + encodeURIComponent(data.download_token);
 

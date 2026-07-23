@@ -17,7 +17,7 @@ export default async function handler(req, res) {
 
     const { data, error } = await supabase
       .from('purchases')
-      .select('download_token, order_id, is_active')
+      .select('download_token, order_id, is_active, email')
       .eq('order_id', String(order_id))
       .single();
 
@@ -31,7 +31,7 @@ export default async function handler(req, res) {
       return res.status(403).json({ error: 'expired' });
     }
 
-    res.status(200).json({ download_token: data.download_token });
+    res.status(200).json({ download_token: data.download_token, email: data.email || null });
   } catch (err) {
     console.error('Purchase lookup error:', err.message);
     res.status(500).json({ error: 'Failed to fetch purchase', details: err.message });
