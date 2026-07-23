@@ -1,0 +1,437 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Nimbus — Account</title>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<meta name="theme-color" content="#f3ecdd" id="metaThemeColor"/>
+<script>(function(){try{var t=localStorage.getItem("nimbus-theme")||"light";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","light");}})();</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Urbanist:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z' fill='none' stroke='%234A9FD9' stroke-width='3'/><circle cx='50' cy='50' r='14' fill='none' stroke='%234A9FD9' stroke-width='2' opacity='0.5'/><rect x='48.8' y='40' width='2.4' height='20' rx='1.2' fill='%234A9FD9'/></svg>"/>
+<style>
+:root{
+  --bg:#f3ecdd;--bg-2:#efe7d6;--bg-3:#e9e0cc;
+  --ink:#1b2a2f;--ink-2:#52676d;--ink-3:#85969c;--ink-4:#c2c9c4;
+  --rule:#ddd3bf;--rule-2:#d0c5ad;
+  --teal:#2f86c0;--glow:rgba(74,159,217,0.18);
+  --grid-line:rgba(0,0,0,0.05);
+  --surface-1:rgba(27,42,47,0.025);--surface-2:rgba(27,42,47,0.045);
+  --on-teal:#06121a;--teal-hover:#246b9c;
+  --ok:#2f9e6b;--err:#d9534f;
+}
+:root[data-theme="dark"]{
+  --bg:#000000;--bg-2:#0a0a0b;--bg-3:#141415;
+  --ink:#efefef;--ink-2:#a0a0a6;--ink-3:#6b6b72;--ink-4:#3a3a40;
+  --rule:#222226;--rule-2:#2c2c32;
+  --teal:#4A9FD9;--glow:rgba(74,159,217,0.18);
+  --grid-line:rgba(255,255,255,0.04);
+  --surface-1:rgba(255,255,255,0.02);--surface-2:rgba(255,255,255,0.05);
+  --on-teal:#06121a;--teal-hover:#67b2e2;
+  --ok:#4cc38a;--err:#f87171;
+}
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body,nav{transition:background-color .4s ease,color .4s ease}
+body{
+  font-family:'Space Grotesk',system-ui,sans-serif;
+  background:var(--bg);color:var(--ink-2);line-height:1.6;
+  -webkit-font-smoothing:antialiased;min-height:100vh;overflow-x:hidden;
+}
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(var(--grid-line) 1px,transparent 1px),linear-gradient(90deg,var(--grid-line) 1px,transparent 1px);
+  background-size:64px 64px;
+  mask-image:radial-gradient(ellipse 70% 60% at 50% 20%,#000 0%,transparent 70%);
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 20%,#000 0%,transparent 70%);
+}
+a{text-decoration:none;color:inherit}
+
+/* Header */
+.topbar{
+  position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;
+  padding:20px clamp(24px,3vw,64px);border-bottom:1px solid var(--rule);
+}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink)}
+.brand svg{width:26px;height:26px}
+.topbar-right{display:flex;align-items:center;gap:14px}
+.top-email{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-3);letter-spacing:.04em}
+.top-link{font-size:13px;color:var(--ink-2);cursor:pointer}
+.top-link:hover{color:var(--teal)}
+.theme-toggle{display:flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:50%;background:var(--surface-1);border:1.5px solid var(--rule-2);color:var(--ink-2);cursor:pointer;flex-shrink:0;transition:color .3s,border-color .3s,transform .3s cubic-bezier(0.16,1,0.3,1)}
+.theme-toggle:hover{color:var(--teal);border-color:var(--teal);transform:rotate(18deg)}
+.theme-toggle svg{width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.theme-toggle .icon-moon{display:none}
+:root[data-theme="dark"] .theme-toggle .icon-sun{display:none}
+:root[data-theme="dark"] .theme-toggle .icon-moon{display:block}
+
+.main{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:56px clamp(20px,4vw,40px) 80px}
+
+/* Auth card */
+.auth-card{
+  max-width:420px;margin:24px auto 0;background:var(--bg-2);border:1px solid var(--rule-2);
+  border-radius:14px;padding:36px 32px;animation:fadeUp .5s ease both;
+}
+.auth-card h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:34px;color:var(--ink);margin-bottom:6px;line-height:1.1}
+.auth-card h1 .it{font-style:italic;color:var(--teal)}
+.auth-sub{font-size:14px;color:var(--ink-2);margin-bottom:24px}
+.tabs{display:flex;gap:4px;background:var(--bg-3);border-radius:9px;padding:4px;margin-bottom:22px}
+.tab{flex:1;text-align:center;padding:9px;border-radius:6px;font-size:13px;font-weight:600;color:var(--ink-3);cursor:pointer;border:none;background:none;font-family:inherit;transition:all .2s}
+.tab.active{background:var(--bg);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.field{margin-bottom:16px}
+.field label{display:block;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);margin-bottom:7px}
+.field input{
+  width:100%;padding:13px 14px;border:1px solid var(--rule-2);border-radius:8px;
+  background:var(--bg);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:14px;transition:border-color .2s}
+.field input:focus{outline:none;border-color:var(--teal)}
+.btn-primary{
+  width:100%;padding:14px;border:none;border-radius:8px;background:var(--teal);color:#fff;
+  font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:14px;cursor:pointer;
+  transition:transform .2s,box-shadow .2s,background .2s;box-shadow:0 4px 20px rgba(74,159,217,.18)}
+.btn-primary:hover{transform:translateY(-1px);background:var(--teal-hover)}
+.btn-primary:disabled{opacity:.6;cursor:not-allowed;transform:none}
+.auth-alt{margin-top:16px;text-align:center;font-size:12.5px;color:var(--ink-3)}
+.auth-alt a{color:var(--teal);cursor:pointer}
+.msg{margin-top:16px;padding:11px 14px;border-radius:8px;font-size:13px;display:none;line-height:1.5}
+.msg.show{display:block}
+.msg.error{background:rgba(217,83,79,.1);color:var(--err);border:1px solid rgba(217,83,79,.25)}
+.msg.ok{background:rgba(47,158,107,.1);color:var(--ok);border:1px solid rgba(47,158,107,.25)}
+
+/* Dashboard */
+.dash-head{margin-bottom:28px;animation:fadeUp .5s ease both}
+.dash-head h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(30px,4vw,42px);color:var(--ink);line-height:1.1}
+.dash-head h1 .it{font-style:italic;color:var(--teal)}
+.dash-head p{font-size:14px;color:var(--ink-2);margin-top:6px}
+.purchase-list{display:flex;flex-direction:column;gap:14px}
+.purchase{background:var(--bg-2);border:1px solid var(--rule-2);border-radius:12px;overflow:hidden;animation:fadeUp .5s ease both}
+.purchase-summary{display:flex;align-items:center;gap:16px;padding:18px 20px;cursor:pointer;user-select:none}
+.purchase-summary:hover{background:var(--bg-3)}
+.p-icon{width:42px;height:42px;border-radius:9px;background:var(--surface-2);display:grid;place-items:center;flex-shrink:0}
+.p-icon svg{width:22px;height:22px;stroke:var(--teal);fill:none;stroke-width:2}
+.p-main{flex:1;min-width:0}
+.p-title{font-size:15px;font-weight:600;color:var(--ink)}
+.p-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink-3);margin-top:3px;letter-spacing:.03em}
+.p-right{display:flex;align-items:center;gap:14px;flex-shrink:0}
+.badge{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:4px 9px;border-radius:20px}
+.badge.paid{background:rgba(47,158,107,.12);color:var(--ok)}
+.badge.other{background:var(--surface-2);color:var(--ink-3)}
+.chevron{width:18px;height:18px;stroke:var(--ink-3);fill:none;stroke-width:2;transition:transform .3s}
+.purchase.open .chevron{transform:rotate(180deg)}
+.purchase-body{max-height:0;overflow:hidden;transition:max-height .35s ease}
+.purchase.open .purchase-body{max-height:520px}
+.purchase-body-inner{padding:4px 20px 22px;border-top:1px solid var(--rule)}
+.detail-row{display:flex;justify-content:space-between;gap:16px;padding:11px 0;border-bottom:1px solid var(--rule);font-size:13px}
+.detail-row:last-of-type{border-bottom:none}
+.detail-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3)}
+.detail-val{color:var(--ink);text-align:right;word-break:break-all}
+.key-box{
+  margin-top:14px;background:var(--bg);border:1px solid var(--rule-2);border-radius:8px;
+  padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.key-val{font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--teal);letter-spacing:.04em;word-break:break-all}
+.key-actions{display:flex;gap:8px;flex-shrink:0}
+.mini-btn{display:inline-flex;align-items:center;gap:5px;padding:7px 12px;border:1px solid var(--rule-2);border-radius:6px;background:var(--bg-3);color:var(--ink-2);font-family:'JetBrains Mono',monospace;font-size:10.5px;letter-spacing:.05em;cursor:pointer;transition:border-color .2s,color .2s}
+.mini-btn:hover{border-color:var(--teal);color:var(--ink)}
+.key-pending{font-size:12.5px;color:var(--ink-3);font-style:italic;margin-top:14px}
+.dl-btn{
+  display:inline-flex;align-items:center;gap:8px;margin-top:16px;padding:12px 26px;border:none;border-radius:8px;
+  background:var(--teal);color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13.5px;cursor:pointer;
+  transition:transform .2s,background .2s;box-shadow:0 4px 18px rgba(74,159,217,.18)}
+.dl-btn:hover{transform:translateY(-1px);background:var(--teal-hover)}
+.dl-btn svg{width:16px;height:16px;stroke:#fff;fill:none;stroke-width:2}
+.empty{text-align:center;padding:48px 20px;background:var(--bg-2);border:1px dashed var(--rule-2);border-radius:12px;animation:fadeUp .5s ease both}
+.empty h3{font-family:'Instrument Serif',serif;font-weight:400;font-size:24px;color:var(--ink);margin-bottom:8px}
+.empty p{font-size:14px;color:var(--ink-2)}
+.empty a{color:var(--teal)}
+.loading{text-align:center;padding:60px 20px;font-family:'JetBrains Mono',monospace;font-size:12px;letter-spacing:.08em;color:var(--ink-3)}
+.copied{color:var(--ok)!important;border-color:var(--ok)!important}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="brand" href="/">
+    <svg viewBox="0 0 100 100"><path d="M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z" fill="none" stroke="#4A9FD9" stroke-width="3"/><circle cx="50" cy="50" r="14" fill="none" stroke="#4A9FD9" stroke-width="2" opacity="0.5"/><rect x="48.8" y="40" width="2.4" height="20" rx="1.2" fill="#4A9FD9"/></svg>
+    Nimbus
+  </a>
+  <div class="topbar-right">
+    <span id="topEmail" class="top-email hidden"></span>
+    <span id="logoutLink" class="top-link hidden">Log out</span>
+    <button id="themeToggle" class="theme-toggle" aria-label="Toggle theme">
+      <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.2" y1="4.2" x2="5.6" y2="5.6"/><line x1="18.4" y1="18.4" x2="19.8" y2="19.8"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.2" y1="19.8" x2="5.6" y2="18.4"/><line x1="18.4" y1="5.6" x2="19.8" y2="4.2"/></svg>
+      <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"/></svg>
+    </button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Initial loading -->
+  <div id="bootLoading" class="loading">Loading…</div>
+
+  <!-- Logged-out: auth -->
+  <div id="authView" class="hidden">
+    <div class="auth-card">
+      <h1 id="authTitle">Your <span class="it">account.</span></h1>
+      <p class="auth-sub" id="authSub">Log in to view your purchases, license keys, and downloads.</p>
+      <div class="tabs" id="tabs">
+        <button class="tab active" data-mode="login" type="button">Log in</button>
+        <button class="tab" data-mode="signup" type="button">Sign up</button>
+      </div>
+      <form id="authForm">
+        <div class="field">
+          <label for="email">Email</label>
+          <input id="email" type="email" autocomplete="email" required placeholder="you@example.com"/>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input id="password" type="password" autocomplete="current-password" required minlength="6" placeholder="••••••••"/>
+        </div>
+        <button id="authSubmit" class="btn-primary" type="submit">Log in</button>
+      </form>
+      <div class="auth-alt" id="forgotWrap"><a id="forgotLink">Forgot your password?</a></div>
+      <div id="authMsg" class="msg"></div>
+    </div>
+  </div>
+
+  <!-- Password recovery: set a new password -->
+  <div id="recoveryView" class="hidden">
+    <div class="auth-card">
+      <h1>Set a new <span class="it">password.</span></h1>
+      <p class="auth-sub">Choose a new password for your account.</p>
+      <form id="recoveryForm">
+        <div class="field">
+          <label for="newPassword">New password</label>
+          <input id="newPassword" type="password" autocomplete="new-password" required minlength="6" placeholder="••••••••"/>
+        </div>
+        <button id="recoverySubmit" class="btn-primary" type="submit">Update password</button>
+      </form>
+      <div id="recoveryMsg" class="msg"></div>
+    </div>
+  </div>
+
+  <!-- Logged-in: dashboard -->
+  <div id="dashView" class="hidden">
+    <div class="dash-head">
+      <h1>Your <span class="it">purchases.</span></h1>
+      <p id="dashSub">Everything tied to your account.</p>
+    </div>
+    <div id="dashLoading" class="loading">Loading your purchases…</div>
+    <div id="purchaseList" class="purchase-list"></div>
+    <div id="emptyState" class="empty hidden">
+      <h3>No purchases yet</h3>
+      <p>We couldn't find any purchases for this email.<br/>Bought Nimbus with a different email? Log in with that one — or <a href="/checkout">get Nimbus</a>.</p>
+    </div>
+  </div>
+
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const $ = (id) => document.getElementById(id);
+const show = (el) => el.classList.remove('hidden');
+const hide = (el) => el.classList.add('hidden');
+
+function setMsg(el, text, kind){
+  el.textContent = text;
+  el.className = 'msg show ' + (kind || '');
+}
+function clearMsg(el){ el.className = 'msg'; el.textContent = ''; }
+
+let supabase;
+try {
+  const cfg = await (await fetch('/api/public-config')).json();
+  if (!cfg.url || !cfg.anonKey) throw new Error('config');
+  supabase = createClient(cfg.url, cfg.anonKey);
+} catch (e) {
+  $('bootLoading').textContent = 'Accounts are not configured yet. Contact hello@nimbus.audio';
+  throw e;
+}
+
+// ---- View switching ----
+function showAuth(){ hide($('bootLoading')); hide($('dashView')); hide($('recoveryView')); show($('authView')); }
+function showDash(){ hide($('bootLoading')); hide($('authView')); hide($('recoveryView')); show($('dashView')); }
+function showRecovery(){ hide($('bootLoading')); hide($('authView')); hide($('dashView')); show($('recoveryView')); }
+
+function setLoggedInChrome(email){
+  $('topEmail').textContent = email; show($('topEmail')); show($('logoutLink'));
+}
+function setLoggedOutChrome(){ hide($('topEmail')); hide($('logoutLink')); }
+
+// ---- Auth form (login / signup) ----
+let mode = 'login';
+document.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+  mode = t.dataset.mode;
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x === t));
+  $('authSubmit').textContent = mode === 'login' ? 'Log in' : 'Create account';
+  $('password').setAttribute('autocomplete', mode === 'login' ? 'current-password' : 'new-password');
+  $('forgotWrap').style.display = mode === 'login' ? 'block' : 'none';
+  clearMsg($('authMsg'));
+}));
+
+$('authForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = $('email').value.trim();
+  const password = $('password').value;
+  const btn = $('authSubmit');
+  btn.disabled = true; clearMsg($('authMsg'));
+  try {
+    if (mode === 'signup') {
+      const { data, error } = await supabase.auth.signUp({
+        email, password,
+        options: { emailRedirectTo: window.location.origin + '/account' }
+      });
+      if (error) throw error;
+      if (data.session) { await loadDashboard(); }        // confirmation disabled
+      else setMsg($('authMsg'), 'Almost there — check your inbox and click the confirmation link to activate your account.', 'ok');
+    } else {
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) throw error;
+      await loadDashboard();
+    }
+  } catch (err) {
+    const m = (err && err.message) || 'Something went wrong.';
+    setMsg($('authMsg'), /confirm/i.test(m) ? 'Please confirm your email first — check your inbox for the link.' : m, 'error');
+  } finally { btn.disabled = false; }
+});
+
+// ---- Forgot password ----
+$('forgotLink').addEventListener('click', async () => {
+  const email = $('email').value.trim();
+  if (!email) { setMsg($('authMsg'), 'Enter your email above first, then click "Forgot your password?".', 'error'); return; }
+  clearMsg($('authMsg'));
+  const { error } = await supabase.auth.resetPasswordForEmail(email, { redirectTo: window.location.origin + '/account' });
+  if (error) setMsg($('authMsg'), error.message, 'error');
+  else setMsg($('authMsg'), 'Password reset link sent — check your email.', 'ok');
+});
+
+// ---- Password recovery (from the emailed link) ----
+supabase.auth.onAuthStateChange((event) => {
+  if (event === 'PASSWORD_RECOVERY') showRecovery();
+});
+$('recoveryForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = $('recoverySubmit'); btn.disabled = true; clearMsg($('recoveryMsg'));
+  const { error } = await supabase.auth.updateUser({ password: $('newPassword').value });
+  if (error) { setMsg($('recoveryMsg'), error.message, 'error'); btn.disabled = false; return; }
+  setMsg($('recoveryMsg'), 'Password updated. Loading your account…', 'ok');
+  setTimeout(loadDashboard, 900);
+});
+
+// ---- Logout ----
+$('logoutLink').addEventListener('click', async () => {
+  await supabase.auth.signOut();
+  setLoggedOutChrome();
+  showAuth();
+});
+
+// ---- Dashboard ----
+function fmtDate(iso){ try { return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'short',day:'numeric'}); } catch(e){ return ''; } }
+function fmtAmount(a, c){
+  if (a == null) return '';
+  const n = Number(a) / 100; // LemonSqueezy totals are in cents
+  try { return new Intl.NumberFormat(undefined,{style:'currency',currency:(c||'USD')}).format(n); }
+  catch(e){ return (c||'') + ' ' + n.toFixed(2); }
+}
+
+async function loadDashboard(){
+  const { data: sess } = await supabase.auth.getSession();
+  if (!sess.session) { showAuth(); return; }
+  setLoggedInChrome(sess.session.user.email);
+  showDash();
+  show($('dashLoading')); hide($('emptyState')); $('purchaseList').innerHTML = '';
+
+  let res;
+  try {
+    res = await fetch('/api/account/purchases', { headers: { Authorization: 'Bearer ' + sess.session.access_token } });
+  } catch(e){ hide($('dashLoading')); $('purchaseList').innerHTML = '<div class="empty"><p>Could not reach the server. Try again.</p></div>'; return; }
+
+  hide($('dashLoading'));
+  if (!res.ok) { $('purchaseList').innerHTML = '<div class="empty"><p>Could not load purchases. Try again shortly.</p></div>'; return; }
+
+  const { email, purchases } = await res.json();
+  $('dashSub').textContent = 'Signed in as ' + email;
+  if (!purchases.length) { show($('emptyState')); return; }
+
+  const token = sess.session.access_token;
+  purchases.forEach(p => $('purchaseList').appendChild(renderPurchase(p, token)));
+}
+
+function renderPurchase(p, token){
+  const paid = (p.status || '').toLowerCase() === 'paid';
+  const el = document.createElement('div');
+  el.className = 'purchase';
+  el.innerHTML = `
+    <div class="purchase-summary">
+      <div class="p-icon"><svg viewBox="0 0 24 24"><path d="M12 2 3 7v6c0 5 3.8 8 9 9 5.2-1 9-4 9-9V7z"/></svg></div>
+      <div class="p-main">
+        <div class="p-title">Nimbus 1.0.0</div>
+        <div class="p-meta">Order ${p.order_id || '—'} · ${fmtDate(p.created_at)}${p.amount!=null?' · '+fmtAmount(p.amount,p.currency):''}</div>
+      </div>
+      <div class="p-right">
+        <span class="badge ${paid?'paid':'other'}">${p.status||'pending'}</span>
+        <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+      </div>
+    </div>
+    <div class="purchase-body"><div class="purchase-body-inner">
+      <div class="detail-row"><span class="detail-label">Order ID</span><span class="detail-val">${p.order_id||'—'}</span></div>
+      <div class="detail-row"><span class="detail-label">Purchased</span><span class="detail-val">${fmtDate(p.created_at)}</span></div>
+      ${p.amount!=null?`<div class="detail-row"><span class="detail-label">Amount</span><span class="detail-val">${fmtAmount(p.amount,p.currency)}</span></div>`:''}
+      <div class="detail-row"><span class="detail-label">Status</span><span class="detail-val">${p.status||'pending'}</span></div>
+      ${p.license_key
+        ? `<div class="key-box">
+             <span class="key-val js-key">${p.license_key}</span>
+             <span class="key-actions">
+               <button class="mini-btn js-copy" type="button">Copy</button>
+               <button class="mini-btn js-save" type="button">.txt</button>
+             </span>
+           </div>`
+        : `<p class="key-pending">Your license key is being generated — refresh in a minute, or check your email.</p>`}
+      ${paid ? `<button class="dl-btn js-dl" type="button"><svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download</button>` : ''}
+    </div></div>`;
+
+  el.querySelector('.purchase-summary').addEventListener('click', () => el.classList.toggle('open'));
+
+  const copyBtn = el.querySelector('.js-copy');
+  if (copyBtn) copyBtn.addEventListener('click', () => {
+    navigator.clipboard.writeText(p.license_key).then(() => {
+      copyBtn.textContent = 'Copied'; copyBtn.classList.add('copied');
+      setTimeout(() => { copyBtn.textContent = 'Copy'; copyBtn.classList.remove('copied'); }, 1800);
+    });
+  });
+  const saveBtn = el.querySelector('.js-save');
+  if (saveBtn) saveBtn.addEventListener('click', () => {
+    const text = 'Nimbus 1.0.0 License Key\n========================\n\n' + p.license_key + '\n\nKeep this file safe.\n';
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(new Blob([text], { type:'text/plain' }));
+    a.download = 'nimbus-license-key.txt'; a.click(); URL.revokeObjectURL(a.href);
+  });
+  const dlBtn = el.querySelector('.js-dl');
+  if (dlBtn) dlBtn.addEventListener('click', async () => {
+    dlBtn.disabled = true; const orig = dlBtn.innerHTML; dlBtn.textContent = 'Preparing…';
+    // Auth-gated endpoint returns a short-lived signed URL; navigate to it to download.
+    try {
+      const r = await fetch('/api/account/download?id=' + encodeURIComponent(p.id), {
+        headers: { Authorization: 'Bearer ' + token }
+      });
+      const j = await r.json().catch(() => ({}));
+      if (r.ok && j.url) { window.location.href = j.url; }
+      else { alert(j.error || 'Download failed.'); }
+    } catch(e){ alert('Download failed.'); }
+    finally { dlBtn.disabled = false; dlBtn.innerHTML = orig; }
+  });
+
+  return el;
+}
+
+// ---- Boot ----
+const { data: initial } = await supabase.auth.getSession();
+if (initial.session) { await loadDashboard(); }
+else { showAuth(); }
+</script>
+
+<script>(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),m=document.getElementById("metaThemeColor"),C={light:"#f3ecdd",dark:"#06121a"};function ap(t){r.setAttribute("data-theme",t);try{localStorage.setItem("nimbus-theme",t);}catch(e){}if(m)m.setAttribute("content",C[t]||C.light);}if(b)b.addEventListener("click",function(){ap(r.getAttribute("data-theme")==="dark"?"light":"dark");});})();</script>
+</body>
+</html>

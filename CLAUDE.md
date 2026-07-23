@@ -24,6 +24,7 @@ Routes come from `vercel.json` rewrites (clean URL → `.html`).
 | `forum.html` | `/forum` | Community forum index (loads threads from `/api/forum/threads`). |
 | `forum-thread.html` | `/forum-thread` | Single thread view (`/api/forum/thread`). |
 | `products.html` | `/products` | Product list. |
+| `account.html` | `/account` | User accounts (Supabase Auth, email+password). Logged-out: login/signup/forgot-password. Logged-in: dashboard of purchases (matched by email), each expandable to reveal license key + download. See `ACCOUNTS_SETUP.md`. |
 
 ## API (`api/`, Vercel serverless functions, Node)
 - `create-checkout.js` — POST; creates a LemonSqueezy checkout, attaches a UUID `download_token`, redirects to `/success.html?token=...`.
@@ -32,10 +33,13 @@ Routes come from `vercel.json` rewrites (clean URL → `.html`).
 - `license.js` — returns license key / order info by `token` or `email`.
 - `purchase.js` — purchase status lookup by `order_id`.
 - `forum/threads.js`, `forum/thread.js` — forum read endpoints.
+- `public-config.js` — serves the public Supabase URL + anon key to the browser (for `account.html` auth).
+- `account/purchases.js` — auth-gated (verifies the Supabase login JWT); returns the user's purchases matched by email.
+- `account/download.js` — auth-gated; returns a fresh signed download URL for a purchase the user owns (no 30-min expiry).
 
 ## Environment variables (see `.env.example`)
 `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_STORE_ID`, `LEMONSQUEEZY_VARIANT_ID`, `LEMONSQUEEZY_WEBHOOK_SECRET`,
-`SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `SITE_URL`, `PRODUCT_FILE_PATH`.
+`SUPABASE_URL`, `SUPABASE_SERVICE_KEY`, `SUPABASE_ANON_KEY` (public; browser auth), `SITE_URL`, `PRODUCT_FILE_PATH`.
 
 ## Assets (`assets/`)
 Images (PNG/SVG), custom fonts (Jankora), and the user-manual PDF. Referenced directly by the HTML.
