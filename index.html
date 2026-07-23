@@ -1215,118 +1215,102 @@ nav.mega-open{border-radius:80px;}
 .plan-card{
   position:relative;isolation:isolate;
   width:100%;max-width:440px;
-  border:1px solid var(--img-border);
-  border-radius:24px;overflow:hidden;
+  border-radius:24px;padding:1.5px;
   color:var(--ink-2);
   font-family:'Space Grotesk',system-ui,sans-serif;
-  box-shadow:0 30px 44px -28px rgba(47,134,192,0.42);
-  transition:transform 0.3s ease,box-shadow 0.3s ease;
+  background:linear-gradient(150deg,var(--teal),var(--cyan) 55%,var(--blue));
+  box-shadow:0 30px 60px -30px rgba(47,134,192,0.55);
+  transition:transform 0.35s cubic-bezier(0.16,1,0.3,1),box-shadow 0.35s ease;
 }
 .plan-card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 44px 56px -26px rgba(47,134,192,0.5);
+  transform:translateY(-5px);
+  box-shadow:0 46px 72px -30px rgba(47,134,192,0.62);
 }
 .plan-card strong{font-weight:700;color:var(--ink)}
 
-/* layer 1 — coloured frame + asymmetric inner surface (purple-400 / bg-[#222] equivalent) */
-.plan-frame{
-  position:absolute;inset:0;z-index:0;padding:6px;
-  background:linear-gradient(150deg,var(--teal),var(--cyan) 70%);
+/* soft radial glow behind the card */
+.plan-glow{
+  position:absolute;z-index:-1;top:-28%;right:-18%;width:70%;height:80%;
+  background:radial-gradient(circle,rgba(74,159,217,0.30),transparent 70%);
+  filter:blur(34px);pointer-events:none;
 }
-.plan-frame::before{
-  content:'';display:block;width:100%;height:100%;
+/* inner surface */
+.plan-inner{
+  position:relative;border-radius:22.5px;overflow:hidden;
   background:var(--card-surface);
-  border-radius:16px 96px 40px 16px;
+  padding:30px 30px 26px;
 }
-
-/* layer 2 — visible spinning gradient disc on a lightly frosted base */
-.plan-stage{
-  position:absolute;inset:0;z-index:1;
-  display:flex;align-items:center;justify-content:center;
-  backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);
+.plan-inner::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,0.45),transparent);
 }
-.plan-orb{
-  width:70%;aspect-ratio:1;border-radius:50%;
-  background:linear-gradient(to top right,var(--teal),var(--cyan) 55%,var(--blue));
-  filter:blur(1px);
-  animation:planSpin 12s linear infinite;
-}
-@keyframes planSpin{to{transform:rotate(360deg)}}
-@media(prefers-reduced-motion:reduce){.plan-orb{animation:none}}
-
-/* layer 3 — content: frosted left panel + right column with labels & arrow CTA */
-.plan-content{
-  position:relative;z-index:2;
-  display:flex;justify-content:space-between;gap:10px;
-  padding:14px;min-height:300px;
-}
-.plan-panel{
-  width:62%;display:flex;flex-direction:column;
-  padding:18px 18px 14px;border-radius:14px;
-  background:var(--card-veil);
-  backdrop-filter:blur(16px) saturate(1.35);
-  -webkit-backdrop-filter:blur(16px) saturate(1.35);
-  box-shadow:inset 0 0 0 1px var(--img-border);
-  color:var(--ink-2);
-}
+.plan-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
 .plan-eyebrow{
   font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:0.18em;
   text-transform:uppercase;color:var(--teal);font-weight:600;
 }
-.plan-title{
-  font-family:'Urbanist',sans-serif;font-weight:800;font-size:1.85rem;
-  color:var(--ink);margin:5px 0 4px;line-height:1;
+.plan-onetime{
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--ink-3);white-space:nowrap;
+  border:1px solid var(--img-border);padding:4px 10px;border-radius:20px;
 }
-.plan-price-row{display:flex;align-items:baseline;gap:6px;margin-bottom:16px}
-.plan-price-row .amt{font-family:'Urbanist',sans-serif;font-weight:800;font-size:1.25rem;color:var(--ink)}
-.plan-price-row .per{font-size:0.72rem;color:var(--ink-3)}
-.plan-features{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
-.plan-features li{display:flex;align-items:center;gap:9px;font-size:0.8rem;color:var(--ink-2);line-height:1.2}
+.plan-title{
+  font-family:'Urbanist',sans-serif;font-weight:800;font-size:2.4rem;
+  color:var(--ink);margin:0 0 6px;line-height:1;
+}
+.plan-price-row{
+  display:flex;align-items:baseline;gap:8px;
+  margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid var(--rule);
+}
+.plan-price-row .amt{font-family:'Urbanist',sans-serif;font-weight:800;font-size:2.6rem;color:var(--ink);line-height:1}
+.plan-price-row .per{font-size:0.8rem;color:var(--ink-3)}
+.plan-features{list-style:none;margin:0 0 26px;padding:0;display:flex;flex-direction:column;gap:13px}
+.plan-features li{display:flex;align-items:center;gap:11px;font-size:0.9rem;color:var(--ink-2);line-height:1.3}
 .plan-features .pf-icon{
-  flex-shrink:0;width:18px;height:18px;border-radius:50%;
+  flex-shrink:0;width:20px;height:20px;border-radius:50%;
   background:var(--teal);color:var(--on-teal);
   display:inline-flex;align-items:center;justify-content:center;
 }
-.plan-features .pf-icon svg{width:11px;height:11px}
+.plan-features .pf-icon svg{width:12px;height:12px}
+.plan-cta{
+  width:100%;display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  padding:16px 24px;border:0;border-radius:13px;cursor:pointer;
+  background:linear-gradient(135deg,#5aa9e0 0%,#2f86c0 50%,#1f5f8f 100%);
+  color:#fff;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.95rem;letter-spacing:0.01em;
+  box-shadow:0 14px 30px -10px rgba(47,134,192,0.75),inset 0 1px 0 rgba(255,255,255,0.32);
+  transition:transform 0.3s cubic-bezier(0.16,1,0.3,1),box-shadow 0.3s ease;
+}
+.plan-cta:hover{transform:translateY(-2px);box-shadow:0 20px 40px -10px rgba(47,134,192,0.9),inset 0 1px 0 rgba(255,255,255,0.42)}
+.plan-cta:active{transform:translateY(0)}
+.plan-cta svg{width:18px;height:18px;transition:transform 0.3s cubic-bezier(0.16,1,0.3,1)}
+.plan-cta:hover svg{transform:translateX(4px)}
 .plan-foot{
-  margin-top:auto;padding-top:14px;text-align:center;
-  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.1em;
+  margin-top:16px;text-align:center;
+  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.14em;
   text-transform:uppercase;color:var(--ink-3);
 }
-.plan-aside{
-  flex:1;display:flex;flex-direction:column;align-items:flex-end;
-  padding:8px 10px 6px 4px;text-align:right;
-}
-.plan-aside .tag{
-  font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:0.12em;
-  text-transform:uppercase;color:var(--ink-3);line-height:1.55;white-space:nowrap;
-}
-.plan-go{
-  margin-top:auto;width:56px;height:56px;border-radius:50%;flex-shrink:0;
-  background:var(--card-veil);color:var(--teal);border:0;cursor:pointer;
-  backdrop-filter:blur(10px) saturate(1.3);-webkit-backdrop-filter:blur(10px) saturate(1.3);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:inset 0 0 0 1.5px var(--img-border),0 10px 22px -8px rgba(0,0,0,0.35);
-  transition:transform 0.3s cubic-bezier(0.16,1,0.3,1),background 0.3s ease,color 0.3s ease,box-shadow 0.3s ease;
-}
-.plan-go:hover{transform:scale(1.1) translateX(2px);background:var(--teal);color:var(--on-teal);box-shadow:inset 0 0 0 1.5px transparent,0 14px 28px -6px rgba(47,134,192,0.6)}
-.plan-go:active{transform:scale(1.03)}
-.plan-go svg{width:22px;height:22px}
 
 /* Visual side */
 .pricing-visual{
   position:relative;display:flex;align-items:center;justify-content:center;
 }
+.pricing-visual::before{
+  content:'';position:absolute;z-index:0;
+  width:78%;aspect-ratio:1;border-radius:50%;
+  background:radial-gradient(circle,rgba(74,159,217,0.30) 0%,rgba(74,159,217,0.08) 45%,transparent 72%);
+  filter:blur(24px);
+}
 .pricing-visual img{
-  width:130%;max-width:none;height:auto;
-  filter:drop-shadow(0 0 60px rgba(74,159,217,0.15));
+  position:relative;z-index:1;
+  width:100%;max-width:500px;height:auto;
+  filter:drop-shadow(0 24px 60px rgba(74,159,217,0.28));
   animation:pricingFloat 6s ease-in-out infinite;
 }
 @keyframes pricingFloat{
   0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-18px)}
+  50%{transform:translateY(-16px)}
 }
-@media(max-width:960px){.pricing-visual img{width:80%}}
+@media(max-width:960px){.pricing-visual img{max-width:380px}}
 
 /* Trust strip */
 .pricing-trust-strip{
@@ -1933,13 +1917,14 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         <div class="section-kicker" style="margin-bottom:20px">&sect;&nbsp;03 &mdash; The deal</div>
 
         <div class="plan-card">
-          <div class="plan-frame"></div>
-          <div class="plan-stage"><div class="plan-orb" aria-hidden="true"></div></div>
-          <div class="plan-content">
-            <div class="plan-panel">
+          <div class="plan-glow" aria-hidden="true"></div>
+          <div class="plan-inner">
+            <div class="plan-head">
               <span class="plan-eyebrow">Lifetime License</span>
-              <p class="plan-title">Nimbus</p>
-              <div class="plan-price-row"><span class="amt">$39.99</span><span class="per">/ once</span></div>
+              <span class="plan-onetime">One-time payment</span>
+            </div>
+            <p class="plan-title">Nimbus</p>
+            <div class="plan-price-row"><span class="amt">$39.99</span><span class="per">/ once &middot; no subscription</span></div>
               <ul class="plan-features">
                 <li><span class="pf-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg></span><span><strong>VST3 / AU / Standalone</strong></span></li>
                 <li><span class="pf-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg></span><span>Two-hand &middot; <strong>12 CC channels</strong></span></li>
@@ -1947,15 +1932,11 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
                 <li><span class="pf-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg></span><span>Install on <strong>3 machines</strong></span></li>
                 <li><span class="pf-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M0 0h24v24H0z" fill="none"/><path fill="currentColor" d="M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z"/></svg></span><span><strong>Lifetime updates</strong></span></li>
               </ul>
-              <div class="plan-foot">Secure &middot; Instant &middot; Lifetime</div>
-            </div>
-            <div class="plan-aside">
-              <span class="tag">One-time</span>
-              <span class="tag">payment</span>
-              <button class="plan-go" onclick="handleCheckout()" aria-label="Get Nimbus — $39.99" title="Get Nimbus — $39.99">
-                <svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><path d="M4.646 2.146a.5.5 0 0 0 0 .708L7.793 6L4.646 9.146a.5.5 0 1 0 .708.708l3.5-3.5a.5.5 0 0 0 0-.708l-3.5-3.5a.5.5 0 0 0-.708 0z" fill="currentColor"/></svg>
+              <button class="plan-cta" onclick="handleCheckout()" aria-label="Get Nimbus — $39.99" title="Get Nimbus — $39.99">
+                <span>Get Nimbus &mdash; $39.99</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
               </button>
-            </div>
+              <div class="plan-foot">Secure &middot; Instant &middot; Lifetime updates</div>
           </div>
         </div>
       </div>
