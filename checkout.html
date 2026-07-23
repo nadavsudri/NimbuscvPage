@@ -399,7 +399,8 @@ nav{
     </div>
 
 
-    <a href="https://nimbuscv.lemonsqueezy.com/checkout/buy/1b9b04a7-d47e-45df-9c56-c5ce69979b7f" class="lemonsqueezy-button btn-pay">
+    <!-- href is set on load by the checkout-switch script below (prod by default, test with ?test=1) -->
+    <a id="buyBtn" href="https://nimbuscv.lemonsqueezy.com/checkout/buy/1753054" class="lemonsqueezy-button btn-pay">
       Continue to checkout
     </a>
 
@@ -424,7 +425,7 @@ nav{
         <div class="name">Nimbus 1.0.0</div>
         <div class="detail">VST3 / AU / Standalone &middot; macOS</div>
       </div>
-      <div class="price">$29.90</div>
+      <div class="price">$39.99</div>
     </div>
     <div class="order-item">
       <div>
@@ -459,6 +460,15 @@ nav{
 </div>
 
 <!-- Lemon.js handles checkout automatically via lemonsqueezy-button class -->
+
+<!-- Checkout link switch: production by default, demo/test link when URL has ?test=1 -->
+<script>(function(){
+  var PROD_CHECKOUT="https://nimbuscv.lemonsqueezy.com/checkout/buy/1753054";
+  var TEST_CHECKOUT="https://nimbuscv.lemonsqueezy.com/checkout/buy/1b9b04a7-d47e-45df-9c56-c5ce69979b7f";
+  var isTest=/[?&]test=1(?:&|$)/.test(window.location.search);
+  var btn=document.getElementById("buyBtn");
+  if(btn)btn.setAttribute("href",isTest?TEST_CHECKOUT:PROD_CHECKOUT);
+})();</script>
 
 <script>(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),m=document.getElementById("metaThemeColor"),C={light:"#f3ecdd",dark:"#06121a"};function ap(t){r.setAttribute("data-theme",t);try{localStorage.setItem("nimbus-theme",t);}catch(e){}if(m)m.setAttribute("content",C[t]||C.light);if(window.__applyWaveTheme)window.__applyWaveTheme();}if(b)b.addEventListener("click",function(){ap(r.getAttribute("data-theme")==="dark"?"light":"dark");});})();</script>
 </body>
