@@ -431,6 +431,7 @@ async function loadThreads() {
   try {
     const response = await fetch('/api/forum/threads');
     const data = await response.json();
+    if (!response.ok || !Array.isArray(data)) throw new Error((data && data.error) || 'Bad response');
     threadsData = data;
     renderThreads();
   } catch (err) {

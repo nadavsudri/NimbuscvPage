@@ -5,8 +5,13 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-// Public columns only — never expose posters' emails to the browser.
-const PUBLIC_COLS = 'id, title, body, name, owns_nimbus, topic, comment_count, created_at';
+// Never expose posters' emails to the browser. We select '*' (schema-agnostic)
+// and drop the email field in code.
+function stripEmail(row) {
+  if (!row) return row;
+  const { email, ...rest } = row;
+  return rest;
+}
 
 // If the request carries a valid Supabase login token, return the caller's
 // VERIFIED email and whether they actually own Nimbus (a paid purchase on that
@@ -41,11 +46,11 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
       const { data, error } = await supabase
         .from('forum_threads')
-        .select(PUBLIC_COLS)
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return res.status(200).json(data);
+      return res.status(200).json((data || []).map(stripEmail));
     }
 
     if (req.method === 'POST') {
@@ -63,10 +68,10 @@ export default async function handler(req, res) {
       const { data, error } = await supabase
         .from('forum_threads')
         .insert([{ title, body, name, email: finalEmail, owns_nimbus: owns, topic: topic || 'general' }])
-        .select(PUBLIC_COLS);
+        .select('*');
 
       if (error) throw error;
-      return res.status(201).json(data[0]);
+      return res.status(201).json(stripEmail(data[0]));
     }
 
     return res.status(405).json({ error: 'Method not allowed' });

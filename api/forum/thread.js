@@ -5,9 +5,13 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
-// Public columns only — never expose posters' emails to the browser.
-const THREAD_COLS = 'id, title, body, name, owns_nimbus, topic, comment_count, created_at';
-const COMMENT_COLS = 'id, thread_id, title, body, name, owns_nimbus, created_at';
+// Never expose posters' emails to the browser. Select '*' (schema-agnostic)
+// and drop the email field in code.
+function stripEmail(row) {
+  if (!row) return row;
+  const { email, ...rest } = row;
+  return rest;
+}
 
 // See threads.js — verified email + real ownership, or null for guests.
 async function verifiedIdentity(req) {
@@ -45,7 +49,7 @@ export default async function handler(req, res) {
     if (req.method === 'GET') {
       const { data: thread, error: threadError } = await supabase
         .from('forum_threads')
-        .select(THREAD_COLS)
+        .select('*')
         .eq('id', id)
         .single();
 
@@ -54,13 +58,13 @@ export default async function handler(req, res) {
 
       const { data: comments, error: commentsError } = await supabase
         .from('forum_comments')
-        .select(COMMENT_COLS)
+        .select('*')
         .eq('thread_id', id)
         .order('created_at', { ascending: true });
 
       if (commentsError) throw commentsError;
 
-      return res.status(200).json({ thread, comments });
+      return res.status(200).json({ thread: stripEmail(thread), comments: (comments || []).map(stripEmail) });
     }
 
     if (req.method === 'POST') {
@@ -85,14 +89,14 @@ export default async function handler(req, res) {
           email: finalEmail,
           owns_nimbus: owns
         }])
-        .select(COMMENT_COLS);
+        .select('*');
 
       if (error) throw error;
 
       // Update thread comment count
       await supabase.rpc('increment_comment_count', { thread_id: id });
 
-      return res.status(201).json(data[0]);
+      return res.status(201).json(stripEmail(data[0]));
     }
 
     return res.status(405).json({ error: 'Method not allowed' });

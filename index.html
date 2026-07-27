@@ -49,6 +49,9 @@
   --cyan:#22d3ee;
   --blue:#3b82f6;
   --blue-deep:#1e40af;
+  --coral:#F0714F;
+  --coral-deep:#db5636;
+  --coral-glow:rgba(240,113,79,0.16);
   --glow:rgba(47,134,192,0.16);
   /* semantic, theme-dependent */
   --nav-glass:rgba(251,246,234,0.82);
@@ -92,6 +95,9 @@
   --cyan:#22d3ee;
   --blue:#3b82f6;
   --blue-deep:#1e40af;
+  --coral:#FF7A5C;
+  --coral-deep:#F0714F;
+  --coral-glow:rgba(255,122,92,0.20);
   --glow:rgba(74,159,217,0.18);
   --nav-glass:rgba(20,20,21,0.85);
   --mega-glass:rgba(20,20,21,0.95);
@@ -1114,9 +1120,9 @@ nav.mega-open{border-radius:80px;}
   padding:4px 9px;border:1px solid var(--rule-2);border-radius:5px;
   background:rgba(6,18,26,0.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
 }
-.piece-head .cat.live{color:var(--teal);border-color:rgba(74,159,217,0.3)}
+.piece-head .cat.live{color:var(--coral-deep);border-color:var(--coral)}
 .piece-head .cat.live::before{content:'';display:inline-block;width:6px;height:6px;border-radius:50%;
-  background:var(--teal);margin-right:6px;vertical-align:0.5px;animation:pulse 2s ease-in-out infinite}
+  background:var(--coral);margin-right:6px;vertical-align:0.5px;animation:pulse 2s ease-in-out infinite}
 
 /* footer content */
 .piece-foot{position:absolute;left:0;right:0;bottom:0;z-index:6;padding:20px 20px 22px}
@@ -1770,11 +1776,11 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 <style>
 .mpe{position:relative;overflow:hidden;padding:96px 0 88px;background:var(--bg-2);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
 .mpe::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
-  background:radial-gradient(ellipse 60% 70% at 82% 40%,var(--glow),transparent 62%)}
+  background:radial-gradient(ellipse 55% 65% at 82% 38%,var(--coral-glow),transparent 62%),radial-gradient(ellipse 55% 70% at 12% 80%,var(--glow),transparent 60%)}
 .mpe .wrap{position:relative;z-index:1}
 .mpe-kicker{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;
-  font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);margin-bottom:18px}
-.mpe-kicker::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(47,134,192,.18)}
+  font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--coral-deep);margin-bottom:18px}
+.mpe-kicker::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--coral);box-shadow:0 0 0 4px var(--coral-glow)}
 .mpe-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:clamp(32px,5vw,72px);align-items:center}
 @media(max-width:920px){.mpe-grid{grid-template-columns:1fr;gap:40px}}
 .mpe-title{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(40px,6vw,68px);
@@ -1785,7 +1791,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 .mpe-verbs{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 30px}
 .mpe-verb{display:inline-flex;align-items:center;gap:9px;padding:9px 15px;border-radius:999px;
   border:1px solid var(--glass-border);background:var(--surface-1);font-size:13.5px;font-weight:500}
-.mpe-verb b{color:var(--teal);font-weight:600}
+.mpe-verb b{color:var(--coral-deep);font-weight:600}
 .mpe-cta{display:inline-flex;align-items:center;gap:9px;background:var(--teal);color:var(--on-teal);
   font-weight:600;font-size:15px;padding:13px 24px;border-radius:12px;transition:background .25s,transform .25s}
 .mpe-cta:hover{background:var(--teal-deep);transform:translateY(-2px)}
@@ -1799,8 +1805,8 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   padding:9px 14px;border-radius:999px;background:var(--nav-glass);backdrop-filter:blur(12px);
   -webkit-backdrop-filter:blur(12px);border:1px solid var(--glass-border);
   font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
-.mpe-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--teal);
-  box-shadow:0 0 0 4px rgba(47,134,192,.2)}
+.mpe-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--coral);
+  box-shadow:0 0 0 4px var(--coral-glow)}
 </style>
 <section class="mpe" id="mpe">
   <div class="wrap">
