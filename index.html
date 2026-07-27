@@ -599,18 +599,15 @@ nav.mega-open{border-radius:80px;}
   margin-right:calc(-1 * max(32px, (100vw - 1400px)/2));
 }
 .hero-split-visual img{
-  width:100%;max-width:none;
+  width:220%;max-width:none;
   height:auto;
   object-fit:contain;
   filter:drop-shadow(0 0 40px rgba(74,159,217,0.15));
 }
-/* Fingertip "touch" ripple — anchored to the image so it tracks the finger.
-   The wrapper carries the old 220% width so the hand keeps its size/position.
-   Nudge --tap-x / --tap-y to fine-tune the origin over the fingertip. */
-.hand-wrap{position:relative;display:inline-block;line-height:0;width:220%;max-width:none;flex:0 0 auto}
+/* Fingertip "touch" ripple — a 0x0 point whose left/top are set by JS from the
+   image's rendered box, so it tracks the fingertip without affecting layout. */
 .tap-ripple{
-  --tap-x:12%; --tap-y:61%;
-  position:absolute;left:var(--tap-x);top:var(--tap-y);
+  position:absolute;left:0;top:0;
   width:0;height:0;pointer-events:none;z-index:3;
 }
 .tap-ripple .ring,.tap-ripple .dot{
@@ -648,7 +645,7 @@ nav.mega-open{border-radius:80px;}
 @media(prefers-reduced-motion:reduce){.tap-ripple{display:none}}
 @media(max-width:960px){
   .hero-split-visual{margin-right:0;justify-content:center}
-  .hero-split-visual .hand-wrap{width:100%}
+  .hero-split-visual img{width:100%}
 }
 /* Reveal from left / right */
 .rv-left{opacity:0;transform:translateX(-80px);transition:opacity 1.4s ease,transform 1.4s cubic-bezier(0.16,1,0.3,1)}
@@ -1766,14 +1763,12 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
       </div>
     </div>
     <div class="hero-split-visual rv-right" id="heroHand">
-      <span class="hand-wrap">
-        <img src="assets/hand-wireframe.png" alt="Wireframe hand gesture tracking"/>
-        <span class="tap-ripple" aria-hidden="true">
-          <span class="dot"></span>
-          <span class="ring"></span>
-          <span class="ring"></span>
-          <span class="ring"></span>
-        </span>
+      <img src="assets/hand-wireframe.png" alt="Wireframe hand gesture tracking" id="heroHandImg"/>
+      <span class="tap-ripple" id="tapRipple" aria-hidden="true">
+        <span class="dot"></span>
+        <span class="ring"></span>
+        <span class="ring"></span>
+        <span class="ring"></span>
       </span>
     </div>
   </div>
@@ -2612,14 +2607,34 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   })();
 </script>
 <script>
-  /* Fingertip touch-ripple: only animate while the hero hand is on screen. */
+  /* Fingertip touch-ripple: place it over the fingertip from the image's
+     rendered box (no layout impact), and only animate while on screen. */
   (function(){
     var hand = document.getElementById('heroHand');
-    if(!hand || !('IntersectionObserver' in window)) { if(hand) hand.classList.add('tap-on'); return; }
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){ hand.classList.toggle('tap-on', e.isIntersecting); });
-    }, { threshold: 0.35 });
-    io.observe(hand);
+    var img  = document.getElementById('heroHandImg');
+    var rip  = document.getElementById('tapRipple');
+    if(!hand || !img || !rip) return;
+
+    // Fraction of the image where the fingertip sits — tweak to fine-tune.
+    var FX = 0.14, FY = 0.60;
+    function place(){
+      var cr = hand.getBoundingClientRect(), ir = img.getBoundingClientRect();
+      if(!ir.width) return;
+      rip.style.left = ((ir.left - cr.left) + ir.width * FX) + 'px';
+      rip.style.top  = ((ir.top  - cr.top ) + ir.height * FY) + 'px';
+    }
+    if(img.complete) place(); else img.addEventListener('load', place);
+    window.addEventListener('load', place);
+    window.addEventListener('resize', place);
+
+    if('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ hand.classList.toggle('tap-on', e.isIntersecting); if(e.isIntersecting) place(); });
+      }, { threshold: 0.35 });
+      io.observe(hand);
+    } else {
+      hand.classList.add('tap-on');
+    }
   })();
 </script>
 </body>
