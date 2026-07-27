@@ -2638,6 +2638,24 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
     } else {
       hand.classList.add('tap-on');
     }
+
+    // Calibration helper: open with ?tapedit=1, click the fingertip, read the numbers.
+    if(/[?&]tapedit/.test(location.search)){
+      hand.style.cursor = 'crosshair';
+      hand.addEventListener('click', function(ev){
+        var ir = img.getBoundingClientRect();
+        FX = (ev.clientX - ir.left) / ir.width;
+        FY = (ev.clientY - ir.top) / ir.height;
+        place();
+        var tag = document.getElementById('tapEditTag') || (function(){
+          var t = document.createElement('div');
+          t.id = 'tapEditTag';
+          t.style.cssText = 'position:fixed;top:12px;left:12px;z-index:9999;background:#000;color:#4A9FD9;font:13px monospace;padding:8px 12px;border:1px solid #4A9FD9;border-radius:8px';
+          document.body.appendChild(t); return t;
+        })();
+        tag.textContent = 'FX=' + FX.toFixed(3) + '  FY=' + FY.toFixed(3) + '  — send me these';
+      });
+    }
   })();
 </script>
 </body>
