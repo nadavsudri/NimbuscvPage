@@ -1766,6 +1766,69 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 </div>
 
 <!-- ═══════ THE PIECES ═══════ -->
+<!-- ═══════ MPE MODE — the main way to play ═══════ -->
+<style>
+.mpe{position:relative;overflow:hidden;padding:96px 0 88px;background:var(--bg-2);border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.mpe::before{content:'';position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 60% 70% at 82% 40%,var(--glow),transparent 62%)}
+.mpe .wrap{position:relative;z-index:1}
+.mpe-kicker{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;
+  font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--teal);margin-bottom:18px}
+.mpe-kicker::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 4px rgba(47,134,192,.18)}
+.mpe-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:clamp(32px,5vw,72px);align-items:center}
+@media(max-width:920px){.mpe-grid{grid-template-columns:1fr;gap:40px}}
+.mpe-title{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(40px,6vw,68px);
+  line-height:1.02;letter-spacing:-.01em;margin:0 0 22px}
+.mpe-title .it{font-style:italic;color:var(--teal)}
+.mpe-lead{color:var(--ink-2);font-size:17px;line-height:1.72;max-width:60ch;margin:0 0 18px}
+.mpe-lead b{color:var(--ink);font-weight:600}
+.mpe-verbs{display:flex;flex-wrap:wrap;gap:10px;margin:26px 0 30px}
+.mpe-verb{display:inline-flex;align-items:center;gap:9px;padding:9px 15px;border-radius:999px;
+  border:1px solid var(--glass-border);background:var(--surface-1);font-size:13.5px;font-weight:500}
+.mpe-verb b{color:var(--teal);font-weight:600}
+.mpe-cta{display:inline-flex;align-items:center;gap:9px;background:var(--teal);color:var(--on-teal);
+  font-weight:600;font-size:15px;padding:13px 24px;border-radius:12px;transition:background .25s,transform .25s}
+.mpe-cta:hover{background:var(--teal-deep);transform:translateY(-2px)}
+.mpe-cta svg{width:18px;height:18px}
+.mpe-media{position:relative;border:1px solid var(--img-border);border-radius:20px;overflow:hidden;
+  background:var(--panel);aspect-ratio:4/5}
+.mpe-media img{width:100%;height:100%;object-fit:cover}
+.mpe-media::after{content:'';position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(180deg,transparent 55%,var(--glow))}
+.mpe-badge{position:absolute;left:18px;bottom:18px;z-index:2;display:inline-flex;align-items:center;gap:8px;
+  padding:9px 14px;border-radius:999px;background:var(--nav-glass);backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);border:1px solid var(--glass-border);
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
+.mpe-badge::before{content:'';width:7px;height:7px;border-radius:50%;background:var(--teal);
+  box-shadow:0 0 0 4px rgba(47,134,192,.2)}
+</style>
+<section class="mpe" id="mpe">
+  <div class="wrap">
+    <div class="mpe-grid">
+      <div class="mpe-copy rv">
+        <div class="mpe-kicker">The main instrument</div>
+        <h2 class="mpe-title">MPE Mode &mdash; <span class="it">play the air</span> like an instrument.</h2>
+        <p class="mpe-lead">Most controllers give you knobs. Nimbus gives you a <b>voice</b>. Turn on MPE Mode and your hands become a fully polyphonic, fully expressive instrument tracked by your webcam.</p>
+        <p class="mpe-lead"><b>Pinch to play.</b> The height of your hand chooses the note &mdash; locked to any scale you like, so you're always in key. Because Nimbus speaks true MIDI Polyphonic Expression, every note carries its own bend, pressure, and dynamics &mdash; the way an acoustic instrument breathes. Each hand's three fingers play the note below, the note itself, and the note above; roll between them for smooth legato, then bring in your second hand for a two-voice performance.</p>
+        <div class="mpe-verbs">
+          <span class="mpe-verb"><b>Pinch</b> to play</span>
+          <span class="mpe-verb"><b>Slide</b> to bend</span>
+          <span class="mpe-verb"><b>Push</b> for pressure</span>
+          <span class="mpe-verb"><b>Dip</b> to swell &amp; fade</span>
+        </div>
+        <a class="mpe-cta" href="/instrument/mpe">
+          Explore MPE Mode
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="mpe-media rv">
+        <img src="assets/hands-two.png" alt="Two hands played as a polyphonic, expressive MPE instrument">
+        <span class="mpe-badge">Polyphonic &middot; MPE</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="pieces" id="pieces">
 
   <!-- hw decor: knob trio -->
@@ -1822,7 +1885,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 
     <div class="pieces-grid">
 
-      <div class="piece-card p-pre rv" tabindex="0" onclick="togglePiece(this)">
+      <div class="piece-card p-pre rv" tabindex="0" role="link" aria-label="Pre-recorded gestures — open instrument page" onclick="goInstrument('pre-recorded')" onkeydown="pieceKey(event,'pre-recorded')">
         <div class="piece-stage"><img src="assets/piece-prerecorded.png" alt="Pre-recorded gesture mappings with sensitivity knobs"></div>
         <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
         <div class="piece-head"><span class="idx"><b>01</b>&thinsp;/&thinsp;06</span><span class="cat">Gesture library</span></div>
@@ -1832,7 +1895,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         </div>
       </div>
 
-      <div class="piece-card p-str rv" tabindex="0" onclick="togglePiece(this)">
+      <div class="piece-card p-str rv" tabindex="0" role="link" aria-label="Strings — open instrument page" onclick="goInstrument('strings')" onkeydown="pieceKey(event,'strings')">
         <div class="piece-stage"><img src="assets/piece-strings.png" alt="Two wireframe hands playing six virtual strings"></div>
         <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
         <div class="piece-head"><span class="idx"><b>02</b>&thinsp;/&thinsp;06</span><span class="cat">Instrument &middot; 6 strings</span></div>
@@ -1842,7 +1905,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         </div>
       </div>
 
-      <div class="piece-card p-rec rv" tabindex="0" onclick="togglePiece(this)">
+      <div class="piece-card p-rec rv" tabindex="0" role="link" aria-label="Gesture recorder — open instrument page" onclick="goInstrument('recorder')" onkeydown="pieceKey(event,'recorder')">
         <div class="piece-stage"><img src="assets/piece-recorder.png" alt="Gesture recorder capturing a custom hand pose"></div>
         <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
         <div class="piece-head"><span class="idx"><b>03</b>&thinsp;/&thinsp;06</span><span class="cat live">Rec</span></div>
@@ -1852,7 +1915,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         </div>
       </div>
 
-      <div class="piece-card p-keys rv" tabindex="0" onclick="togglePiece(this)">
+      <div class="piece-card p-keys rv" tabindex="0" role="link" aria-label="Keys — open instrument page" onclick="goInstrument('keys')" onkeydown="pieceKey(event,'keys')">
         <div class="piece-stage"><img src="assets/piece-keys.png" alt="Virtual piano keyboard with arp sequencer"></div>
         <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
         <div class="piece-head"><span class="idx"><b>04</b>&thinsp;/&thinsp;06</span><span class="cat">16-step arp</span></div>
@@ -1862,7 +1925,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         </div>
       </div>
 
-      <div class="piece-card p-chord rv" tabindex="0" onclick="togglePiece(this)">
+      <div class="piece-card p-chord rv" tabindex="0" role="link" aria-label="Chord Player — open instrument page" onclick="goInstrument('chords')" onkeydown="pieceKey(event,'chords')">
         <div class="piece-stage"><img src="assets/piece-chords.png" alt="Two radial chord wheels for root and variation"></div>
         <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
         <div class="piece-head"><span class="idx"><b>05</b>&thinsp;/&thinsp;06</span><span class="cat">Instrument &middot; 12 chords</span></div>
@@ -1872,7 +1935,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
         </div>
       </div>
 
-      <div class="piece-card p-knob rv" tabindex="0" onclick="togglePiece(this)">
+      <div class="piece-card p-knob rv" tabindex="0" role="link" aria-label="Sliders and Knobs — open instrument page" onclick="goInstrument('knobs')" onkeydown="pieceKey(event,'knobs')">
         <div class="piece-stage"><img src="assets/piece-knobs.png" alt="Sliders and knobs mapped to CC channels"></div>
         <span class="brk tl"></span><span class="brk tr"></span><span class="brk bl"></span><span class="brk br"></span>
         <div class="piece-head"><span class="idx"><b>06</b>&thinsp;/&thinsp;06</span><span class="cat">Controls &middot; any CC</span></div>
@@ -2458,11 +2521,12 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
     a.addEventListener('click', function(){closeMega()});
   });
 
-  // Piece cards — only one open at a time
-  window.togglePiece = function(el){
-    var wasOpen = el.classList.contains('open');
-    document.querySelectorAll('.piece-card.open').forEach(function(c){ c.classList.remove('open') });
-    if (!wasOpen) el.classList.add('open');
+  // Piece cards — each opens its own instrument page
+  window.goInstrument = function(slug){
+    window.location.href = '/instrument/' + slug;
+  };
+  window.pieceKey = function(ev, slug){
+    if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); window.goInstrument(slug); }
   };
 
   // CHECKOUT — redirect to checkout page
