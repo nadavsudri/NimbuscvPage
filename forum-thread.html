@@ -344,7 +344,14 @@ h1.title{
       <h3>Join the <span class="it">conversation</span></h3>
     </div>
     <div class="composer-body">
-      <div class="composer-fields">
+      <div id="reply-gate" style="display:none;padding:4px 0;">
+        <p style="color:var(--ink-2);font-size:14px;line-height:1.6;margin:0 0 16px;">Log in to join the conversation and post a reply.</p>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+          <a href="/account" style="display:inline-flex;align-items:center;gap:8px;padding:11px 20px;background:var(--teal);color:var(--bg);border-radius:8px;font-weight:600;text-decoration:none;font-size:14px;">Log in or sign up</a>
+          <button type="button" onclick="replyAsGuest()" style="padding:9px 16px;background:transparent;color:var(--ink-2);border:1px solid var(--rule-2);border-radius:8px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;">Reply as a guest &rarr;</button>
+        </div>
+      </div>
+      <div class="composer-fields" id="reply-fields">
         <input class="field-name" id="nameField" type="text" placeholder="Your name" autocomplete="name"/>
         <textarea class="field-msg" id="msgField" placeholder="Share what worked, ask a follow-up, or help someone out…"></textarea>
         <div class="composer-foot">
@@ -455,9 +462,35 @@ h1.title{
     // Replies
     renderReplies();
 
-    // Show composer
+    // Show composer (gated: logged-out users must log in or choose "Reply as a guest")
     document.getElementById('composer').style.display = 'block';
+    gateComposer();
   }
+
+  function gateComposer() {
+    var gate = document.getElementById('reply-gate');
+    var fields = document.getElementById('reply-fields');
+    gate.style.display = 'none';
+    fields.style.display = 'none';
+    Promise.resolve(window.__getForumUser ? window.__getForumUser() : null).then(function(user) {
+      if (user) {
+        var nf = document.getElementById('nameField');
+        if (nf && !nf.value) {
+          var meta = user.user_metadata || {};
+          nf.value = meta.name || meta.full_name || (user.email ? user.email.split('@')[0] : '');
+        }
+        fields.style.display = '';
+      } else {
+        gate.style.display = 'block';
+      }
+    }).catch(function() { gate.style.display = 'block'; });
+  }
+
+  window.replyAsGuest = function() {
+    document.getElementById('reply-gate').style.display = 'none';
+    document.getElementById('reply-fields').style.display = '';
+    setTimeout(function(){ var n = document.getElementById('nameField'); if (n) n.focus(); }, 60);
+  };
 
   function renderReplies() {
     var section = document.getElementById('repliesSection');
@@ -566,5 +599,23 @@ h1.title{
 </script>
 
 <script>(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),m=document.getElementById("metaThemeColor"),C={light:"#f3ecdd",dark:"#06121a"};function ap(t){r.setAttribute("data-theme",t);try{localStorage.setItem("nimbus-theme",t);}catch(e){}if(m)m.setAttribute("content",C[t]||C.light);if(window.__applyWaveTheme)window.__applyWaveTheme();}if(b)b.addEventListener("click",function(){ap(r.getAttribute("data-theme")==="dark"?"light":"dark");});})();</script>
+
+<!-- Supabase session probe — exposes window.__getForumUser() for the reply gate -->
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  let user = null;
+  const ready = (async () => {
+    try {
+      const cfg = await (await fetch('/api/public-config')).json();
+      if (cfg && cfg.url && cfg.anonKey) {
+        const sb = createClient(cfg.url, cfg.anonKey);
+        const { data } = await sb.auth.getSession();
+        user = (data && data.session && data.session.user) || null;
+      }
+    } catch (e) { user = null; }
+    return user;
+  })();
+  window.__getForumUser = () => ready.then(() => user);
+</script>
 </body>
 </html>

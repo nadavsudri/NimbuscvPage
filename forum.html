@@ -362,7 +362,17 @@ nav{
 <div id="new-thread-modal" style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:201;background:var(--bg-2);border:1px solid var(--rule-2);border-radius:12px;padding:40px;max-width:600px;width:90%;max-height:90vh;overflow-y:auto;">
   <h2 style="font-family:'Instrument Serif',serif;font-weight:400;font-size:28px;color:var(--ink);margin:0 0 24px;">New <span style="font-style:italic;color:var(--teal)">Question</span></h2>
 
-  <form id="new-thread-form" onsubmit="submitNewThread(event)">
+  <!-- Login gate (shown to logged-out users) -->
+  <div id="thread-gate" style="display:none;">
+    <p style="color:var(--ink-2);font-size:15px;line-height:1.6;margin:0 0 24px;">Log in to post your question — that ties it to your account so you can keep track of replies.</p>
+    <a href="/account" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;background:var(--teal);color:var(--bg);border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:600;text-decoration:none;transition:background 0.2s ease;">Log in or sign up</a>
+    <div style="display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--ink-3);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;">
+      <span style="flex:1;height:1px;background:var(--rule-2);"></span>or<span style="flex:1;height:1px;background:var(--rule-2);"></span>
+    </div>
+    <button type="button" onclick="askAsGuest()" style="width:100%;padding:11px 16px;background:transparent;color:var(--ink-2);border:1px solid var(--rule-2);border-radius:8px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:13px;transition:border-color 0.2s ease,color 0.2s ease;">Ask as a guest &rarr;</button>
+  </div>
+
+  <form id="new-thread-form" style="display:none;" onsubmit="submitNewThread(event)">
     <div style="margin-bottom:20px;">
       <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;">Your Name</label>
       <input type="text" name="name" required placeholder="Ada Lovelace" style="width:100%;padding:12px 14px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--rule-2);border-radius:6px;outline:none;transition:border-color 0.25s ease;">
@@ -468,14 +478,49 @@ function renderThreads() {
   `}).join('');
 }
 
-function showNewThreadForm() {
+async function showNewThreadForm() {
   document.getElementById('modal-backdrop').style.display = 'block';
   document.getElementById('new-thread-modal').style.display = 'block';
+
+  var gate = document.getElementById('thread-gate');
+  var form = document.getElementById('new-thread-form');
+  // Until we know auth state, show neither (avoids a flash of the guest form).
+  gate.style.display = 'none';
+  form.style.display = 'none';
+
+  var user = null;
+  try { user = window.__getForumUser ? await window.__getForumUser() : null; } catch (e) {}
+
+  if (user) {
+    // Logged in — skip the gate, go straight to the form, prefill identity.
+    prefillIdentity(form, user);
+    form.style.display = 'block';
+  } else {
+    gate.style.display = 'block';
+  }
+}
+
+function askAsGuest() {
+  document.getElementById('thread-gate').style.display = 'none';
+  document.getElementById('new-thread-form').style.display = 'block';
+}
+
+function prefillIdentity(form, user) {
+  var nameInput = form.querySelector('[name="name"]');
+  var emailInput = form.querySelector('[name="email"]');
+  var email = user.email || '';
+  var meta = user.user_metadata || {};
+  var name = meta.name || meta.full_name || (email ? email.split('@')[0] : '');
+  if (nameInput && !nameInput.value) nameInput.value = name;
+  if (emailInput && !emailInput.value) emailInput.value = email;
 }
 
 function closeNewThreadForm() {
   document.getElementById('modal-backdrop').style.display = 'none';
   document.getElementById('new-thread-modal').style.display = 'none';
+  // Reset so the next open re-evaluates auth from a clean state.
+  document.getElementById('thread-gate').style.display = 'none';
+  document.getElementById('new-thread-form').style.display = 'none';
 }
 
 async function submitNewThread(e) {
@@ -514,5 +559,23 @@ loadThreads();
 
 
 <script>(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),m=document.getElementById("metaThemeColor"),C={light:"#f3ecdd",dark:"#06121a"};function ap(t){r.setAttribute("data-theme",t);try{localStorage.setItem("nimbus-theme",t);}catch(e){}if(m)m.setAttribute("content",C[t]||C.light);if(window.__applyWaveTheme)window.__applyWaveTheme();}if(b)b.addEventListener("click",function(){ap(r.getAttribute("data-theme")==="dark"?"light":"dark");});})();</script>
+
+<!-- Supabase session probe — exposes window.__getForumUser() for the post gate -->
+<script type="module">
+  import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+  let user = null;
+  const ready = (async () => {
+    try {
+      const cfg = await (await fetch('/api/public-config')).json();
+      if (cfg && cfg.url && cfg.anonKey) {
+        const sb = createClient(cfg.url, cfg.anonKey);
+        const { data } = await sb.auth.getSession();
+        user = (data && data.session && data.session.user) || null;
+      }
+    } catch (e) { user = null; }
+    return user;
+  })();
+  window.__getForumUser = () => ready.then(() => user);
+</script>
 </body>
 </html>
