@@ -5,10 +5,31 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_KEY
 );
 
+// Public columns only — never expose posters' emails to the browser.
+const THREAD_COLS = 'id, title, body, name, owns_nimbus, topic, comment_count, created_at';
+const COMMENT_COLS = 'id, thread_id, title, body, name, owns_nimbus, created_at';
+
+// See threads.js — verified email + real ownership, or null for guests.
+async function verifiedIdentity(req) {
+  const header = req.headers.authorization || '';
+  const token = header.startsWith('Bearer ') ? header.slice(7) : null;
+  if (!token) return null;
+  const { data, error } = await supabase.auth.getUser(token);
+  if (error || !data?.user?.email) return null;
+  const email = data.user.email;
+  const { data: rows } = await supabase
+    .from('purchases')
+    .select('id')
+    .ilike('email', email)
+    .eq('status', 'paid')
+    .limit(1);
+  return { email, owns: !!(rows && rows.length) };
+}
+
 export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', process.env.SITE_URL || '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
   if (req.method === 'OPTIONS') {
     return res.status(200).end();
@@ -22,10 +43,9 @@ export default async function handler(req, res) {
 
   try {
     if (req.method === 'GET') {
-      // Get thread with comments
       const { data: thread, error: threadError } = await supabase
         .from('forum_threads')
-        .select('*')
+        .select(THREAD_COLS)
         .eq('id', id)
         .single();
 
@@ -34,7 +54,7 @@ export default async function handler(req, res) {
 
       const { data: comments, error: commentsError } = await supabase
         .from('forum_comments')
-        .select('*')
+        .select(COMMENT_COLS)
         .eq('thread_id', id)
         .order('created_at', { ascending: true });
 
@@ -44,8 +64,12 @@ export default async function handler(req, res) {
     }
 
     if (req.method === 'POST') {
-      // Add comment to thread
-      const { body, name, email, owns_nimbus } = req.body;
+      const { body, name } = req.body || {};
+
+      // Server decides email + owner badge; the client can't spoof either.
+      const who = await verifiedIdentity(req);
+      const finalEmail = who ? who.email : ((req.body && req.body.email) || 'guest@nimbus.local');
+      const owns = who ? who.owns : false;
 
       if (!body || !name) {
         return res.status(400).json({ error: 'Name and message required' });
@@ -58,10 +82,10 @@ export default async function handler(req, res) {
           title: 'Reply',
           body,
           name,
-          email: email || 'user@nimbus.local',
-          owns_nimbus: owns_nimbus || false
+          email: finalEmail,
+          owns_nimbus: owns
         }])
-        .select();
+        .select(COMMENT_COLS);
 
       if (error) throw error;
 
@@ -74,6 +98,6 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (err) {
     console.error('Forum thread error:', err.message);
-    res.status(500).json({ error: err.message });
+    res.status(500).json({ error: 'Something went wrong. Please try again.' });
   }
 }

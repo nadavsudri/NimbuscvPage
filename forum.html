@@ -406,11 +406,6 @@ nav{
       <textarea name="body" required placeholder="Describe your question, setup, or issue..." rows="6" style="width:100%;padding:12px 14px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--rule-2);border-radius:6px;outline:none;resize:vertical;transition:border-color 0.25s ease;"></textarea>
     </div>
 
-    <div style="display:flex;align-items:center;gap:12px;margin:20px 0;cursor:pointer;user-select:none;">
-      <input type="checkbox" id="new-thread-owns" name="owns_nimbus" style="width:20px;height:20px;cursor:pointer;accent-color:var(--teal);">
-      <label for="new-thread-owns" style="margin:0;font-size:13px;color:var(--ink-2);cursor:pointer;">I own Nimbus</label>
-    </div>
-
     <div style="display:flex;gap:12px;justify-content:flex-end;">
       <button type="button" onclick="closeNewThreadForm()" style="padding:12px 24px;background:var(--bg);color:var(--ink-2);border:1px solid var(--rule-2);border-radius:6px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-weight:600;transition:all 0.2s ease;">Cancel</button>
       <button type="submit" style="padding:12px 24px;background:var(--teal);color:var(--bg);border:none;border-radius:6px;cursor:pointer;font-family:'Space Grotesk',sans-serif;font-weight:600;transition:all 0.2s ease;">Post Question</button>
@@ -528,12 +523,16 @@ async function submitNewThread(e) {
   const form = e.target;
   const data = new FormData(form);
   const payload = Object.fromEntries(data);
-  payload.owns_nimbus = data.has('owns_nimbus');
+  // owns_nimbus is decided server-side from a verified purchase; don't send it.
+
+  const token = window.__getForumToken ? await window.__getForumToken() : null;
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers['Authorization'] = 'Bearer ' + token;
 
   try {
     const response = await fetch('/api/forum/threads', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: headers,
       body: JSON.stringify(payload)
     });
 
@@ -563,7 +562,7 @@ loadThreads();
 <!-- Supabase session probe — exposes window.__getForumUser() for the post gate -->
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-  let user = null;
+  let user = null, token = null;
   const ready = (async () => {
     try {
       const cfg = await (await fetch('/api/public-config')).json();
@@ -571,11 +570,13 @@ loadThreads();
         const sb = createClient(cfg.url, cfg.anonKey);
         const { data } = await sb.auth.getSession();
         user = (data && data.session && data.session.user) || null;
+        token = (data && data.session && data.session.access_token) || null;
       }
-    } catch (e) { user = null; }
+    } catch (e) { user = null; token = null; }
     return user;
   })();
   window.__getForumUser = () => ready.then(() => user);
+  window.__getForumToken = () => ready.then(() => token);
 </script>
 </body>
 </html>
