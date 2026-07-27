@@ -2616,7 +2616,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
     if(!hand || !img || !rip) return;
 
     // Fraction of the image where the index fingertip sits — tweak to fine-tune.
-    var FX = 0.16, FY = 0.26;
+    var FX = 0.205, FY = 0.35;
     function place(){
       var cr = hand.getBoundingClientRect(), ir = img.getBoundingClientRect();
       if(!ir.width) return;
@@ -2626,6 +2626,9 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
     if(img.complete) place(); else img.addEventListener('load', place);
     window.addEventListener('load', place);
     window.addEventListener('resize', place);
+    // Reposition during scroll so the reveal transition can't leave it stale.
+    window.addEventListener('scroll', place, { passive: true });
+    [200, 700, 1300].forEach(function(t){ setTimeout(place, t); });
 
     if('IntersectionObserver' in window){
       var io = new IntersectionObserver(function(entries){
