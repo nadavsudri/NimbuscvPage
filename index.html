@@ -599,14 +599,15 @@ nav.mega-open{border-radius:80px;}
   margin-right:calc(-1 * max(32px, (100vw - 1400px)/2));
 }
 .hero-split-visual img{
-  width:220%;max-width:none;
+  width:100%;max-width:none;
   height:auto;
   object-fit:contain;
   filter:drop-shadow(0 0 40px rgba(74,159,217,0.15));
 }
 /* Fingertip "touch" ripple — anchored to the image so it tracks the finger.
+   The wrapper carries the old 220% width so the hand keeps its size/position.
    Nudge --tap-x / --tap-y to fine-tune the origin over the fingertip. */
-.hand-wrap{position:relative;display:inline-block;line-height:0}
+.hand-wrap{position:relative;display:inline-block;line-height:0;width:220%;max-width:none;flex:0 0 auto}
 .tap-ripple{
   --tap-x:12%; --tap-y:61%;
   position:absolute;left:var(--tap-x);top:var(--tap-y);
@@ -647,7 +648,7 @@ nav.mega-open{border-radius:80px;}
 @media(prefers-reduced-motion:reduce){.tap-ripple{display:none}}
 @media(max-width:960px){
   .hero-split-visual{margin-right:0;justify-content:center}
-  .hero-split-visual img{width:100%}
+  .hero-split-visual .hand-wrap{width:100%}
 }
 /* Reveal from left / right */
 .rv-left{opacity:0;transform:translateX(-80px);transition:opacity 1.4s ease,transform 1.4s cubic-bezier(0.16,1,0.3,1)}
