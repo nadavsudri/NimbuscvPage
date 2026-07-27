@@ -2615,8 +2615,8 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
     var rip  = document.getElementById('tapRipple');
     if(!hand || !img || !rip) return;
 
-    // Fraction of the image where the fingertip sits — tweak to fine-tune.
-    var FX = 0.14, FY = 0.60;
+    // Fraction of the image where the index fingertip sits — tweak to fine-tune.
+    var FX = 0.16, FY = 0.26;
     function place(){
       var cr = hand.getBoundingClientRect(), ir = img.getBoundingClientRect();
       if(!ir.width) return;
