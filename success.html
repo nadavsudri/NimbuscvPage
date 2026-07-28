@@ -430,10 +430,6 @@ a{text-decoration:none}
     })
     .then(function(data){
       if (!data) return;
-      if (data.email) {
-        var acb = document.getElementById('accountCtaBtn');
-        if (acb) acb.href = '/account?signup=1&email=' + encodeURIComponent(data.email);
-      }
       if (data.download_token) {
         btn.href = '/api/download?token=' + encodeURIComponent(data.download_token);
 
