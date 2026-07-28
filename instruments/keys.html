@@ -86,11 +86,11 @@ button{font:inherit;cursor:pointer;border:none;background:none;color:inherit}
 .it{font-family:'Space Grotesk',serif;font-style:italic}
 
 nav{
-  position:sticky;top:0;z-index:50;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:20px;padding:14px clamp(20px,3vw,48px);
+  position:fixed;top:20px;left:20px;z-index:50;
+  display:inline-flex;align-items:center;
+  padding:12px 26px;
   background:var(--nav-glass);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
-  border-bottom:1px solid var(--rule);
+  border:1px solid var(--rule);border-radius:80px;
 }
 .nav-logo{display:flex;align-items:center;gap:10px}
 .nav-logo svg{width:34px;height:34px}
@@ -116,7 +116,7 @@ nav{
 :root[data-theme="dark"] .theme-btn .sun{display:none}
 :root[data-theme="dark"] .theme-btn .moon{display:block}
 
-.stage{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:clamp(18px,3vw,40px) clamp(14px,3vw,40px) 96px}
+.stage{position:relative;z-index:1;max-width:1300px;margin:0 auto;padding:96px clamp(14px,3vw,40px) 96px}
 
 /* HERO CARD */
 .hero{
