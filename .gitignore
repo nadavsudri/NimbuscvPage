@@ -7,3 +7,10 @@ node_modules/
 # Local Claude Code skills / tooling (not site content)
 .claude/
 skills-lock.json
+CLAUDE.md
+
+# Internal / scratch (not deployed)
+SECURITY_TODO.md
+index_copy.html
+index2.html
+index_tmp.html

@@ -9,12 +9,12 @@
     { "source": "/forum", "destination": "/forum.html" },
     { "source": "/forum-thread", "destination": "/forum-thread.html" },
     { "source": "/products", "destination": "/products.html" },
-    { "source": "/instrument/mpe", "destination": "/instrument-mpe.html" },
-    { "source": "/instrument/pre-recorded", "destination": "/instrument-pre-recorded.html" },
-    { "source": "/instrument/strings", "destination": "/instrument-strings.html" },
-    { "source": "/instrument/recorder", "destination": "/instrument-recorder.html" },
-    { "source": "/instrument/keys", "destination": "/instrument-keys.html" },
-    { "source": "/instrument/chords", "destination": "/instrument-chords.html" },
-    { "source": "/instrument/knobs", "destination": "/instrument-knobs.html" }
+    { "source": "/instrument/mpe", "destination": "/instruments/mpe.html" },
+    { "source": "/instrument/pre-recorded", "destination": "/instruments/pre-recorded.html" },
+    { "source": "/instrument/strings", "destination": "/instruments/strings.html" },
+    { "source": "/instrument/recorder", "destination": "/instruments/recorder.html" },
+    { "source": "/instrument/keys", "destination": "/instruments/keys.html" },
+    { "source": "/instrument/chords", "destination": "/instruments/chords.html" },
+    { "source": "/instrument/knobs", "destination": "/instruments/knobs.html" }
   ]
 }
