@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>Nimbus — Documentation</title>
+<title>Nimbus - Documentation</title>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="description" content="Nimbus user manual. Installation, gesture mappings, virtual instruments, scene management, and troubleshooting."/>
 <meta name="theme-color" content="#f3ecdd" id="metaThemeColor"/>
@@ -280,7 +280,7 @@ nav{
 <!-- HERO -->
 <div class="docs-hero">
   <div class="wrap">
-    <div class="meta">Nimbus v1.0.0 &mdash; User manual</div>
+    <div class="meta">Nimbus v1.0.0 - User manual</div>
     <h1>Read the <span class="it">manual.</span></h1>
     <p>Everything you need to install, configure, and perform with Nimbus. From first launch to stage-ready in minutes.</p>
     <a href="assets/USRMNLNMBS.pdf" class="docs-download" download>Download PDF &darr;</a>
@@ -313,7 +313,7 @@ nav{
 
       <!-- 1. INSTALLATION -->
       <div class="docs-section" id="installation">
-        <div class="section-num">01 &mdash; Setup</div>
+        <div class="section-num">01 - Setup</div>
         <h2>Installation &amp; setup</h2>
 
         <h3>System requirements</h3>
@@ -347,13 +347,13 @@ nav{
 
       <!-- 2. GETTING STARTED -->
       <div class="docs-section" id="getting-started">
-        <div class="section-num">02 &mdash; Basics</div>
+        <div class="section-num">02 - Basics</div>
         <h2>Getting started</h2>
 
         <h3>Workspace layout</h3>
         <p>The Nimbus interface is divided into three main sections:</p>
 
-        <h4>Left panel &mdash; Source pads</h4>
+        <h4>Left panel - Source pads</h4>
         <ul>
           <li>4 Sound Pads (2&times;2 grid)</li>
           <li>4 Sliders (2&times;2 grid)</li>
@@ -364,15 +364,15 @@ nav{
           <li>Dead Zone</li>
         </ul>
 
-        <h4>Center &mdash; Hand visualizer</h4>
+        <h4>Center - Hand visualizer</h4>
         <ul>
           <li>Live hand tracking display</li>
-          <li>0&ndash;400px coordinate space</li>
+          <li>0-400px coordinate space</li>
           <li>Gesture visualization</li>
           <li>Interactive instrument placement</li>
         </ul>
 
-        <h4>Right panel &mdash; Settings</h4>
+        <h4>Right panel - Settings</h4>
         <ul>
           <li>Hand color selection</li>
           <li>Tracking smoothing slider</li>
@@ -393,7 +393,7 @@ nav{
 
       <!-- 3. VISUALIZER -->
       <div class="docs-section" id="visualizer">
-        <div class="section-num">03 &mdash; Display</div>
+        <div class="section-num">03 - Display</div>
         <h2>The hand visualizer</h2>
 
         <h3>What you're seeing</h3>
@@ -414,7 +414,7 @@ nav{
 
         <h3>Interaction tips</h3>
         <ul>
-          <li>Keep hands 18&ndash;24 inches from the camera for best tracking</li>
+          <li>Keep hands 18-24 inches from the camera for best tracking</li>
           <li>Ensure good lighting on your hands</li>
           <li>The hand visualizer updates at 30Hz</li>
           <li>Landmarks are smoothed with adjustable EMA (exponential moving average)</li>
@@ -423,7 +423,7 @@ nav{
 
       <!-- 4. GESTURES -->
       <div class="docs-section" id="gestures">
-        <div class="section-num">04 &mdash; Control</div>
+        <div class="section-num">04 - Control</div>
         <h2>Gesture mappings</h2>
 
         <h3>Hand openness</h3>
@@ -439,36 +439,36 @@ nav{
         <p>Hands together outputs CC 0. Hands apart (opposite edges) outputs CC 127. Requires both hands active and not in the dead zone. Great for stereo width, delay feedback, or reverb decay.</p>
 
         <h3>Pinch detection</h3>
-        <p>Thumb to index finger distance &lt; 45% of hand size activates the pinch. Also works with thumb to middle finger. While pinching, all CC values for that hand freeze (pinch lock) &mdash; useful for holding a parameter value.</p>
+        <p>Thumb to index finger distance &lt; 45% of hand size activates the pinch. Also works with thumb to middle finger. While pinching, all CC values for that hand freeze (pinch lock) - useful for holding a parameter value.</p>
 
         <h3>Snap detection</h3>
         <p>Triggered when thumb flicks up while middle finger flicks down simultaneously. Hand must be mostly closed; opposing vertical velocities &gt; 14px/frame. 500ms cooldown between snaps. Visual feedback: orange ripple effect at trigger point.</p>
 
         <h3>Custom gestures</h3>
-        <p>Right-click "Record" in settings to capture a pose. Choose between trigger mode (toggle on/off) or scale mode (continuous 0&ndash;127). Detection uses RMS distance from the template pose with an adjustable threshold. Assign any custom CC number and range.</p>
+        <p>Right-click "Record" in settings to capture a pose. Choose between trigger mode (toggle on/off) or scale mode (continuous 0-127). Detection uses RMS distance from the template pose with an adjustable threshold. Assign any custom CC number and range.</p>
       </div>
 
       <!-- 5. INSTRUMENTS -->
       <div class="docs-section" id="instruments">
-        <div class="section-num">05 &mdash; Instruments</div>
+        <div class="section-num">05 - Instruments</div>
         <h2>Instruments</h2>
 
         <h3>Sound pads</h3>
         <p>Trigger audio samples and MIDI notes by touching virtual pads with your index fingertip. 4 pads arranged in a 2&times;2 grid. Drag from the left panel to place.</p>
         <ul>
-          <li><strong>Position:</strong> X/Y coordinates (0&ndash;1.0 normalized)</li>
+          <li><strong>Position:</strong> X/Y coordinates (0-1.0 normalized)</li>
           <li><strong>Size:</strong> pad radius in pixels (default 40px)</li>
-          <li><strong>MIDI Note:</strong> 0&ndash;127 (default 60 = Middle C)</li>
-          <li><strong>MIDI Channel:</strong> 0&ndash;15 (default 0)</li>
-          <li><strong>Velocity:</strong> 0&ndash;127 (default 127)</li>
+          <li><strong>MIDI Note:</strong> 0-127 (default 60 = Middle C)</li>
+          <li><strong>MIDI Channel:</strong> 0-15 (default 0)</li>
+          <li><strong>Velocity:</strong> 0-127 (default 127)</li>
           <li><strong>Polyphonic:</strong> up to 4 pads simultaneously</li>
         </ul>
 
         <h3>Sliders</h3>
-        <p>Output continuous CC values based on hand position along a linear track. Pinch with thumb + index, then move fist up/down to modulate. CC output updates in real-time (0&ndash;127).</p>
+        <p>Output continuous CC values based on hand position along a linear track. Pinch with thumb + index, then move fist up/down to modulate. CC output updates in real-time (0-127).</p>
 
         <h3>Knobs</h3>
-        <p>Output continuous CC values based on rotational hand movement around the knob center. Place hand over knob, rotate wrist to modulate. 360&deg; rotation maps to full 0&ndash;127 CC sweep.</p>
+        <p>Output continuous CC values based on rotational hand movement around the knob center. Place hand over knob, rotate wrist to modulate. 360&deg; rotation maps to full 0-127 CC sweep.</p>
 
         <h3>Piano keyboard</h3>
         <p>Curl individual fingers to play notes on a virtual keyboard overlay. Each finger maps to a key. Place on the canvas and interact with fingertips.</p>
@@ -477,7 +477,7 @@ nav{
         <p>BPM-synced laser beams that fire MIDI notes when your hand passes through armed pulses. 16-step sequencer with per-step note assignment via a built-in piano picker. Set time division (1/4, 1/8, 1/16, 1/32).</p>
 
         <h3>Guitar strings</h3>
-        <p>6 virtual strings with chord switching. One hand pinches like holding a pick and strums up/down across strings. The other hand signs numbers 1&ndash;5 to switch between 5 assignable chords from a 12-chord library (C, Cm, D, Dm, G, Em, E, Am, A, F, Bm, B). Chords persist until a new number is shown &mdash; fist is neutral.</p>
+        <p>6 virtual strings with chord switching. One hand pinches like holding a pick and strums up/down across strings. The other hand signs numbers 1-5 to switch between 5 assignable chords from a 12-chord library (C, Cm, D, Dm, G, Em, E, Am, A, F, Bm, B). Chords persist until a new number is shown - fist is neutral.</p>
 
         <h3>Dead zone</h3>
         <p>Drag a resizable exclusion zone onto the canvas where hand tracking is completely ignored. No MIDI, no triggers, nothing. Useful for resting hands or isolating performance areas.</p>
@@ -485,7 +485,7 @@ nav{
 
       <!-- 6. ADVANCED -->
       <div class="docs-section" id="advanced">
-        <div class="section-num">06 &mdash; Advanced</div>
+        <div class="section-num">06 - Advanced</div>
         <h2>Advanced features</h2>
 
         <h3>Collision detection</h3>
@@ -500,7 +500,7 @@ nav{
 
       <!-- 7. SETTINGS -->
       <div class="docs-section" id="settings">
-        <div class="section-num">07 &mdash; Settings</div>
+        <div class="section-num">07 - Settings</div>
         <h2>Settings &amp; customization</h2>
 
         <h3>Tracking smoothing</h3>
@@ -524,7 +524,7 @@ nav{
 
       <!-- 8. SCENES -->
       <div class="docs-section" id="scenes">
-        <div class="section-num">08 &mdash; Scenes</div>
+        <div class="section-num">08 - Scenes</div>
         <h2>Scene management</h2>
 
         <p>A scene is a complete configuration of all placed instruments, their positions, properties, and assignments.</p>
@@ -549,15 +549,15 @@ nav{
 
       <!-- 9. TIPS -->
       <div class="docs-section" id="tips">
-        <div class="section-num">09 &mdash; Tips</div>
+        <div class="section-num">09 - Tips</div>
         <h2>Tips &amp; tricks</h2>
 
         <h3>Performance</h3>
         <ul>
-          <li>Keep hands 18&ndash;24 inches from camera for optimal tracking</li>
+          <li>Keep hands 18-24 inches from camera for optimal tracking</li>
           <li>Bright, even lighting on hands improves detection</li>
           <li>Plain, contrasting background (not same color as hands)</li>
-          <li>Let detector warm up for 2&ndash;3 seconds before performing</li>
+          <li>Let detector warm up for 2-3 seconds before performing</li>
         </ul>
 
         <h3>Gestures</h3>
@@ -565,7 +565,7 @@ nav{
           <li>Bring thumb and index tips close (almost touching) for reliable pinch</li>
           <li>Fully close all fingers for clean fist detection</li>
           <li>Spread all fingers wide for maximum openness value</li>
-          <li>Practice the snap flick motion slowly at first &mdash; speed comes with muscle memory</li>
+          <li>Practice the snap flick motion slowly at first - speed comes with muscle memory</li>
         </ul>
 
         <h3>Workflow</h3>
@@ -579,7 +579,7 @@ nav{
 
       <!-- 10. TROUBLESHOOTING -->
       <div class="docs-section" id="troubleshooting">
-        <div class="section-num">10 &mdash; Troubleshooting</div>
+        <div class="section-num">10 - Troubleshooting</div>
         <h2>Troubleshooting</h2>
 
         <h3>Hand not tracking</h3>
@@ -588,7 +588,7 @@ nav{
           <li>Restart plugin/DAW</li>
           <li>Try different camera (Settings &rarr; Camera dropdown)</li>
           <li>Ensure adequate lighting</li>
-          <li>Move closer to camera (12&ndash;24 inches optimal)</li>
+          <li>Move closer to camera (12-24 inches optimal)</li>
         </ul>
 
         <h3>Tracking is jittery</h3>
@@ -626,7 +626,7 @@ nav{
 
         <h3>Snap detection not working</h3>
         <ul>
-          <li>Practice the flick motion &mdash; thumb and middle must move opposite directions</li>
+          <li>Practice the flick motion - thumb and middle must move opposite directions</li>
           <li>Increase Tracking Smoothing slightly</li>
           <li>Ensure hand is mostly closed (openness &lt; 35%)</li>
           <li>Verify 500ms has passed since last snap (cooldown)</li>
@@ -643,15 +643,15 @@ nav{
             <tr><th>Function</th><th>Default CC</th><th>Range</th><th>Notes</th></tr>
           </thead>
           <tbody>
-            <tr><td>Hand Openness (Left)</td><td><code>20</code></td><td>0&ndash;127</td><td>Via gesture slot</td></tr>
-            <tr><td>Hand Openness (Right)</td><td><code>21</code></td><td>0&ndash;127</td><td>Via gesture slot</td></tr>
-            <tr><td>Hand Height (Left)</td><td><code>22</code></td><td>0&ndash;127</td><td>Inverted Y</td></tr>
-            <tr><td>Hand Height (Right)</td><td><code>23</code></td><td>0&ndash;127</td><td>Inverted Y</td></tr>
-            <tr><td>Hand X (Left)</td><td><code>24</code></td><td>0&ndash;127</td><td>Left=0, Right=127</td></tr>
-            <tr><td>Hand X (Right)</td><td><code>25</code></td><td>0&ndash;127</td><td>Right=0, Left=127</td></tr>
-            <tr><td>Hand Distance</td><td><code>26</code></td><td>0&ndash;127</td><td>Both hands required</td></tr>
-            <tr><td>Sound Pads</td><td><code>30&ndash;33</code></td><td>0&ndash;127</td><td>4 pads</td></tr>
-            <tr><td>Snap Gesture</td><td><code>34&ndash;35</code></td><td>0/127</td><td>2 snap slots</td></tr>
+            <tr><td>Hand Openness (Left)</td><td><code>20</code></td><td>0-127</td><td>Via gesture slot</td></tr>
+            <tr><td>Hand Openness (Right)</td><td><code>21</code></td><td>0-127</td><td>Via gesture slot</td></tr>
+            <tr><td>Hand Height (Left)</td><td><code>22</code></td><td>0-127</td><td>Inverted Y</td></tr>
+            <tr><td>Hand Height (Right)</td><td><code>23</code></td><td>0-127</td><td>Inverted Y</td></tr>
+            <tr><td>Hand X (Left)</td><td><code>24</code></td><td>0-127</td><td>Left=0, Right=127</td></tr>
+            <tr><td>Hand X (Right)</td><td><code>25</code></td><td>0-127</td><td>Right=0, Left=127</td></tr>
+            <tr><td>Hand Distance</td><td><code>26</code></td><td>0-127</td><td>Both hands required</td></tr>
+            <tr><td>Sound Pads</td><td><code>30-33</code></td><td>0-127</td><td>4 pads</td></tr>
+            <tr><td>Snap Gesture</td><td><code>34-35</code></td><td>0/127</td><td>2 snap slots</td></tr>
           </tbody>
         </table>
       </div>
@@ -682,9 +682,9 @@ nav{
         <ul>
           <li><strong>Tracking rate:</strong> 30Hz</li>
           <li><strong>Hand landmarks:</strong> 21 per hand &times; 2 hands</li>
-          <li><strong>Coordinate space:</strong> 0&ndash;400px (normalized to 0&ndash;1.0)</li>
+          <li><strong>Coordinate space:</strong> 0-400px (normalized to 0-1.0)</li>
           <li><strong>MIDI latency:</strong> &lt; 1 frame (~33ms)</li>
-          <li><strong>Supported MIDI channels:</strong> 0&ndash;15</li>
+          <li><strong>Supported MIDI channels:</strong> 0-15</li>
           <li><strong>Max simultaneous CC updates:</strong> 12 per frame</li>
           <li><strong>Max placed instruments:</strong> unlimited (performance dependent)</li>
           <li><strong>Audio formats:</strong> WAV, AIFF, MP3, OGG, FLAC</li>

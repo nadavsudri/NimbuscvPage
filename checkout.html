@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>Nimbus — Checkout</title>
+<title>Nimbus - Checkout</title>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="theme-color" content="#f3ecdd" id="metaThemeColor"/>
 <script>(function(){try{var t=localStorage.getItem("nimbus-theme")||"light";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","light");}})();</script>
@@ -363,16 +363,16 @@ nav{
           <span style="color:var(--teal);flex-shrink:0;">→</span> 30Hz hand tracking with <1 frame latency
         </li>
         <li style="padding:8px 0;font-size:13px;color:var(--ink-2);display:flex;gap:10px;">
-          <span style="color:var(--teal);flex-shrink:0;">→</span> 12 CC channels — map anything to everything
+          <span style="color:var(--teal);flex-shrink:0;">→</span> 12 CC channels - map anything to everything
         </li>
         <li style="padding:8px 0;font-size:13px;color:var(--ink-2);display:flex;gap:10px;">
           <span style="color:var(--teal);flex-shrink:0;">→</span> Smart gesture recording for custom control
         </li>
         <li style="padding:8px 0;font-size:13px;color:var(--ink-2);display:flex;gap:10px;">
-          <span style="color:var(--teal);flex-shrink:0;">→</span> Lifetime updates — all future versions included
+          <span style="color:var(--teal);flex-shrink:0;">→</span> Lifetime updates - all future versions included
         </li>
         <li style="padding:8px 0;font-size:13px;color:var(--ink-2);display:flex;gap:10px;">
-          <span style="color:var(--teal);flex-shrink:0;">→</span> Install on 3 machines — no strings attached
+          <span style="color:var(--teal);flex-shrink:0;">→</span> Install on 3 machines - no strings attached
         </li>
       </ul>
 
@@ -471,12 +471,12 @@ try {
     if (data.session && data.session.user.email) {
       const email = data.session.user.email;
       base += (base.includes('?') ? '&' : '?') + 'checkout[email]=' + encodeURIComponent(email);
-      nudge.innerHTML = 'Signed in as <strong style="color:var(--ink)">' + email + '</strong> — this purchase will be added to your account.';
+      nudge.innerHTML = 'Signed in as <strong style="color:var(--ink)">' + email + '</strong> - this purchase will be added to your account.';
     } else {
       nudge.innerHTML = 'Already have an account? <a href="/account" style="color:var(--teal);text-decoration:none">Log in</a> to link this purchase.';
     }
   }
-} catch (e) { /* accounts not configured — silently keep guest checkout */ }
+} catch (e) { /* accounts not configured - silently keep guest checkout */ }
 
 if (btn) btn.setAttribute("href", base);
 </script>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>Nimbus — Forum · Thread</title>
+<title>Nimbus - Forum · Thread</title>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="theme-color" content="#f3ecdd" id="metaThemeColor"/>
 <script>(function(){try{var t=localStorage.getItem("nimbus-theme")||"light";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","light");}})();</script>
@@ -392,7 +392,7 @@ h1.title{
     document.getElementById('loadingState').style.display = 'none';
 
     // Update page title
-    document.title = 'Nimbus — ' + threadData.title;
+    document.title = 'Nimbus - ' + threadData.title;
 
     // Breadcrumb
     document.getElementById('crumbTitle').textContent = truncate(threadData.title, 40);
@@ -593,7 +593,7 @@ h1.title{
 
 <script>(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),m=document.getElementById("metaThemeColor"),C={light:"#f3ecdd",dark:"#06121a"};function ap(t){r.setAttribute("data-theme",t);try{localStorage.setItem("nimbus-theme",t);}catch(e){}if(m)m.setAttribute("content",C[t]||C.light);if(window.__applyWaveTheme)window.__applyWaveTheme();}if(b)b.addEventListener("click",function(){ap(r.getAttribute("data-theme")==="dark"?"light":"dark");});})();</script>
 
-<!-- Supabase session probe — exposes window.__getForumUser() for the reply gate -->
+<!-- Supabase session probe - exposes window.__getForumUser() for the reply gate -->
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   let user = null, token = null;

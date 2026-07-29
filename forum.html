@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>Nimbus — Community Forum</title>
+<title>Nimbus - Community Forum</title>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="theme-color" content="#f3ecdd" id="metaThemeColor"/>
 <script>(function(){try{var t=localStorage.getItem("nimbus-theme")||"light";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","light");}})();</script>
@@ -353,7 +353,7 @@ nav{
 
   <!-- Login gate (shown to logged-out users) -->
   <div id="thread-gate" style="display:none;">
-    <p style="color:var(--ink-2);font-size:15px;line-height:1.6;margin:0 0 24px;">Log in to post your question — that ties it to your account so you can keep track of replies.</p>
+    <p style="color:var(--ink-2);font-size:15px;line-height:1.6;margin:0 0 24px;">Log in to post your question - that ties it to your account so you can keep track of replies.</p>
     <a href="/account" style="display:flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;background:var(--teal);color:var(--bg);border-radius:8px;font-family:'Space Grotesk',sans-serif;font-weight:600;text-decoration:none;transition:background 0.2s ease;">Log in or sign up</a>
     <div style="display:flex;align-items:center;gap:12px;margin:18px 0;color:var(--ink-3);font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;">
       <span style="flex:1;height:1px;background:var(--rule-2);"></span>or<span style="flex:1;height:1px;background:var(--rule-2);"></span>
@@ -441,7 +441,7 @@ function renderThreads() {
   const filtered = activeTopic === 'all' ? threadsData : threadsData.filter(t => t.topic === activeTopic);
 
   if (filtered.length === 0) {
-    container.innerHTML = '<div class="empty-state"><div class="icon">—</div><h2>No questions yet</h2><p>Be the first to ask something!</p></div>';
+    container.innerHTML = '<div class="empty-state"><div class="icon">-</div><h2>No questions yet</h2><p>Be the first to ask something!</p></div>';
     return;
   }
 
@@ -477,7 +477,7 @@ async function showNewThreadForm() {
   try { user = window.__getForumUser ? await window.__getForumUser() : null; } catch (e) {}
 
   if (user) {
-    // Logged in — skip the gate, go straight to the form, prefill identity.
+    // Logged in - skip the gate, go straight to the form, prefill identity.
     prefillIdentity(form, user);
     form.style.display = 'block';
   } else {
@@ -549,7 +549,7 @@ loadThreads();
 
 <script>(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),m=document.getElementById("metaThemeColor"),C={light:"#f3ecdd",dark:"#06121a"};function ap(t){r.setAttribute("data-theme",t);try{localStorage.setItem("nimbus-theme",t);}catch(e){}if(m)m.setAttribute("content",C[t]||C.light);if(window.__applyWaveTheme)window.__applyWaveTheme();}if(b)b.addEventListener("click",function(){ap(r.getAttribute("data-theme")==="dark"?"light":"dark");});})();</script>
 
-<!-- Supabase session probe — exposes window.__getForumUser() for the post gate -->
+<!-- Supabase session probe - exposes window.__getForumUser() for the post gate -->
 <script type="module">
   import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
   let user = null, token = null;

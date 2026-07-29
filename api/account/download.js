@@ -15,7 +15,7 @@ async function getUser(req) {
 }
 
 // Account-holder download. Unlike the one-time email link (api/download.js),
-// this does NOT expire 30 min after purchase — a logged-in owner can re-download
+// this does NOT expire 30 min after purchase - a logged-in owner can re-download
 // their product anytime. Ownership is enforced by matching the purchase's email
 // to the authenticated account's verified email.
 export default async function handler(req, res) {
