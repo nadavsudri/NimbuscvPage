@@ -8,7 +8,7 @@
 <script>(function(){try{var t=localStorage.getItem("nimbus-theme")||"light";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","light");}})();</script>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Urbanist:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Urbanist:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M10 50 Q 50 18, 90 50 Q 50 82, 10 50 Z' fill='none' stroke='%234A9FD9' stroke-width='3'/><circle cx='50' cy='50' r='14' fill='none' stroke='%234A9FD9' stroke-width='2' opacity='0.5'/><rect x='48.8' y='40' width='2.4' height='20' rx='1.2' fill='%234A9FD9'/></svg>"/>
 <style>
 :root{
@@ -60,7 +60,7 @@ button{font-family:inherit}
   background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(10px);
   position:sticky;top:0;
 }
-.brand{display:flex;align-items:center;gap:10px;font-family:'Instrument Serif',serif;font-size:22px;color:var(--ink)}
+.brand{display:flex;align-items:center;gap:10px;font-family:'Space Grotesk',system-ui,sans-serif;font-size:22px;color:var(--ink)}
 .brand svg{width:26px;height:26px}
 .topbar-right{display:flex;align-items:center;gap:12px}
 .acct-chip{display:flex;align-items:center;gap:9px;padding:5px 6px 5px 12px;border:1px solid var(--rule-2);border-radius:30px;background:var(--surface-1)}
@@ -95,7 +95,7 @@ button{font-family:inherit}
   radial-gradient(circle at 10% 90%,rgba(255,255,255,.10),transparent 40%);pointer-events:none}
 .aside-badge{display:inline-flex;align-items:center;gap:8px;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;opacity:.85;position:relative}
 .aside-badge svg{width:18px;height:18px}
-.aside-title{font-family:'Instrument Serif',serif;font-size:34px;line-height:1.12;margin:26px 0 14px;position:relative}
+.aside-title{font-family:'Space Grotesk',system-ui,sans-serif;font-size:34px;line-height:1.12;margin:26px 0 14px;position:relative}
 .aside-title .it{font-style:italic}
 .aside-list{list-style:none;position:relative;display:flex;flex-direction:column;gap:14px;margin-top:8px}
 .aside-list li{display:flex;align-items:flex-start;gap:11px;font-size:14px;color:rgba(255,255,255,.92)}
@@ -103,7 +103,7 @@ button{font-family:inherit}
 .aside-foot{position:relative;font-size:12px;color:rgba(255,255,255,.7);margin-top:26px}
 
 .auth-panel{padding:44px 40px;display:flex;flex-direction:column;justify-content:center}
-.auth-panel h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:30px;color:var(--ink);line-height:1.1}
+.auth-panel h1{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:600;font-size:30px;color:var(--ink);line-height:1.1}
 .auth-panel h1 .it{font-style:italic;color:var(--teal)}
 .auth-sub{font-size:13.5px;color:var(--ink-2);margin:6px 0 22px}
 .tabs{position:relative;display:flex;background:var(--bg-3);border-radius:10px;padding:4px;margin-bottom:22px}
@@ -154,14 +154,14 @@ button{font-family:inherit}
 /* ── Dashboard ── */
 .dash{max-width:840px;margin:0 auto;padding:44px clamp(20px,4vw,40px) 90px}
 .dash-head{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-bottom:26px;animation:fadeUp .5s ease both}
-.dash-head h1{font-family:'Instrument Serif',serif;font-weight:400;font-size:clamp(30px,4vw,42px);color:var(--ink);line-height:1.05}
+.dash-head h1{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:600;font-size:clamp(30px,4vw,42px);color:var(--ink);line-height:1.05}
 .dash-head h1 .it{font-style:italic;color:var(--teal)}
 .dash-head p{font-size:13px;color:var(--ink-3);margin-top:4px;font-family:'JetBrains Mono',monospace;letter-spacing:.02em}
 .stat-chips{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:26px;animation:fadeUp .5s .05s ease both}
 .chip{flex:1;min-width:150px;background:var(--bg-2);border:1px solid var(--rule-2);border-radius:13px;padding:16px 18px;box-shadow:var(--card-shadow)}
 .chip .k{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-3);display:flex;align-items:center;gap:7px}
 .chip .k svg{width:14px;height:14px;stroke:var(--teal);fill:none;stroke-width:2}
-.chip .v{font-family:'Instrument Serif',serif;font-size:28px;color:var(--ink);margin-top:8px;line-height:1}
+.chip .v{font-family:'Space Grotesk',system-ui,sans-serif;font-size:28px;color:var(--ink);margin-top:8px;line-height:1}
 .chip .v small{font-family:'Space Grotesk';font-size:13px;color:var(--ink-3)}
 .section-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3);margin:0 2px 12px}
 
@@ -222,7 +222,7 @@ button{font-family:inherit}
 .empty{text-align:center;padding:56px 24px;background:var(--bg-2);border:1px dashed var(--rule-2);border-radius:16px;animation:fadeUp .5s ease both}
 .empty .empty-ico{width:64px;height:64px;margin:0 auto 18px;border-radius:16px;background:var(--surface-2);display:grid;place-items:center}
 .empty .empty-ico svg{width:30px;height:30px;stroke:var(--ink-3);fill:none;stroke-width:1.6}
-.empty h3{font-family:'Instrument Serif',serif;font-weight:400;font-size:26px;color:var(--ink);margin-bottom:8px}
+.empty h3{font-family:'Space Grotesk',system-ui,sans-serif;font-weight:600;font-size:26px;color:var(--ink);margin-bottom:8px}
 .empty p{font-size:14px;color:var(--ink-2);max-width:420px;margin:0 auto 20px}
 .empty a.cta{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:9px;background:var(--teal);color:var(--on-teal);font-weight:600;font-size:13.5px}
 .skel{background:var(--bg-2);border:1px solid var(--rule-2);border-radius:15px;padding:18px 20px;display:flex;align-items:center;gap:16px}
