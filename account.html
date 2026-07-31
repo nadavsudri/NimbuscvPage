@@ -121,6 +121,14 @@ button{font-family:inherit}
 .field input:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--glow)}
 .field.invalid input{border-color:var(--err)}
 .field.valid input{border-color:var(--ok)}
+.field select{
+  width:100%;padding:13px 14px;border:1px solid var(--rule-2);border-radius:9px;
+  background:var(--bg);color:var(--ink);font-family:'Space Grotesk',sans-serif;font-size:14px;
+  cursor:pointer;appearance:auto;transition:border-color .2s,box-shadow .2s}
+.field select:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 3px var(--glow)}
+.field input[type="date"]{color:var(--ink)}
+.signup-only{display:none}
+.tabs.signup ~ #authForm .signup-only,#authForm.show-signup .signup-only{display:block}
 .pw-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:34px;height:34px;display:grid;place-items:center;border:none;background:none;color:var(--ink-3);cursor:pointer;border-radius:7px;transition:color .2s}
 .pw-toggle:hover{color:var(--teal)}
 .pw-toggle svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
@@ -313,6 +321,48 @@ button{font-family:inherit}
               </div>
               <div class="field-err" id="errPass">Password must be at least 6 characters.</div>
             </div>
+
+            <div class="field signup-only">
+              <label for="birthdate">Birthdate</label>
+              <div class="input-wrap"><input id="birthdate" type="date" autocomplete="bday"/></div>
+            </div>
+            <div class="field signup-only">
+              <label for="genre">Music genre</label>
+              <div class="input-wrap">
+                <select id="genre">
+                  <option value="" disabled selected>Choose your main genre…</option>
+                  <option>Electronic</option>
+                  <option>House</option>
+                  <option>Techno</option>
+                  <option>Hip-Hop / Trap</option>
+                  <option>Pop</option>
+                  <option>R&amp;B / Soul</option>
+                  <option>Rock</option>
+                  <option>Ambient</option>
+                  <option>Jazz</option>
+                  <option>Classical / Film</option>
+                  <option>Experimental</option>
+                  <option>Other</option>
+                </select>
+              </div>
+            </div>
+            <div class="field signup-only">
+              <label for="seniority">Seniority in production</label>
+              <div class="input-wrap">
+                <select id="seniority">
+                  <option value="" disabled selected>How long have you produced?</option>
+                  <option value="0-1">1 year or less</option>
+                  <option value="2-5">2-5 years</option>
+                  <option value="5-10">5-10 years</option>
+                  <option value="10+">10+ years</option>
+                </select>
+              </div>
+            </div>
+            <div class="field signup-only">
+              <label for="address">Address</label>
+              <div class="input-wrap"><input id="address" type="text" autocomplete="street-address" placeholder="City, Country"/></div>
+            </div>
+
             <div class="row-between" id="forgotWrap"><span class="link-sm" id="forgotLink">Forgot your password?</span></div>
             <button id="authSubmit" class="btn-primary" type="submit"><span class="btn-label">Log in</span><span class="spinner"></span></button>
           </form>
@@ -456,6 +506,7 @@ function applyMode(m){
   mode = m;
   document.querySelectorAll('.tab').forEach(x => x.classList.toggle('active', x.dataset.mode === m));
   $('tabs').classList.toggle('signup', m === 'signup');
+  $('authForm').classList.toggle('show-signup', m === 'signup');
   $('authTitle').innerHTML = m === 'login' ? 'Welcome <span class="it">back.</span>' : 'Create your <span class="it">account.</span>';
   $('authSub').textContent = m === 'login' ? 'Log in to view your purchases, license keys, and downloads.' : 'Sign up with the email you used at checkout to see your purchases.';
   $('authSubmit').querySelector('.btn-label').textContent = m === 'login' ? 'Log in' : 'Create account';
@@ -476,7 +527,22 @@ $('authForm').addEventListener('submit', async (e) => {
   setBtnLoading(btn, true); clearMsg($('authMsg'));
   try {
     if (mode === 'signup') {
-      const { data, error } = await supabase.auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin + '/account' } });
+      const birthdate = $('birthdate').value;
+      const genre = $('genre').value;
+      const seniority = $('seniority').value;
+      const address = $('address').value.trim();
+      if (!birthdate || !genre || !seniority || !address) {
+        setMsg($('authMsg'), 'Please fill in your birthdate, genre, seniority, and address.', 'error');
+        setBtnLoading(btn, false);
+        return;
+      }
+      const { data, error } = await supabase.auth.signUp({
+        email, password,
+        options: {
+          emailRedirectTo: window.location.origin + '/account',
+          data: { birthdate, music_genre: genre, seniority, address }
+        }
+      });
       if (error) throw error;
       if (data.session) { await loadDashboard(); }
       else setMsg($('authMsg'), 'Almost there - check your inbox and click the confirmation link to activate your account.', 'ok');
