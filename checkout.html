@@ -340,10 +340,10 @@ nav{
   <!-- FORM -->
   <div class="checkout-form">
     <h1>Check<span class="it">out.</span></h1>
-    <p class="subtitle">One-time purchase. No subscription. Yours forever.</p>
+    <p class="subtitle" id="ckSub">One-time purchase. No subscription. Yours forever.</p>
 
     <div style="margin:32px 0;padding:20px;background:var(--bg-2);border-left:3px solid var(--teal);border-radius:6px;">
-      <p style="margin:0;font-size:14px;line-height:1.8;">
+      <p style="margin:0;font-size:14px;line-height:1.8;" id="ckWelcome">
         You're about to complete your first step into the future. Welcome to Nimbus.
       </p>
     </div>
@@ -351,30 +351,11 @@ nav{
     <div style="margin:24px 0;">
       <p style="font-size:13px;color:var(--ink-3);font-weight:600;margin-bottom:16px;">What you're getting:</p>
 
-      <p style="font-size:13px;color:var(--ink-2);margin-bottom:16px;line-height:1.7;">
+      <p style="font-size:13px;color:var(--ink-2);margin-bottom:16px;line-height:1.7;" id="ckDesc">
         Your webcam becomes an expressive MIDI instrument. No special hardware. No latency. Just you, your hands, and limitless creative control at 30Hz tracking speed.
       </p>
 
-      <ul style="list-style:none;padding:0;margin:0;margin-bottom:16px;">
-        <li style="padding:8px 0;font-size:13px;color:var(--ink-2);display:flex;gap:10px;">
-          <span style="color:var(--teal);flex-shrink:0;">→</span> VST3 / AU / Standalone for macOS
-        </li>
-        <li style="padding:8px 0;font-size:13px;color:var(--ink-2);display:flex;gap:10px;">
-          <span style="color:var(--teal);flex-shrink:0;">→</span> 30Hz hand tracking with <1 frame latency
-        </li>
-        <li style="padding:8px 0;font-size:13px;color:var(--ink-2);display:flex;gap:10px;">
-          <span style="color:var(--teal);flex-shrink:0;">→</span> 12 CC channels - map anything to everything
-        </li>
-        <li style="padding:8px 0;font-size:13px;color:var(--ink-2);display:flex;gap:10px;">
-          <span style="color:var(--teal);flex-shrink:0;">→</span> Smart gesture recording for custom control
-        </li>
-        <li style="padding:8px 0;font-size:13px;color:var(--ink-2);display:flex;gap:10px;">
-          <span style="color:var(--teal);flex-shrink:0;">→</span> Lifetime updates - all future versions included
-        </li>
-        <li style="padding:8px 0;font-size:13px;color:var(--ink-2);display:flex;gap:10px;">
-          <span style="color:var(--teal);flex-shrink:0;">→</span> Install on 3 machines - no strings attached
-        </li>
-      </ul>
+      <ul style="list-style:none;padding:0;margin:0;margin-bottom:16px;" id="ckFeatures"></ul>
 
       <p style="font-size:12px;color:var(--ink-3);font-style:italic;margin:0;">
         One-time purchase. One price. Forever yours.
@@ -382,14 +363,14 @@ nav{
     </div>
 
     <div style="margin:32px 0;padding:16px;background:rgba(74,159,217,0.05);border-radius:6px;border:1px solid rgba(74,159,217,0.2);">
-      <p style="margin:0;font-size:13px;color:var(--ink-2);">
+      <p style="margin:0;font-size:13px;color:var(--ink-2);" id="ckReq">
         <strong style="color:var(--teal);">macOS 10.13+</strong> with VST3 or AU compatible DAW (Ableton, Logic, FL Studio, Cubase, etc.)
       </p>
     </div>
 
 
-    <!-- href is set on load by the checkout-switch script below (prod by default, test with ?test=1) -->
-    <a id="buyBtn" href="https://nimbuscv.lemonsqueezy.com/checkout/buy/cf020729-0725-4773-9e0e-b0cac4fb2b14?embed=1" class="lemonsqueezy-button btn-pay">
+    <!-- href is set on load by the checkout-switch script below (product + prod/test aware) -->
+    <a id="buyBtn" href="#" class="lemonsqueezy-button btn-pay">
       Continue to checkout
     </a>
 
@@ -413,30 +394,24 @@ nav{
 
     <div class="order-item">
       <div>
-        <div class="name">Nimbus 1.0.0</div>
-        <div class="detail">VST3 / AU / Standalone &middot; macOS</div>
+        <div class="name" id="ckSumName">Nimbus 1.0.0</div>
+        <div class="detail" id="ckSumDetail">VST3 / AU / Standalone &middot; macOS</div>
       </div>
-      <div class="price">$39.99</div>
+      <div class="price" id="ckSumPrice">$39.99</div>
     </div>
-    <div class="order-item">
+    <div class="order-item" id="ckSecond">
       <div>
-        <div class="name">Lifetime upgrades pack</div>
-        <div class="detail">All future versions &middot; no extra cost</div>
+        <div class="name" id="ckSecName">NOTE - sound to MIDI</div>
+        <div class="detail" id="ckSecDetail">Bundled at no extra cost</div>
       </div>
-      <div class="price" style="color:var(--teal)">Free</div>
+      <div class="price" id="ckSecPrice" style="color:var(--teal)">Free</div>
     </div>
 
-    <ul class="order-includes">
-      <li>Two-hand tracking</li>
-      <li>12 CC channels &middot; gesture editor</li>
-      <li>Smart gesture recording</li>
-      <li>Dual camera support</li>
-      <li>3 machines &middot; lifetime updates</li>
-    </ul>
+    <ul class="order-includes" id="ckIncludes"></ul>
 
     <div class="order-total">
       <span class="label">Total</span>
-      <span class="amount">$39<small>.99</small></span>
+      <span class="amount" id="ckTotal">$39<small>.99</small></span>
     </div>
   </div>
 
@@ -456,12 +431,57 @@ nav{
      email prefill when the visitor is already logged in, so the purchase auto-links. -->
 <script type="module">
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
-const PROD_CHECKOUT="https://nimbuscv.lemonsqueezy.com/checkout/buy/cf020729-0725-4773-9e0e-b0cac4fb2b14?embed=1";
-const TEST_CHECKOUT="https://nimbuscv.lemonsqueezy.com/checkout/buy/1b9b04a7-d47e-45df-9c56-c5ce69979b7f";
-const isTest=/[?&]test=1(?:&|$)/.test(window.location.search);
-let base = isTest ? TEST_CHECKOUT : PROD_CHECKOUT;
-const btn = document.getElementById("buyBtn");
-const nudge = document.getElementById("checkoutAcct");
+
+// Product catalog. To sell NOTE standalone, create it in LemonSqueezy and paste
+// its buy-link into note.prod (and a test link into note.test).
+const PRODUCTS = {
+  nimbus: {
+    title:'Nimbus - Checkout',
+    sub:'One-time purchase. No subscription. Yours forever.',
+    welcome:"You're about to complete your first step into the future. Welcome to Nimbus.",
+    desc:'Your webcam becomes an expressive MIDI instrument. No special hardware, no latency - just you, your hands, and full creative control. NOTE (sound-to-MIDI) is bundled in free.',
+    features:['VST3 / AU / Standalone for macOS','Real-time two-hand tracking','12 CC channels - map anything to everything','Smart gesture recording for custom control','NOTE (sound to MIDI) included free','Lifetime updates - all future versions included','Install on 3 machines'],
+    req:'<strong style="color:var(--teal);">macOS 10.13+</strong> with a VST3 or AU compatible DAW (Ableton, Logic, FL Studio, Cubase, etc.)',
+    sumName:'Nimbus 1.0.0', sumDetail:'VST3 / AU / Standalone &middot; macOS', sumPrice:'$39.99',
+    second:{name:'NOTE - sound to MIDI', detail:'Bundled at no extra cost', price:'Free'},
+    includes:['Two-hand tracking','12 CC channels &middot; gesture editor','Smart gesture recording','NOTE bundled free','3 machines &middot; lifetime updates'],
+    total:'$39<small>.99</small>',
+    prod:'https://nimbuscv.lemonsqueezy.com/checkout/buy/cf020729-0725-4773-9e0e-b0cac4fb2b14?embed=1',
+    test:'https://nimbuscv.lemonsqueezy.com/checkout/buy/1b9b04a7-d47e-45df-9c56-c5ce69979b7f'
+  },
+  note: {
+    title:'NOTE - Checkout',
+    sub:'One-time purchase. Or get it free with Nimbus.',
+    welcome:"You're about to turn your instrument into a MIDI player. Welcome to NOTE.",
+    desc:'NOTE listens to your guitar - or anything you plug in - and turns every note into MIDI with almost no delay. Route it to any synth, sampler, or virtual instrument.',
+    features:['Sound to MIDI for any instrument','Near-zero latency conversion','Works with guitar, bass, voice, line-in','Route MIDI to any synth or sampler','VST3 / AU plugin for your DAW','Free with every Nimbus license'],
+    req:'<strong style="color:var(--teal);">macOS</strong> with a VST3 or AU compatible DAW and an audio input (guitar, mic, or line-in).',
+    sumName:'NOTE 1.0.0', sumDetail:'Sound to MIDI &middot; plugin', sumPrice:'$7.99',
+    second:{name:'Own Nimbus?', detail:'NOTE is included free with Nimbus', price:'Free'},
+    includes:['Real-time pitch to MIDI','Near-zero latency','Any audio input','Route to any synth','Free with Nimbus'],
+    total:'$7<small>.99</small>',
+    prod:'REPLACE_WITH_NOTE_LEMONSQUEEZY_BUYLINK',
+    test:'REPLACE_WITH_NOTE_LEMONSQUEEZY_BUYLINK'
+  }
+};
+
+const params = new URLSearchParams(window.location.search);
+const key = (params.get('product') || 'nimbus').toLowerCase();
+const P = PRODUCTS[key] || PRODUCTS.nimbus;
+
+const set = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+document.title = P.title;
+set('ckSub', P.sub); set('ckWelcome', P.welcome); set('ckDesc', P.desc); set('ckReq', P.req);
+set('ckFeatures', P.features.map(f => '<li style="padding:8px 0;font-size:13px;color:var(--ink-2);display:flex;gap:10px;"><span style="color:var(--teal);flex-shrink:0;">&rarr;</span> ' + f + '</li>').join(''));
+set('ckSumName', P.sumName); set('ckSumDetail', P.sumDetail); set('ckSumPrice', P.sumPrice);
+set('ckSecName', P.second.name); set('ckSecDetail', P.second.detail); set('ckSecPrice', P.second.price);
+set('ckIncludes', P.includes.map(i => '<li>' + i + '</li>').join(''));
+set('ckTotal', P.total);
+
+const isTest = /[?&]test=1(?:&|$)/.test(window.location.search);
+let base = isTest ? P.test : P.prod;
+const btn = document.getElementById('buyBtn');
+const nudge = document.getElementById('checkoutAcct');
 
 try {
   const cfg = await (await fetch('/api/public-config')).json();
@@ -478,7 +498,17 @@ try {
   }
 } catch (e) { /* accounts not configured - silently keep guest checkout */ }
 
-if (btn) btn.setAttribute("href", base);
+if (btn) {
+  if (base.startsWith('REPLACE_')) {
+    // NOTE store not wired yet - route to the Nimbus bundle (NOTE is free with it).
+    btn.textContent = 'Get NOTE free with Nimbus';
+    btn.classList.remove('lemonsqueezy-button');
+    btn.setAttribute('href', '/checkout?product=nimbus');
+    nudge.innerHTML = 'Standalone NOTE checkout is coming soon - for now, NOTE is included free with Nimbus.';
+  } else {
+    btn.setAttribute('href', base);
+  }
+}
 </script>
 
 <script>(function(){var r=document.documentElement,b=document.getElementById("themeToggle"),m=document.getElementById("metaThemeColor"),C={light:"#f3ecdd",dark:"#06121a"};function ap(t){r.setAttribute("data-theme",t);try{localStorage.setItem("nimbus-theme",t);}catch(e){}if(m)m.setAttribute("content",C[t]||C.light);if(window.__applyWaveTheme)window.__applyWaveTheme();}if(b)b.addEventListener("click",function(){ap(r.getAttribute("data-theme")==="dark"?"light":"dark");});})();</script>
