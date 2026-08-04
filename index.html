@@ -431,7 +431,7 @@ nav.mega-open{border-radius:80px;}
   width:24px;height:24px;flex-shrink:0;
   display:flex;align-items:center;justify-content:center;background:transparent;
 }
-.mega-link-icon svg{width:20px;height:20px;stroke:var(--teal);fill:none;stroke-width:2.2}
+.mega-link-icon svg{width:20px;height:20px;stroke:var(--teal);fill:none;stroke-width:1.5}
 .mega-link-text h4{
   font-family:'Space Grotesk',sans-serif;
   font-size:14px;font-weight:600;margin:0 0 3px;color:var(--ink);
@@ -1609,12 +1609,13 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   <div class="mega-content" data-for="products" style="display:none">
     <div class="mega-inner">
       <div class="mega-links single">
-        <a class="mega-link" href="/#pricing"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M9.5 11V5.6a1.4 1.4 0 0 1 2.8 0V10"/><path d="M12.3 10V4.4a1.4 1.4 0 0 1 2.8 0V11"/><path d="M15.1 11V6.2a1.4 1.4 0 0 1 2.8 0v6.8a6 6 0 0 1-6 6h-1a4 4 0 0 1-3.3-1.8L5 14.4a1.5 1.5 0 0 1 2.5-1.6l1 1.2"/></svg></div><div class="mega-link-text"><h4>Nimbus - $39.99</h4></div></a>
-        <a class="mega-link" href="/note"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><div class="mega-link-text"><h4>NOTE - $7.99 &middot; free with Nimbus</h4></div></a>
+        <a class="mega-link" href="/#pricing"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M9.5 11V5.6a1.4 1.4 0 0 1 2.8 0V10"/><path d="M12.3 10V4.4a1.4 1.4 0 0 1 2.8 0V11"/><path d="M15.1 11V6.2a1.4 1.4 0 0 1 2.8 0v6.8a6 6 0 0 1-6 6h-1a4 4 0 0 1-3.3-1.8L5 14.4a1.5 1.5 0 0 1 2.5-1.6l1 1.2"/></svg></div><div class="mega-link-text"><h4>Nimbus - $39.99</h4><p>Hand-tracking to MIDI / MPE. Your webcam becomes an expressive controller.</p></div></a>
+        <a class="mega-link" href="/note"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><div class="mega-link-text"><h4>NOTE - $7.99 &middot; free with Nimbus</h4><p>Sound to MIDI. Turn your guitar into a MIDI player, near-zero latency.</p></div></a>
       </div>
       <div class="mega-visual">
         <img src="assets/mpe-interface.png" alt="Nimbus product interface" style="aspect-ratio:auto;object-fit:cover;width:100%;border-radius:12px"/>
         <a href="/products" class="mega-visual-link">All products <svg class="arrow-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
+        <p class="mega-visual-desc">Everything Nimbus makes, in one place.</p>
       </div>
     </div>
   </div>
@@ -1622,15 +1623,15 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   <div class="mega-content" data-for="instruments" style="display:none">
     <div class="mega-inner">
       <div class="mega-links" style="grid-template-columns:1fr;gap:4px;">
-        <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><rect x="2" y="10" width="3" height="10" rx="1"/><rect x="7" y="6" width="3" height="14" rx="1"/><rect x="12" y="3" width="3" height="17" rx="1"/><rect x="17" y="8" width="3" height="12" rx="1"/></svg></div><div class="mega-link-text"><h4>Keys</h4></div></a>
-        <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></div><div class="mega-link-text"><h4>Chord Player</h4></div></a>
+        <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><rect x="2" y="10" width="3" height="10" rx="1"/><rect x="7" y="6" width="3" height="14" rx="1"/><rect x="12" y="3" width="3" height="17" rx="1"/><rect x="17" y="8" width="3" height="12" rx="1"/></svg></div><div class="mega-link-text"><h4>Keys</h4><p>Virtual piano + 16-step arpeggiator, BPM-synced</p></div></a>
+        <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg></div><div class="mega-link-text"><h4>Chord Player</h4><p>Two-hand chord instrument - roots &amp; variations</p></div></a>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
-          <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><div class="mega-link-text"><h4>Pre-recorded Gestures</h4></div></a>
-          <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg></div><div class="mega-link-text"><h4>Strings</h4></div></a>
+          <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><div class="mega-link-text"><h4>Pre-recorded Gestures</h4><p>Ready-made hand mappings - openness, height, pinch, snap</p></div></a>
+          <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="10"/></svg></div><div class="mega-link-text"><h4>Strings</h4><p>Pick and strum 6 virtual strings with pinch gestures</p></div></a>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:4px;">
-          <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div><div class="mega-link-text"><h4>Gesture Recorder</h4></div></a>
-          <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div><div class="mega-link-text"><h4>Sliders &amp; Knobs</h4></div></a>
+          <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/></svg></div><div class="mega-link-text"><h4>Gesture Recorder</h4><p>Record any hand pose, name it, map it to CC</p></div></a>
+          <a class="mega-link" href="#pieces"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg></div><div class="mega-link-text"><h4>Sliders &amp; Knobs</h4><p>Drag controls onto canvas, map to any CC channel</p></div></a>
         </div>
       </div>
       <div class="mega-visual">
@@ -1639,6 +1640,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
           <img src="assets/instruments-bar.png" alt="Nimbus instrument bar" style="width:100%;border-radius:10px;border:2px solid var(--img-border);box-shadow:-8px 10px 24px -4px rgba(0,0,0,0.5);transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);" onmouseenter="this.style.transform='scale(1.04)'" onmouseleave="this.style.transform='scale(1)'"/>
         </div>
         <a href="#pieces" class="mega-visual-link">Explore all instruments <svg class="arrow-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
+        <p class="mega-visual-desc">Six instruments, infinite expression.</p>
       </div>
     </div>
   </div>
@@ -1646,11 +1648,12 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   <div class="mega-content" data-for="docs" style="display:none">
     <div class="mega-inner">
       <div class="mega-links single">
-        <a class="mega-link" href="/docs"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><div class="mega-link-text"><h4>Documentation</h4></div></a>
+        <a class="mega-link" href="/docs"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></div><div class="mega-link-text"><h4>Documentation</h4><p>Full guide - installation, setup, every instrument and gesture explained.</p></div></a>
       </div>
       <div class="mega-visual">
         <img src="assets/docs-settings.png" alt="Nimbus settings panel" style="aspect-ratio:auto;object-fit:contain;width:65%;transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);" onmouseenter="this.style.transform='scale(1.04)'" onmouseleave="this.style.transform='scale(1)'"/>
         <a href="/docs" class="mega-visual-link">Open docs <svg class="arrow-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
+        <p class="mega-visual-desc">Everything you need to get started.</p>
       </div>
     </div>
   </div>
@@ -1658,9 +1661,9 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
   <div class="mega-content" data-for="forum" style="display:none">
     <div class="mega-inner">
       <div class="mega-links">
-        <a class="mega-link" href="/forum"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div class="mega-link-text"><h4>General</h4></div></a>
-        <a class="mega-link" href="/forum"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="mega-link-text"><h4>Feature Requests</h4></div></a>
-        <a class="mega-link" href="/forum"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="mega-link-text"><h4>Bug Reports</h4></div></a>
+        <a class="mega-link" href="/forum"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div><div class="mega-link-text"><h4>General</h4><p>Chat about anything Nimbus - tips, workflows, questions</p></div></a>
+        <a class="mega-link" href="/forum"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></div><div class="mega-link-text"><h4>Feature Requests</h4><p>Vote on and suggest new features for Nimbus</p></div></a>
+        <a class="mega-link" href="/forum"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg></div><div class="mega-link-text"><h4>Bug Reports</h4><p>Found a bug? Report it and help us improve</p></div></a>
       </div>
       <div class="mega-visual">
         <div style="position:relative;margin-bottom:16px;overflow:visible;">
@@ -1668,6 +1671,7 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
           <img src="assets/forum-mapping.png" alt="Nimbus CC mapping" style="position:absolute;right:-10%;bottom:0;height:66%;width:auto;object-fit:contain;border-radius:10px;border:2px solid var(--img-border);box-shadow:-8px 10px 24px -4px rgba(0,0,0,0.5);transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);" onmouseenter="this.style.transform='scale(1.04)'" onmouseleave="this.style.transform='scale(1)'"/>
         </div>
         <a href="/forum" class="mega-visual-link">Visit forum <svg class="arrow-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
+        <p class="mega-visual-desc">Join the community. Share your setups.</p>
       </div>
     </div>
   </div>
