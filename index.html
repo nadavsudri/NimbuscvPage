@@ -1550,6 +1550,9 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
     <span>NIMBUS</span>
   </div>
   <div class="nav-links">
+    <div class="nav-drop" data-menu="products">
+      <button class="nav-drop-btn" type="button">Products <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
+    </div>
     <div class="nav-drop" data-menu="instruments">
       <button class="nav-drop-btn" type="button">Instruments <svg class="chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg></button>
     </div>
@@ -1605,6 +1608,20 @@ footer{background:var(--bg);padding:64px 0 28px;position:relative;z-index:1}
 <!-- Mega dropdown panels -->
 <div class="mega-panel" id="megaPanel">
   <div class="mega-accent" id="megaAccent"></div>
+  <!-- PRODUCTS -->
+  <div class="mega-content" data-for="products" style="display:none">
+    <div class="mega-inner">
+      <div class="mega-links single">
+        <a class="mega-link" href="/#pricing"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M9.5 11V5.6a1.4 1.4 0 0 1 2.8 0V10"/><path d="M12.3 10V4.4a1.4 1.4 0 0 1 2.8 0V11"/><path d="M15.1 11V6.2a1.4 1.4 0 0 1 2.8 0v6.8a6 6 0 0 1-6 6h-1a4 4 0 0 1-3.3-1.8L5 14.4a1.5 1.5 0 0 1 2.5-1.6l1 1.2"/></svg></div><div class="mega-link-text"><h4>Nimbus - $39.99</h4><p>Hand-tracking to MIDI / MPE. Your webcam becomes an expressive controller.</p></div></a>
+        <a class="mega-link" href="/note"><div class="mega-link-icon"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div><div class="mega-link-text"><h4>NOTE - $7.99 &middot; free with Nimbus</h4><p>Sound to MIDI. Turn your guitar into a MIDI player, near-zero latency.</p></div></a>
+      </div>
+      <div class="mega-visual">
+        <img src="assets/mpe-interface.png" alt="Nimbus product interface" style="aspect-ratio:auto;object-fit:cover;width:100%;border-radius:12px"/>
+        <a href="/products" class="mega-visual-link">All products <svg class="arrow-icon" viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7 7 17 7 17 17"/></svg></a>
+        <p class="mega-visual-desc">Everything Nimbus makes, in one place.</p>
+      </div>
+    </div>
+  </div>
   <!-- INSTRUMENTS -->
   <div class="mega-content" data-for="instruments" style="display:none">
     <div class="mega-inner">

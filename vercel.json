@@ -9,6 +9,7 @@
     { "source": "/forum", "destination": "/forum.html" },
     { "source": "/forum-thread", "destination": "/forum-thread.html" },
     { "source": "/products", "destination": "/products.html" },
+    { "source": "/note", "destination": "/note.html" },
     { "source": "/instrument/mpe", "destination": "/instruments/mpe.html" },
     { "source": "/instrument/pre-recorded", "destination": "/instruments/pre-recorded.html" },
     { "source": "/instrument/strings", "destination": "/instruments/strings.html" },
