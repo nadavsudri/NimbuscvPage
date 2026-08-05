@@ -353,12 +353,16 @@ nav{
   </div>
 
   <form id="new-thread-form" style="display:none;" onsubmit="submitNewThread(event)">
-    <div style="margin-bottom:20px;">
+    <div id="nt-identity" style="display:none;align-items:center;gap:9px;margin-bottom:20px;padding:12px 14px;background:var(--surface-1);border:1px solid var(--rule-2);border-radius:8px;font-size:13px;color:var(--ink-2);">
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--teal)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span id="nt-identity-text"></span>
+    </div>
+    <div id="nt-name-field" style="margin-bottom:20px;">
       <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;">Your Name</label>
       <input type="text" name="name" required placeholder="Ada Lovelace" style="width:100%;padding:12px 14px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--rule-2);border-radius:6px;outline:none;transition:border-color 0.25s ease;">
     </div>
 
-    <div style="margin-bottom:20px;">
+    <div id="nt-email-field" style="margin-bottom:20px;">
       <label style="display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;">Email</label>
       <input type="email" name="email" required placeholder="ada@example.com" style="width:100%;padding:12px 14px;font-family:'Space Grotesk',sans-serif;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--rule-2);border-radius:6px;outline:none;transition:border-color 0.25s ease;">
     </div>
@@ -464,12 +468,16 @@ async function showNewThreadForm() {
   gate.style.display = 'none';
   form.style.display = 'none';
 
+  // Reset to guest state (name/email asked) before we know auth.
+  setIdentityFields(true);
+  document.getElementById('nt-identity').style.display = 'none';
+
   var user = null;
   try { user = window.__getForumUser ? await window.__getForumUser() : null; } catch (e) {}
 
   if (user) {
-    // Logged in - skip the gate, go straight to the form, prefill identity.
-    prefillIdentity(form, user);
+    // Logged in - skip the gate; identity is fixed from the account.
+    applyAccountIdentity(form, user);
     form.style.display = 'block';
   } else {
     gate.style.display = 'block';
@@ -478,17 +486,35 @@ async function showNewThreadForm() {
 
 function askAsGuest() {
   document.getElementById('thread-gate').style.display = 'none';
+  setIdentityFields(true);
+  document.getElementById('nt-identity').style.display = 'none';
   document.getElementById('new-thread-form').style.display = 'block';
 }
 
-function prefillIdentity(form, user) {
-  var nameInput = form.querySelector('[name="name"]');
-  var emailInput = form.querySelector('[name="email"]');
+// Toggle the Name/Email inputs (shown + required for guests, hidden for members).
+function setIdentityFields(show) {
+  var nf = document.getElementById('nt-name-field');
+  var ef = document.getElementById('nt-email-field');
+  var ni = document.querySelector('#new-thread-form [name="name"]');
+  var ei = document.querySelector('#new-thread-form [name="email"]');
+  if (nf) nf.style.display = show ? '' : 'none';
+  if (ef) ef.style.display = show ? '' : 'none';
+  if (ni) { show ? ni.setAttribute('required', '') : ni.removeAttribute('required'); }
+  if (ei) { show ? ei.setAttribute('required', '') : ei.removeAttribute('required'); }
+}
+
+function applyAccountIdentity(form, user) {
   var email = user.email || '';
   var meta = user.user_metadata || {};
   var name = meta.name || meta.full_name || (email ? email.split('@')[0] : '');
-  if (nameInput && !nameInput.value) nameInput.value = name;
-  if (emailInput && !emailInput.value) emailInput.value = email;
+  var ni = form.querySelector('[name="name"]');
+  var ei = form.querySelector('[name="email"]');
+  if (ni) ni.value = name;
+  if (ei) ei.value = email;
+  setIdentityFields(false); // don't ask - fixed from account
+  var banner = document.getElementById('nt-identity');
+  document.getElementById('nt-identity-text').textContent = 'Posting as ' + name + ' (' + email + ')';
+  banner.style.display = 'flex';
 }
 
 function closeNewThreadForm() {

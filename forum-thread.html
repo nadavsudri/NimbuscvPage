@@ -332,6 +332,10 @@ h1.title{
         </div>
       </div>
       <div class="composer-fields" id="reply-fields">
+        <div id="reply-identity" style="display:none;align-items:center;gap:9px;padding:11px 14px;background:var(--surface-1);border:1px solid var(--rule-2);border-radius:10px;font-size:13px;color:var(--ink-2);">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;color:var(--teal)"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          <span id="reply-identity-text"></span>
+        </div>
         <input class="field-name" id="nameField" type="text" placeholder="Your name" autocomplete="name"/>
         <textarea class="field-msg" id="msgField" placeholder="Share what worked, ask a follow-up, or help someone out…"></textarea>
         <div class="composer-foot">
@@ -452,15 +456,21 @@ h1.title{
     var fields = document.getElementById('reply-fields');
     gate.style.display = 'none';
     fields.style.display = 'none';
+    var nf = document.getElementById('nameField');
+    var banner = document.getElementById('reply-identity');
     Promise.resolve(window.__getForumUser ? window.__getForumUser() : null).then(function(user) {
       if (user) {
-        var nf = document.getElementById('nameField');
-        if (nf && !nf.value) {
-          var meta = user.user_metadata || {};
-          nf.value = meta.name || meta.full_name || (user.email ? user.email.split('@')[0] : '');
-        }
+        // Logged in - name is fixed from the account; don't ask for it.
+        var meta = user.user_metadata || {};
+        var name = meta.name || meta.full_name || (user.email ? user.email.split('@')[0] : '');
+        nf.value = name;
+        nf.style.display = 'none';
+        document.getElementById('reply-identity-text').textContent = 'Replying as ' + name;
+        banner.style.display = 'flex';
         fields.style.display = '';
       } else {
+        nf.style.display = '';
+        banner.style.display = 'none';
         gate.style.display = 'block';
       }
     }).catch(function() { gate.style.display = 'block'; });
@@ -468,6 +478,8 @@ h1.title{
 
   window.replyAsGuest = function() {
     document.getElementById('reply-gate').style.display = 'none';
+    document.getElementById('nameField').style.display = '';
+    document.getElementById('reply-identity').style.display = 'none';
     document.getElementById('reply-fields').style.display = '';
     setTimeout(function(){ var n = document.getElementById('nameField'); if (n) n.focus(); }, 60);
   };
